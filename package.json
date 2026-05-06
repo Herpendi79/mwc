@@ -1,0 +1,47 @@
+{
+    "private": true,
+    "name": "paxvent-laravel",
+    "version": "1.0.0",
+    "description": "Event & Conference Landing Template",
+    "main": "vite.config.js",
+    "type": "module",
+    "author": "SRBThemes",
+    "browserslist": [
+        "> 0.5%",
+        "last 2 versions",
+        "Firefox ESR",
+        "not dead"
+    ],
+    "scripts": {
+        "build": "vite build",
+        "dev": "vite"
+    },
+    "devDependencies": {
+        "@tailwindcss/vite": "^4.2.2",
+        "axios": "^1.11.0",
+        "concurrently": "^9.0.1",
+        "laravel-vite-plugin": "^3.0.0",
+        "tailwindcss": "^4.2.2",
+        "vite": "^8.0.0"
+    },
+    "dependencies": {
+        "@popperjs/core": "^2.11.8",
+        "@tailwindcss/postcss": "^4.2.2",
+        "aos": "^2.3.4",
+        "boxicons": "^2.1.4",
+        "fs-extra": "^11.3.4",
+        "glob": "^13.0.6",
+        "lucide": "^1.7.0",
+        "postcss-nested": "^7.0.2",
+        "remixicon": "^4.9.1",
+        "rollup-plugin-copy": "^3.5.0",
+        "sal.js": "^0.8.5",
+        "simple-lightbox": "^2.1.0",
+        "simple-parallax-js": "^6.3.3",
+        "simplebar": "^6.3.3",
+        "slick-image-compare": "^0.4.11",
+        "swiper": "^12.1.3",
+        "virtual-select-plugin": "^1.1.0",
+        "wnumb": "^1.2.0"
+    }
+}

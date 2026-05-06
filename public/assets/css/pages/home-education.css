@@ -1,0 +1,12 @@
+/* home-education */
+.menu-swiper.swiper-initialized {
+    @apply visible opacity-100;
+}
+
+.menu-swiper .swiper-slide.swiper-slide-active {
+    @apply opacity-95 scale-100 cursor-pointer;
+}
+
+.menu-swiper .swiper-slide:not(.swiper-slide-active) a {
+    pointer-events: none;
+}

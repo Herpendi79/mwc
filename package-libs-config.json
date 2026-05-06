@@ -1,0 +1,18 @@
+{
+    "packagesToCopy": [
+        "@popperjs/core",
+        "boxicons",
+        "lucide",
+        "moment",
+        "sal.js",
+        "simple-lightbox",
+        "simple-parallax-js",
+        "simplebar",
+        "slick-image-compare",
+        "tailwindcss",
+        "remixicon",
+        "swiper",
+        "virtual-select-plugin",
+        "wnumb"
+    ]
+}

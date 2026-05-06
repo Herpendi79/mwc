@@ -1,0 +1,563 @@
+@extends('layouts.main')
+
+@section('title', 'Available Conferences')
+
+@section('content')
+    <style>
+        /* 1. Memastikan elemen tetap tampil meskipun library animasi (SAL) belum termuat */
+        .force-show {
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: none !important;
+        }
+
+        /* 2. Sembunyikan berbagai kemungkinan selector button scroll up melalui CSS */
+        .scroll-to-top,
+        #scroll-top,
+        .back-to-top,
+        .scroll-top,
+        .rn-backto-top,
+        [id*="scroll"],
+        [class*="backto"],
+        [class*="scroll-top"],
+        .fixed.bottom-5.right-5,
+        .bg-primary.rounded-circle {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+    </style>
+
+    <div class="flex h-screen bg-gray-50 dark:bg-black font-ibm overflow-hidden">
+        @include('participants.partials._sidebar')
+
+        <div class="flex-1 flex flex-col overflow-hidden">
+            @include('participants.partials._navbar')
+
+            <main class="flex-1 overflow-y-auto p-8 bg-gray-50 dark:bg-black">
+                @if (session('success'))
+                    <div id="alert-success"
+                        class="mb-6 flex items-center p-4 rounded-2xl bg-green-500/10 border border-green-500/20 text-green-500 force-show"
+                        data-sal="slide-down">
+                        <i class="ri-checkbox-circle-fill text-xl mr-3"></i>
+                        <div class="text-sm font-bold">
+                            {{ session('success') }}
+                        </div>
+                        <button type="button" class="ml-auto" onclick="document.getElementById('alert-success').remove()">
+                            <i class="ri-close-line text-xl"></i>
+                        </button>
+                    </div>
+                @endif
+
+                @if (session('error'))
+                    <div id="alert-error"
+                        class="mb-6 flex items-center p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-500 force-show"
+                        data-sal="slide-down">
+                        <i class="ri-error-warning-fill text-xl mr-3"></i>
+                        <div class="text-sm font-bold">
+                            {{ session('error') }}
+                        </div>
+                        <button type="button" class="ml-auto" onclick="document.getElementById('alert-error').remove()">
+                            <i class="ri-close-line text-xl"></i>
+                        </button>
+                    </div>
+                @endif
+                <div class="container mx-auto min-h-full flex flex-col">
+
+                    <div class="flex-grow">
+                        <div class="mb-8 force-show" data-sal="slide-up" data-sal-duration="800">
+                            <h2 class="text-3xl font-bold mb-2 dark:text-white">Conference List</h2>
+                            <p class="text-gray-500">Select a conference to participate and submit your work.</p>
+                        </div>
+
+                        <div class="bg-white dark:bg-zinc-900 rounded-3xl border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden force-show"
+                            data-sal="zoom-in" data-sal-duration="800">
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr
+                                            class="border-b border-gray-100 dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-800/50">
+                                            <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">
+                                                No</th>
+                                            <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">
+                                                Conference Name</th>
+                                            <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">
+                                                Event Date</th>
+                                            <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">
+                                                Deadline</th>
+                                            <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">
+                                                Category</th>
+                                            <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">
+                                                Publication</th>
+                                            <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">
+                                                Link</th>
+                                            <th
+                                                class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 text-center">
+                                                Files</th>
+
+                                            {{-- Tambahan Header Baru: Abstract Status --}}
+                                            <th
+                                                class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 text-center">
+                                                Abstract Status</th>
+                                            <th
+                                                class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 text-center">
+                                                Full Article Status</th>
+
+                                            <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">
+                                                Payment Note</th>
+                                            <th
+                                                class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 text-center">
+                                                Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-100 dark:divide-zinc-800">
+                                        @forelse ($conferences as $index => $conf)
+                                            @php
+                                                $submission = $userSubmissions[$conf->id_conf] ?? null;
+                                            @endphp
+                                            <tr class="hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-colors">
+                                                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                                                    {{ $index + 1 }}
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <div class="text-sm font-bold dark:text-white">{{ $conf->nama_conf }}
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                                                    <div class="text-xs">
+                                                        {{ \Carbon\Carbon::parse($conf->tgl_mulai)->format('d M') }} -
+                                                        {{ \Carbon\Carbon::parse($conf->tgl_selesai)->format('d M Y') }}
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4 text-sm">
+                                                    <div
+                                                        class="text-xs {{ \Carbon\Carbon::parse($conf->deadline_subm)->isPast() ? 'text-red-500' : 'text-orange-500' }}">
+                                                        {{ \Carbon\Carbon::parse($conf->deadline_subm)->format('d M Y') }}
+                                                    </div>
+                                                </td>
+
+                                                {{-- Kolom Kategori --}}
+                                                <td class="px-6 py-4">
+                                                    @if ($submission && $submission->kategori)
+                                                        <div class="text-sm font-medium dark:text-gray-200">
+                                                            {{ $submission->kategori->nama_ktg }}
+                                                        </div>
+                                                        <div class="text-[10px] font-mono text-gray-500 mt-1">
+                                                            @if ($submission->kategori->domisili == 'international')
+                                                                <span
+                                                                    class="bg-blue-500/10 text-blue-500 px-1 rounded">USD</span>
+                                                                ${{ number_format($submission->kategori->fee, 0, ',', '.') }}
+                                                            @else
+                                                                <span
+                                                                    class="bg-green-500/10 text-green-500 px-1 rounded">IDR</span>
+                                                                {{ number_format($submission->kategori->fee, 0, ',', '.') }}
+                                                            @endif
+                                                        </div>
+                                                    @else
+                                                        <span class="text-gray-400 text-sm">-</span>
+                                                    @endif
+                                                </td>
+
+                                                {{-- KOLOM BARU: Target Publication --}}
+                                                <td class="px-6 py-4">
+                                                    @if ($submission && $submission->publikasi)
+                                                        <div class="text-xs font-bold dark:text-gray-200">
+                                                            {{ $submission->publikasi->nama_pub }}</div>
+                                                        <div class="text-[10px] text-blue-500 mt-1 uppercase">
+                                                            {{ $submission->publikasi->index }}</div>
+                                                    @else
+                                                        <span class="text-gray-400 text-xs">-</span>
+                                                    @endif
+                                                </td>
+
+                                                {{-- KOLOM BARU: Template --}}
+                                                <td class="px-6 py-4 text-center">
+                                                    @if ($submission && $submission->publikasi && $submission->publikasi->template)
+                                                        <a href="{{ $submission->publikasi->template }}" target="_blank"
+                                                            class="inline-flex items-center gap-1 text-red-500 hover:text-red-700 transition-colors"
+                                                            title="Download Journal Template">
+                                                            <i class="ri-file-download-line text-xl"></i>
+                                                            <span class="text-[10px] font-bold uppercase">Template</span>
+                                                        </a>
+                                                    @else
+                                                        <span class="text-gray-400 text-xs">-</span>
+                                                    @endif
+                                                </td>
+
+                                                {{-- Kolom Files --}}
+                                                <td class="px-6 py-4 text-center">
+                                                    @if ($submission)
+                                                        <div class="flex flex-col items-center gap-2">
+                                                            <div class="flex justify-center gap-3">
+                                                                {{-- Ikon-ikon file yang sudah diupload --}}
+                                                                @if ($submission->file_kp)
+                                                                    <a href="{{ asset('assets/file/submissions/' . $submission->file_kp) }}"
+                                                                        target="_blank"><i
+                                                                            class="ri-file-user-line text-xl text-blue-500"></i></a>
+                                                                @endif
+                                                                @if ($submission->file_abstract)
+                                                                    <a href="{{ asset('assets/file/submissions/' . $submission->file_abstract) }}"
+                                                                        target="_blank"><i
+                                                                            class="ri-file-text-line text-xl text-orange-500"></i></a>
+                                                                @endif
+                                                                @if ($submission->file_artikel)
+                                                                    <a href="{{ asset('assets/file/submissions/' . $submission->file_artikel) }}"
+                                                                        target="_blank"><i
+                                                                            class="ri-file-pdf-line text-xl text-red-500"></i></a>
+                                                                @endif
+                                                            </div>
+
+                                                            {{-- LOGIKA TOMBOL UPLOAD ARTIKEL --}}
+                                                            @php
+                                                                $absStatus = strtolower($submission->status_abstract);
+                                                                $artStatus = strtolower($submission->status_artikel);
+                                                            @endphp
+
+                                                            @if ($absStatus == 'revision required')
+                                                                <button
+                                                                    onclick="openRevisionModal('{{ $submission->id_pc }}')"
+                                                                    class="bg-orange-500 text-white text-[9px] px-2 py-1 rounded-md font-bold uppercase">Revision
+                                                                    Abstract</button>
+                                                            @elseif ($absStatus == 'accepted')
+                                                                @if (!$submission->file_artikel || $artStatus == 'revision required')
+                                                                    {{-- Tombol Aktif jika belum upload ATAU butuh revisi artikel --}}
+                                                                    <button
+                                                                        onclick="openArticleModal('{{ $submission->id_pc }}')"
+                                                                        class="bg-red-500 text-white text-[9px] px-2 py-1 rounded-md font-bold uppercase hover:bg-red-600">
+                                                                        {{ $artStatus == 'revision required' ? 'Upload Revision Article' : 'Upload Full Article' }}
+                                                                    </button>
+                                                                @elseif ($artStatus == 'accepted')
+                                                                    {{-- Tombol Disable jika sudah Accepted --}}
+                                                                    <span
+                                                                        class="text-[9px] text-green-600 font-bold uppercase"><i
+                                                                            class="ri-checkbox-circle-line"></i> Article
+                                                                        Accepted</span>
+                                                                @endif
+                                                            @endif
+                                                        </div>
+                                                    @else
+                                                        <span class="text-gray-400">-</span>
+                                                    @endif
+                                                </td>
+
+                                                {{-- Kolom Abstract Status --}}
+                                                <td class="px-6 py-4 text-center">
+                                                    @if ($submission && $submission->status_abstract)
+                                                        @php $status = strtolower($submission->status_abstract); @endphp
+                                                        @if ($status == 'waiting review')
+                                                            <span
+                                                                class="px-2 py-1 bg-yellow-500/10 text-yellow-600 text-[10px] font-bold rounded-full uppercase">Waiting
+                                                                Review</span>
+                                                        @elseif($status == 'revision required')
+                                                            <span
+                                                                class="px-2 py-1 bg-orange-500/20 text-orange-600 border border-orange-200 text-[10px] font-bold rounded-full uppercase">Revision
+                                                                Required</span>
+                                                        @elseif($status == 'accepted')
+                                                            <span
+                                                                class="px-2 py-1 bg-green-500/10 text-green-500 text-[10px] font-bold rounded-full uppercase">Accepted</span>
+                                                        @endif
+                                                    @else
+                                                        <span class="text-gray-400 text-xs">-</span>
+                                                    @endif
+                                                </td>
+                                                {{-- Kolom Artikel Status --}}
+                                                <td class="px-6 py-4 text-center">
+                                                    @if ($submission && $submission->status_artikel)
+                                                        @php $status = strtolower($submission->status_artikel); @endphp
+                                                        @if ($status == 'waiting review')
+                                                            <span
+                                                                class="px-2 py-1 bg-yellow-500/10 text-yellow-600 text-[10px] font-bold rounded-full uppercase">Waiting
+                                                                Review</span>
+                                                        @elseif($status == 'revision required')
+                                                            <span
+                                                                class="px-2 py-1 bg-orange-500/20 text-orange-600 border border-orange-200 text-[10px] font-bold rounded-full uppercase">Revision
+                                                                Required</span>
+                                                        @elseif($status == 'accepted')
+                                                            <span
+                                                                class="px-2 py-1 bg-green-500/10 text-green-500 text-[10px] font-bold rounded-full uppercase">Accepted</span>
+                                                        @endif
+                                                    @else
+                                                        <span class="text-gray-400 text-xs">-</span>
+                                                    @endif
+                                                </td>
+
+                                                {{-- Kolom Payment Note --}}
+                                                <td class="px-6 py-4">
+                                                    @if ($submission && $submission->payment == 'pending')
+                                                        <div
+                                                            class="text-[10px] leading-tight text-orange-600 bg-orange-100 p-2 rounded-lg border border-orange-200">
+                                                            <i class="ri-information-line mr-1"></i> Please complete
+                                                            payment.
+                                                        </div>
+                                                    @elseif ($submission && $submission->payment == 'expired')
+                                                        <div
+                                                            class="text-[10px] leading-tight text-red-600 bg-red-100 p-2 rounded-lg border border-red-200">
+                                                            <i class="ri-error-warning-line mr-1"></i> Payment expired.
+                                                        </div>
+                                                    @elseif ($submission && in_array($submission->payment, ['settlement', 'success']))
+                                                        <span
+                                                            class="px-2 py-1 bg-green-500/10 text-green-500 text-[10px] font-bold rounded-full uppercase">Verified</span>
+                                                    @else
+                                                        <span class="text-gray-400 text-xs">-</span>
+                                                    @endif
+                                                </td>
+
+                                                {{-- Kolom Action --}}
+                                                <td class="px-6 py-4 text-center">
+                                                    @php
+                                                        $isDeadlinePassed = \Carbon\Carbon::today()->greaterThan(
+                                                            \Carbon\Carbon::parse($conf->deadline_subm),
+                                                        );
+                                                        $canSubmit =
+                                                            !$isDeadlinePassed &&
+                                                            (!$submission || $submission->payment == 'expired');
+                                                    @endphp
+
+                                                    @if ($canSubmit)
+                                                        <a href="{{ url('/participants/submit/' . $conf->id_conf) }}"
+                                                            class="bg-[#c0f037] text-black font-bold py-2 px-4 rounded-xl text-xs">
+                                                            {{ $submission && $submission->payment == 'expired' ? 'Resubmit' : 'Submit' }}
+                                                        </a>
+                                                    @elseif ($isDeadlinePassed)
+                                                        <button disabled
+                                                            class="bg-gray-100 text-gray-400 font-bold py-2 px-4 rounded-xl text-xs cursor-not-allowed">Closed</button>
+                                                    @elseif ($submission && in_array($submission->payment, ['success', 'settlement', 'pending']))
+                                                        <button disabled
+                                                            class="bg-gray-100 text-gray-400 font-bold py-2 px-4 rounded-xl text-xs cursor-not-allowed">Locked</button>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                {{-- UPDATED COLSPAN: 11 --}}
+                                                <td colspan="11" class="px-6 py-20 text-center text-gray-500">
+                                                    No conferences available.
+                                                </td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                                <!-- Modal Revision Abstract -->
+                                <div id="modal-revision" class="fixed inset-0 z-[9999] hidden overflow-y-auto">
+                                    <!-- Overlay -->
+                                    <div class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"></div>
+
+                                    <div class="flex min-h-full items-center justify-center p-4">
+                                        <div
+                                            class="relative w-full max-w-lg transform overflow-hidden rounded-3xl bg-white dark:bg-zinc-900 p-8 shadow-2xl transition-all">
+                                            <!-- Header -->
+                                            <div class="mb-6 flex items-center justify-between">
+                                                <h3 class="text-xl font-bold dark:text-white">Submit Revised Abstract</h3>
+                                                <button onclick="closeRevisionModal()"
+                                                    class="text-gray-400 hover:text-gray-600 dark:hover:text-white">
+                                                    <i class="ri-close-line text-2xl"></i>
+                                                </button>
+                                            </div>
+
+                                            <!-- Form -->
+                                            <form id="form-revision" method="POST" enctype="multipart/form-data">
+                                                @csrf
+                                                <div class="space-y-4">
+                                                    <div>
+                                                        <label
+                                                            class="mb-2 block text-sm font-bold text-gray-700 dark:text-gray-300">New
+                                                            Abstract File</label>
+                                                        <input type="file" name="file_abstract" required
+                                                            class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none transition-all focus:ring-2 focus:ring-[#c0f037] dark:border-zinc-700 dark:bg-zinc-800 dark:text-white">
+                                                        <p class="mt-2 text-[10px] text-gray-500">Format: PDF, DOC, or DOCX
+                                                            (Max 2MB). Uploading a new file will replace your previous
+                                                            abstract.</p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="mt-8 flex gap-3">
+                                                    <button type="button" onclick="closeRevisionModal()"
+                                                        class="flex-1 rounded-xl border border-gray-200 py-3 text-sm font-bold text-gray-600 hover:bg-gray-50 dark:border-zinc-700 dark:text-gray-400 dark:hover:bg-zinc-800">
+                                                        Cancel
+                                                    </button>
+                                                    <button type="submit"
+                                                        class="flex-1 rounded-xl bg-[#c0f037] py-3 text-sm font-bold text-black shadow-lg shadow-[#c0f037]/20 hover:opacity-90">
+                                                        <i class="ri-upload-cloud-2-line mr-1"></i> Submit Revision
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Modal full artikel -->
+                                <div id="modal-article" class="fixed inset-0 z-[9999] hidden overflow-y-auto">
+                                    <div class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"></div>
+                                    <div class="flex min-h-full items-center justify-center p-4">
+                                        <div
+                                            class="relative w-full max-w-lg transform overflow-hidden rounded-3xl bg-white dark:bg-zinc-900 p-8 shadow-2xl transition-all">
+                                            <div class="mb-6 flex items-center justify-between">
+                                                <h3 class="text-xl font-bold dark:text-white">Upload Full Article</h3>
+                                                <button onclick="closeArticleModal()"
+                                                    class="text-gray-400 hover:text-gray-600 dark:hover:text-white">
+                                                    <i class="ri-close-line text-2xl"></i>
+                                                </button>
+                                            </div>
+
+                                            <form id="form-article" method="POST" enctype="multipart/form-data">
+                                                @csrf
+                                                <div class="space-y-4">
+                                                    <div
+                                                        class="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-2xl mb-4">
+                                                        <p
+                                                            class="text-xs text-blue-600 dark:text-blue-400 leading-relaxed">
+                                                            <i class="ri-information-line mr-1"></i>
+                                                            Make sure your article follows the target journal template.
+                                                            Status will change to <strong>Waiting Review</strong> after
+                                                            upload.
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <label
+                                                            class="mb-2 block text-sm font-bold text-gray-700 dark:text-gray-300">Full
+                                                            Article File (PDF/DOCX Max 2MB)</label>
+                                                        <input type="file" name="file_artikel" required
+                                                            class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none transition-all focus:ring-2 focus:ring-[#c0f037] dark:border-zinc-700 dark:bg-zinc-800 dark:text-white">
+                                                    </div>
+                                                </div>
+
+                                                <div class="mt-8 flex gap-3">
+                                                    <button type="button" onclick="closeArticleModal()"
+                                                        class="flex-1 rounded-xl border border-gray-200 py-3 text-sm font-bold text-gray-600 hover:bg-gray-50 dark:border-zinc-700 dark:text-gray-400 dark:hover:bg-zinc-800">
+                                                        Cancel
+                                                    </button>
+                                                    <button type="submit"
+                                                        class="flex-1 rounded-xl bg-red-500 py-3 text-sm font-bold text-white shadow-lg shadow-red-500/20 hover:bg-red-600">
+                                                        <i class="ri-upload-cloud-2-line mr-1"></i> Submit Article
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Footer dipanggil di dalam container agar sejajar di bawah --}}
+                    @include('participants.partials._footer')
+                </div>
+            </main>
+        </div>
+    </div>
+@endsection
+
+@section('scripts')
+    <script src="{{ asset('assets/js/dark-mode.js') }}" defer></script>
+    <script>
+        // 1. PINDAHKAN FUNGSI MODAL KE GLOBAL SCOPE (Di luar DOMContentLoaded)
+        function openRevisionModal(id_pc) {
+            const modal = document.getElementById('modal-revision');
+            const form = document.getElementById('form-revision');
+
+            if (modal && form) {
+                // Set Action URL secara dinamis
+                form.action = `/participants/revision-abstract/${id_pc}`;
+
+                // Tampilkan Modal
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // Matikan scroll background
+            }
+        }
+
+        function closeRevisionModal() {
+            const modal = document.getElementById('modal-revision');
+            if (modal) {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto'; // Aktifkan kembali scroll
+            }
+        }
+
+        function openArticleModal(id_pc) {
+            const modal = document.getElementById('modal-article');
+            const form = document.getElementById('form-article');
+            form.action = `/participants/upload-article/${id_pc}`;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeArticleModal() {
+            const modal = document.getElementById('modal-article');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Tambahkan listener klik luar untuk modal article
+        window.addEventListener('click', function(event) {
+            const modalArt = document.getElementById('modal-article');
+            if (event.target === modalArt) {
+                closeArticleModal();
+            }
+        });
+
+        // Script Penghapus Otomatis Tombol Scroll
+        function removeScrollButton() {
+            const selectors = [
+                '.scroll-to-top', '#scroll-top', '.back-to-top', '.rn-backto-top',
+                '.fixed.bottom-5.right-5', '.scroll-top'
+            ];
+
+            selectors.forEach(selector => {
+                const element = document.querySelector(selector);
+                if (element) {
+                    element.remove();
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Jalankan fungsi hapus scroll button
+            removeScrollButton();
+            setTimeout(removeScrollButton, 1000);
+            window.addEventListener('scroll', removeScrollButton);
+
+            const sidebar = document.getElementById('main-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            const btnOpen = document.getElementById('sidebar-open');
+            const btnClose = document.getElementById('sidebar-close');
+            const profileBtn = document.getElementById('profile-menu-button');
+            const profileDropdown = document.getElementById('profile-dropdown');
+
+            // Toggle Profile Dropdown
+            if (profileBtn && profileDropdown) {
+                profileBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    profileDropdown.classList.toggle('hidden');
+                });
+
+                window.addEventListener('click', function(e) {
+                    if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
+                        profileDropdown.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Sidebar Logic
+            function toggleSidebar() {
+                if (sidebar && overlay) {
+                    sidebar.classList.toggle('-translate-x-full');
+                    overlay.classList.toggle('hidden');
+                    document.body.classList.toggle('overflow-hidden');
+                }
+            }
+
+            if (btnOpen) btnOpen.addEventListener('click', toggleSidebar);
+            if (btnClose) btnClose.addEventListener('click', toggleSidebar);
+            if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+            // Perbaikan Logika Klik di Luar Modal
+            const modalRevision = document.getElementById('modal-revision');
+            window.addEventListener('click', function(event) {
+                // Jika yang diklik adalah area overlay (di luar box modal)
+                if (event.target === modalRevision) {
+                    closeRevisionModal();
+                }
+            });
+        });
+    </script>
+@endsection

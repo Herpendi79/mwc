@@ -1,0 +1,16 @@
+/* home-business */
+.clip-shape-left {
+    clip-path: polygon(100% 0, 11% 0, 0% 50%, 7% 100%, 100% 100%);
+}
+
+[dir="rtl"] .clip-shape-left {
+    clip-path: polygon(0% 0, 89% 0, 100% 50%, 93% 100%, 0% 100%);
+}
+
+.clip-shape-right {
+    clip-path: polygon(0% 0, 89% 0, 100% 50%, 93% 100%, 0% 100%);
+}
+
+[dir="rtl"] .clip-shape-right {
+    clip-path: polygon(100% 0, 11% 0, 0% 50%, 7% 100%, 100% 100%);
+}

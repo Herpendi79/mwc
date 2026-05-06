@@ -1,0 +1,15 @@
+/* Tech conference css */
+.swiper-pagination {
+    @apply !flex !justify-center !gap-[7px] !p-[3px] !bottom-[2px] !relative;
+}
+
+.swiper-pagination-bullet {
+    @apply !w-[5px] !h-[5px] !bg-white !opacity-100 !rounded-none;
+    transform: rotate(45deg) !important;
+}
+
+.swiper-pagination-bullet-active {
+    @apply !bg-white;
+    outline: 1px solid #fff !important;
+    outline-offset: 2px !important;
+}
