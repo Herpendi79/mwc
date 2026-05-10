@@ -452,7 +452,7 @@ class PesertaController extends Controller
             $submission = PesertaConferences::findOrFail($id_pc);
 
             // Security Check
-            if ($submission->id !== Auth::user()->peserta->id) {
+            if ($submission->id != Auth::user()->peserta->id) {
                 return redirect()->back()->with('error', 'Unauthorized action.');
             }
 
