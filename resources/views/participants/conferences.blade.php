@@ -80,6 +80,9 @@
                                             class="border-b border-gray-100 dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-800/50">
                                             <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">
                                                 No</th>
+                                            <th
+                                                class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 text-center">
+                                                Action</th>
                                             <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">
                                                 Conference Name</th>
                                             <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">
@@ -108,9 +111,6 @@
                                                 Payment Note</th>
                                             <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">
                                                 Certificate</th>
-                                            <th
-                                                class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 text-center">
-                                                Action</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-100 dark:divide-zinc-800">
