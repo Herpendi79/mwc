@@ -308,7 +308,7 @@ class ReviewerController extends Controller
 
         if ($status === 'success') {
             $pesertaConf->update(['payment' => 'success']);
-            $pesertaConf->update(['status_abstract' => 'waiting review']);
+           // $pesertaConf->update(['status_abstract' => 'waiting review']);
 
             // Logika Pesan Berdasarkan Kategori
             if (str_contains($nama_kategori, 'presenter')) {
