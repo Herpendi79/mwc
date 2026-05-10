@@ -172,7 +172,7 @@ class ReviewerController extends Controller
 
             // Akumulasi untuk total seluruh conference
             $totalAll += $conf->total_per_conf;
-        } 
+        }
 
         return view('reviewer.conferences', compact('conferences', 'totalAll'));
     }
@@ -308,9 +308,11 @@ class ReviewerController extends Controller
 
         if ($status === 'success') {
             $pesertaConf->update(['payment' => 'success']);
+            $pesertaConf->update(['status_abstract' => 'waiting review']);
 
             // Logika Pesan Berdasarkan Kategori
             if (str_contains($nama_kategori, 'presenter')) {
+                $pesertaConf->update(['status_abstract' => 'waiting review']);
                 $keterangan_tambahan = "The next process is the review of your abstract by the reviewer.";
             } else {
                 $keterangan_tambahan = "Congratulations, your payment is valid. See you on the conference day!";
@@ -321,7 +323,7 @@ class ReviewerController extends Controller
         } else if ($status === 'nonvalid') {
             // ... (Logika hapus file tetap sama)
             if ($pesertaConf->file_bukti_tf) {
-               // $filePath = public_path('assets/file/submissions/' . $pesertaConf->file_bukti_tf);
+                // $filePath = public_path('assets/file/submissions/' . $pesertaConf->file_bukti_tf);
                 $filePath = config('path.submissions') . $pesertaConf->file_bukti_tf;
                 if (File::exists($filePath)) {
                     File::delete($filePath);
