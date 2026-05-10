@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use App\Jobs\SendSubmissionEmail;
 
 class PesertaController extends Controller
 {
@@ -134,7 +135,7 @@ class PesertaController extends Controller
         $request->validate($rules);
 
         Log::info('Memulai proses storeSubmission untuk User ID: ' . Auth::id());
-
+        DB::beginTransaction();
         try {
             $user = Auth::user();
             $peserta = $user->peserta;
@@ -143,7 +144,7 @@ class PesertaController extends Controller
             // 3. Proses Folder & Upload File
             //$path = public_path('../public_html/file/');
             //$path = public_path('../../public_html/uploads/file/submissions');
-            
+
             $path = config('path.submissions');
             if (!file_exists($path)) {
                 mkdir($path, 0777, true);
@@ -203,8 +204,14 @@ class PesertaController extends Controller
                     'nama_conference' => $conference->nama_conf
                 ])->render();
 
-                EmailApiService::send($user->email, "Payment Waiting Validation - " . $conference->nama_conf, "Please wait for admin validation.", $html);
-
+                //EmailApiService::send($user->email, "Payment Waiting Validation - " . $conference->nama_conf, "Please wait for admin validation.", $html);
+                SendSubmissionEmail::dispatch([
+                    'to'      => $user->email,
+                    'subject' => "Payment Waiting Validation - " . $conference->nama_conf,
+                    'text'    => "Please wait for admin validation.",
+                    'html'    => $html
+                ])->onQueue('conference');
+                DB::commit();
                 return redirect()->route('participants.conferences')->with('success', 'Registration successful. Please wait for admin to validate your payment.');
             }
 
@@ -281,12 +288,22 @@ class PesertaController extends Controller
                 'urlPembayaran'   => $urlPembayaran,
             ])->render();
 
-            $text = "Halo {$peserta->nama}, please complete your payment for {$conference->nama_conf}. Link: {$urlPembayaran}";
-            EmailApiService::send($user->email, $subject, $text, $html);
+            SendSubmissionEmail::dispatch([
+                'to'      => $user->email,
+                'subject' => "Payment Required - " . $conference->nama_conf,
+                'text'    => "Halo {$peserta->nama}, please complete your payment.",
+                'html'    => $html
+            ])->onQueue('conference');
+
+            DB::commit();
+
+            //$text = "Halo {$peserta->nama}, please complete your payment for {$conference->nama_conf}. Link: {$urlPembayaran}";
+            //EmailApiService::send($user->email, $subject, $text, $html);
             Log::info('Email tagihan berhasil dikirim ke: ' . $user->email);
 
             return redirect()->route('payment', ['snapToken' => $snapToken]);
         } catch (Exception $e) {
+            DB::rollback();
             Log::error('Terjadi Error di storeSubmission: ' . $e->getMessage());
             return redirect()->back()->withInput()->with('error', 'Failed to process submission: ' . $e->getMessage());
         }
