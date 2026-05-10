@@ -122,6 +122,30 @@
                                                 <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
                                                     {{ $index + 1 }}
                                                 </td>
+                                                {{-- Kolom Action --}}
+                                                <td class="px-6 py-4 text-center">
+                                                    @php
+                                                        $isDeadlinePassed = \Carbon\Carbon::today()->greaterThan(
+                                                            \Carbon\Carbon::parse($conf->deadline_subm),
+                                                        );
+                                                        $canSubmit =
+                                                            !$isDeadlinePassed &&
+                                                            (!$submission || $submission->payment == 'expired');
+                                                    @endphp
+
+                                                    @if ($canSubmit)
+                                                        <a href="{{ url('/participants/submit/' . $conf->id_conf) }}"
+                                                            class="bg-[#c0f037] text-black font-bold py-2 px-4 rounded-xl text-xs">
+                                                            {{ $submission && $submission->payment == 'expired' ? 'Resubmit' : 'Submit' }}
+                                                        </a>
+                                                    @elseif ($isDeadlinePassed)
+                                                        <button disabled
+                                                            class="bg-gray-100 text-gray-400 font-bold py-2 px-4 rounded-xl text-xs cursor-not-allowed">Closed</button>
+                                                    @elseif ($submission && in_array($submission->payment, ['success', 'settlement', 'pending']))
+                                                        <button disabled
+                                                            class="bg-gray-100 text-gray-400 font-bold py-2 px-4 rounded-xl text-xs cursor-not-allowed">Locked</button>
+                                                    @endif
+                                                </td>
                                                 <td class="px-6 py-4">
                                                     <div class="text-sm font-bold dark:text-white">{{ $conf->nama_conf }}
                                                     </div>
@@ -375,7 +399,7 @@
 
                                                             // Cek fisik file template sertifikat
                                                             $confName = $conf->nama_conf;
-                                                            $templatePath = config('path.sertifikat') ;
+                                                            $templatePath = config('path.sertifikat');
                                                             $fileExist = false;
                                                             foreach (['png', 'jpg', 'jpeg'] as $ext) {
                                                                 if (
@@ -413,30 +437,7 @@
                                                     @endif
                                                 </td>
 
-                                                {{-- Kolom Action --}}
-                                                <td class="px-6 py-4 text-center">
-                                                    @php
-                                                        $isDeadlinePassed = \Carbon\Carbon::today()->greaterThan(
-                                                            \Carbon\Carbon::parse($conf->deadline_subm),
-                                                        );
-                                                        $canSubmit =
-                                                            !$isDeadlinePassed &&
-                                                            (!$submission || $submission->payment == 'expired');
-                                                    @endphp
 
-                                                    @if ($canSubmit)
-                                                        <a href="{{ url('/participants/submit/' . $conf->id_conf) }}"
-                                                            class="bg-[#c0f037] text-black font-bold py-2 px-4 rounded-xl text-xs">
-                                                            {{ $submission && $submission->payment == 'expired' ? 'Resubmit' : 'Submit' }}
-                                                        </a>
-                                                    @elseif ($isDeadlinePassed)
-                                                        <button disabled
-                                                            class="bg-gray-100 text-gray-400 font-bold py-2 px-4 rounded-xl text-xs cursor-not-allowed">Closed</button>
-                                                    @elseif ($submission && in_array($submission->payment, ['success', 'settlement', 'pending']))
-                                                        <button disabled
-                                                            class="bg-gray-100 text-gray-400 font-bold py-2 px-4 rounded-xl text-xs cursor-not-allowed">Locked</button>
-                                                    @endif
-                                                </td>
                                             </tr>
                                         @empty
                                             <tr>
