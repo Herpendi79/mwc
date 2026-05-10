@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use App\Models\MonitoringPresenter;
+use App\Jobs\SendSubmissionEmail;
 
 class ReviewerController extends Controller
 {
@@ -181,23 +182,20 @@ class ReviewerController extends Controller
     // Fungsi untuk update status abstract (revision atau accepted)
     public function updateStatus(Request $request, $id, $sumber)
     {
+        // 1. Fetch data berdasarkan sumber (ADAKSI atau Umum)
         if ($sumber === 'ADAKSI') {
-            // Menggunakan id_pca untuk tabel Adaksi
             $presenter = \App\Models\PesertaConferencesAdaksi::with(['user.anggota', 'kategori.conference'])
                 ->where('id_pca', $id)
                 ->firstOrFail();
 
-            // Ambil info user & nama (Relasi Adaksi: PCA -> User -> Anggota)
             $user = $presenter->user;
             $nama_peserta = $user->anggota->nama_anggota ?? 'Participant';
         } else {
-            // Menggunakan id_pc untuk tabel Umum
             $presenter = PesertaConferences::with(['peserta.user', 'kategori.conference'])
                 ->where('id_pc', $id)
                 ->firstOrFail();
 
-            // Ambil info user & nama (Relasi Umum: PC -> Peserta -> User)
-            $user = $presenter->peserta->user;
+            $user = $presenter->peserta->user ?? null;
             $nama_peserta = $presenter->peserta->nama ?? 'Participant';
         }
 
@@ -208,61 +206,69 @@ class ReviewerController extends Controller
 
         $status = $request->input('status');
         $comment = $request->input('comment');
-        //$user = $presenter->peserta->user;
-
         $nama_conference = $presenter->kategori->conference->nama_conf;
 
-        if ($status === 'revision') {
-            // 1. Hapus file abstract lama
-            if ($presenter->file_abstract) {
-                //$path = public_path('../../public_html/uploads/file/submissions' . $presenter->file_abstract);
-                $path = config('path.submissions') . $presenter->file_abstract;
-                if (File::exists($path)) {
-                    File::delete($path);
+        // Mulai Transaksi Database
+        DB::beginTransaction();
+        try {
+            if ($status === 'revision') {
+                // 2. Logika Revision: Hapus file lama dan kosongkan status
+                if ($presenter->file_abstract) {
+                    $path = config('path.submissions') . $presenter->file_abstract;
+                    if (File::exists($path)) {
+                        File::delete($path);
+                    }
                 }
+
+                $presenter->update([
+                    'status_abstract' => null,
+                    'file_abstract'   => null,
+                    'keterangan'      => $comment,
+                ]);
+
+                $subject = "Revision Required: Abstract Submission - " . $nama_conference;
+                $text = "Dear {$nama_peserta}, your abstract requires revision. Feedback: {$comment}";
+            } else {
+                // 3. Logika Accepted
+                $presenter->update([
+                    'status_abstract' => 'accepted',
+                ]);
+
+                $subject = "Accepted: Abstract Submission Notification - " . $nama_conference;
+                $text = "Congratulations {$nama_peserta}, your abstract has been accepted.";
             }
 
-            // 2. Update Database (Kosongkan file dan status agar bisa upload ulang)
-            $presenter->update([
-                'status_abstract' => null,
-                'file_abstract'   => null,
-                'keterangan'      => $comment,
-            ]);
+            // 4. Siapkan View Email
+            $html = view('emails.review_abstract', [
+                'nama'    => $nama_peserta,
+                'status'  => $status,
+                'comment' => $comment,
+                'nama_conference' => $nama_conference
+            ])->render();
 
-            $subject = "Revision Required: Abstract Submission - " . $nama_conference;
-            $text = "Dear {$nama_peserta}, your abstract requires revision. Feedback: {$comment}";
-        } else {
-            // 1. Update Database ke Accepted
-            $presenter->update([
-                'status_abstract' => 'accepted',
-            ]);
+            // 5. Masukkan ke Queue (Antrean)
+            SendSubmissionEmail::dispatch([
+                'to'      => $user->email,
+                'subject' => $subject,
+                'text'    => $text,
+                'html'    => $html,
+            ])->onQueue('conference'); // Jalur khusus agar tidak bentrok dengan adaksi.org
 
-            $subject = "Accepted: Abstract Submission Notification - " . $nama_conference;
-            $text = "Congratulations {$nama_peserta}, your abstract has been accepted. Please upload your full paper.";
-        }
+            DB::commit();
+            Log::info("Status abstract updated & job dispatched for: " . $user->email);
 
-        // --- INTEGRASI EMAIL API SERVICE ---
-        $html = view('emails.review_abstract', [
-            'nama'    => $nama_peserta,
-            'status'  => $status,
-            'comment' => $comment,
-        ])->render();
-
-        try {
-            EmailApiService::send($user->email, $subject, $text, $html);
-            Log::info("Email notifikasi review ({$status}) berhasil dikirim ke: " . $user->email);
-
-            return back()->with('success', 'Decision submitted and notification email has been sent.');
+            return back()->with('success', 'Decision submitted and notification email is being processed in background.');
         } catch (\Exception $e) {
-            Log::error("Gagal mengirim email review: " . $e->getMessage());
-            return back()->with('error', 'Status updated, but failed to send email notification.');
+            DB::rollback();
+            Log::error("Gagal update status review: " . $e->getMessage());
+            return back()->with('error', 'Something went wrong. Database rolled back.');
         }
     }
 
     //update status artikel (accepted atau revision)
     public function updateStatusArtikel(Request $request, $id, $sumber)
     {
-
+        // 1. Identifikasi Sumber Data (ADAKSI atau UMUM)
         if ($sumber === 'ADAKSI') {
             $presenter = \App\Models\PesertaConferencesAdaksi::with(['user.anggota', 'kategori.conference'])
                 ->where('id_pca', $id)
@@ -275,7 +281,7 @@ class ReviewerController extends Controller
                 ->where('id_pc', $id)
                 ->firstOrFail();
 
-            $user = $presenter->peserta->user;
+            $user = $presenter->peserta->user ?? null;
             $nama_peserta = $presenter->peserta->nama ?? 'Participant';
         }
 
@@ -288,144 +294,155 @@ class ReviewerController extends Controller
         $comment = $request->input('comment');
         $nama_conference = $presenter->kategori->conference->nama_conf;
 
-        if ($status === 'revision') {
-            // Hapus file artikel lama
-            if ($presenter->file_artikel) {
-                $path = config('path.submissions') . $presenter->file_artikel;
-                if (\Illuminate\Support\Facades\File::exists($path)) {
-                    \Illuminate\Support\Facades\File::delete($path);
+        // 2. Mulai Transaksi Database
+        DB::beginTransaction();
+        try {
+            if ($status === 'revision') {
+                // Hapus file artikel lama jika ada revisi
+                if ($presenter->file_artikel) {
+                    $path = config('path.submissions') . $presenter->file_artikel;
+                    if (\Illuminate\Support\Facades\File::exists($path)) {
+                        \Illuminate\Support\Facades\File::delete($path);
+                    }
                 }
+
+                // Update Database (Kosongkan file agar user bisa upload ulang)
+                $presenter->update([
+                    'status_artikel' => null,
+                    'file_artikel'   => null,
+                    'keterangan'      => $comment,
+                ]);
+
+                $subject = "Revision Required: Full Paper Submission - " . $nama_conference;
+                $text = "Dear {$nama_peserta}, your full paper requires revision. Feedback: {$comment}";
+            } else {
+                // Update Database ke Accepted
+                $presenter->update([
+                    'status_artikel' => 'accepted',
+                ]);
+
+                $subject = "Accepted: Full Paper Submission Notification - " . $nama_conference;
+                $text = "Congratulations {$nama_peserta}, your Full Paper has been accepted.";
             }
 
-            // 2. Update Database (Kosongkan file dan status agar bisa upload ulang)
-            $presenter->update([
-                'status_artikel' => null,
-                'file_artikel'   => null,
-                'keterangan'      => $comment,
-            ]);
+            // 3. Render HTML untuk Email
+            $html = view('emails.review_artikel', [
+                'nama'    => $nama_peserta,
+                'status'  => $status,
+                'comment' => $comment,
+                'nama_conference' => $nama_conference
+            ])->render();
 
-            $subject = "Revision Required: Full Paper Submission - " . $nama_conference;
-            $text = "Dear {$nama_peserta}, your full paper requires revision. Feedback: {$comment}";
-        } else {
-            // 1. Update Database ke Accepted
-            $presenter->update([
-                'status_artikel' => 'accepted',
-            ]);
+            // 4. Kirim ke Queue (Jalur Conference)
+            SendSubmissionEmail::dispatch([
+                'to'      => $user->email,
+                'subject' => $subject,
+                'text'    => $text,
+                'html'    => $html,
+            ])->onQueue('conference');
 
-            $subject = "Accepted: Full Paper Submission Notification - " . $nama_conference;
-            $text = "Congratulations {$nama_peserta}, your Full Paper has been accepted. Please wait the next information.";
-        }
+            DB::commit();
+            Log::info("Full Paper review processed for: " . $user->email);
 
-        // --- INTEGRASI EMAIL API SERVICE ---
-        $html = view('emails.review_artikel', [
-            'nama'    => $nama_peserta,
-            'status'  => $status,
-            'comment' => $comment,
-        ])->render();
-
-        try {
-            EmailApiService::send($user->email, $subject, $text, $html);
-            Log::info("Email notifikasi review ({$status}) berhasil dikirim ke: " . $user->email);
-
-            return back()->with('success', 'Decision submitted and notification email has been sent.');
+            return back()->with('success', 'Full Paper decision submitted. Notification email is being sent in background.');
         } catch (\Exception $e) {
-            Log::error("Gagal mengirim email review: " . $e->getMessage());
-            return back()->with('error', 'Status updated, but failed to send email notification.');
+            DB::rollback();
+            Log::error("Gagal update status artikel: " . $e->getMessage());
+            return back()->with('error', 'An error occurred while processing the decision.');
         }
     }
 
     public function updateStatusPayment(Request $request, $id)
     {
+        // 1. Load data
         $pesertaConf = PesertaConferences::with(['peserta.user', 'kategori.conference'])->findOrFail($id);
 
         $status = $request->input('status');
         $comment = $request->input('comment');
         $user = $pesertaConf->peserta->user;
+        $nama_peserta = $pesertaConf->peserta->nama ?? 'Participant';
         $nama_conference = $pesertaConf->kategori->conference->nama_conf;
-
-        // Ambil nama kategori untuk pengecekan pesan
         $nama_kategori = strtolower($pesertaConf->kategori->nama_ktg);
+
         $keterangan_tambahan = "";
+        $recipientEmail = $user->email;
 
-        if ($status === 'success') {
+        // 2. Mulai Transaksi
+        DB::beginTransaction();
+        try {
+            if ($status === 'success') {
+                // Logika Sertifikat
+                $suffix = "/ICPIP-HE-I/CERTIF/VI/2026";
+                $lastRecord = PesertaConferences::where('no_sertifikat', 'like', '%' . $suffix)
+                    ->orderBy('no_sertifikat', 'desc')
+                    ->first();
 
-            $pesertaConf->update(['payment' => 'success']);
-            $suffix = "/ICPIP-HE-I/CERTIF/VI/2026";
-            $lastRecord = PesertaConferences::where('no_sertifikat', 'like', '%' . $suffix)
-                ->orderBy('no_sertifikat', 'desc')
-                ->first();
+                $nextNumber = $lastRecord ? (int)explode('/', $lastRecord->no_sertifikat)[0] + 1 : 1;
+                $no_sertifikat = str_pad($nextNumber, 2, '0', STR_PAD_LEFT) . $suffix;
 
-            if ($lastRecord) {
-                $parts = explode('/', $lastRecord->no_sertifikat);
-                $lastNumber = (int)$parts[0];
-                $nextNumber = $lastNumber + 1;
-            } else {
-                $nextNumber = 1;
-            }
-            $formattedNumber = str_pad($nextNumber, 2, '0', STR_PAD_LEFT);
-            $no_sertifikat = $formattedNumber . $suffix;
+                $updateData = [
+                    'payment' => 'success',
+                    'no_sertifikat' => $no_sertifikat
+                ];
 
-            $pesertaConf->update(['no_sertifikat' => $no_sertifikat]);
-
-            // Logika Pesan Berdasarkan Kategori
-            if (str_contains($nama_kategori, 'presenter')) {
-                $pesertaConf->update(['status_abstract' => 'waiting review']);
-                $keterangan_tambahan = "The next process is the review of your abstract by the reviewer.";
-            } else {
-                $keterangan_tambahan = "Congratulations, your payment is valid. See you on the conference day!. You can download your certificate after the conference ends.";
-            }
-
-            $subject = "Payment Verified: " . $nama_conference;
-            $text = "Dear {$pesertaConf->peserta->nama}, your payment has been successfully verified. {$keterangan_tambahan}";
-        } else if ($status === 'nonvalid') {
-            // ... (Logika hapus file tetap sama)
-            if ($pesertaConf->file_bukti_tf) {
-                // $filePath = public_path('assets/file/submissions/' . $pesertaConf->file_bukti_tf);
-                $filePath = config('path.submissions') . $pesertaConf->file_bukti_tf;
-                if (File::exists($filePath)) {
-                    File::delete($filePath);
+                if (str_contains($nama_kategori, 'presenter')) {
+                    $updateData['status_abstract'] = 'waiting review';
+                    $keterangan_tambahan = "The next process is the review of your abstract by the reviewer.";
+                } else {
+                    $keterangan_tambahan = "Congratulations, your payment is valid. See you on the conference day! You can download your certificate after the conference ends.";
                 }
+
+                $pesertaConf->update($updateData);
+                $subject = "Payment Verified: " . $nama_conference;
+                $text = "Dear {$nama_peserta}, your payment has been successfully verified. {$keterangan_tambahan}";
+            } else if ($status === 'nonvalid') {
+                // Hapus file bukti transfer
+                if ($pesertaConf->file_bukti_tf) {
+                    $filePath = config('path.submissions') . $pesertaConf->file_bukti_tf;
+                    if (File::exists($filePath)) {
+                        File::delete($filePath);
+                    }
+                }
+
+                $subject = "Payment Rejected: " . $nama_conference;
+                $text = "Dear {$nama_peserta}, your payment proof was rejected. Reason: {$comment}.";
+
+                // Simpan info ke variabel sebelum data dihapus
+                $htmlData = [
+                    'nama' => $nama_peserta,
+                    'status' => $status,
+                    'comment' => $comment,
+                    'nama_conference' => $nama_conference,
+                    'keterangan_tambahan' => ""
+                ];
+
+                // Hapus data (jika ini memang alur yang diinginkan untuk nonvalid)
+                $pesertaConf->delete();
             }
 
-            $subject = "Payment Rejected: " . $nama_conference;
-            $text = "Dear {$pesertaConf->peserta->nama}, your payment proof was rejected. Reason: {$comment}.";
-
-            $recipientEmail = $user->email;
-            $recipientName = $pesertaConf->peserta->nama;
-
+            // 3. Render HTML Email
             $html = view('emails.payment_status', [
-                'nama' => $recipientName,
-                'status' => $status,
+                'nama'    => $nama_peserta,
+                'status'  => $status,
                 'comment' => $comment,
                 'nama_conference' => $nama_conference,
-                'keterangan_tambahan' => "" // Kosong untuk nonvalid
+                'keterangan_tambahan' => $keterangan_tambahan
             ])->render();
 
-            try {
-                EmailApiService::send($recipientEmail, $subject, $text, $html);
-                $pesertaConf->delete();
-                return back()->with('success', 'Payment rejected, email sent, and data has been cleared.');
-            } catch (\Exception $e) {
-                Log::error("Gagal mengirim email rejection payment: " . $e->getMessage());
-                return back()->with('error', 'Failed to send notification email.');
-            }
-        }
+            // 4. Masukkan ke Queue
+            SendSubmissionEmail::dispatch([
+                'to'      => $recipientEmail,
+                'subject' => $subject,
+                'text'    => $text,
+                'html'    => $html,
+            ])->onQueue('conference');
 
-        // Render HTML untuk status Success
-        $html = view('emails.payment_status', [
-            'nama'    => $pesertaConf->peserta->nama,
-            'status'  => $status,
-            'comment' => $comment,
-            'nama_conference' => $nama_conference,
-            'keterangan_tambahan' => $keterangan_tambahan // Kirim variabel ini ke blade
-        ])->render();
-
-        try {
-            EmailApiService::send($user->email, $subject, $text, $html);
-            return back()->with('success', 'Payment status updated and email notification sent.');
+            DB::commit();
+            return back()->with('success', 'Payment status updated and notification is being sent.');
         } catch (\Exception $e) {
-            Log::error("Gagal mengirim email payment: " . $e->getMessage());
-            return back()->with('error', 'Status updated, but email failed to send.');
+            DB::rollback();
+            Log::error("Gagal update status payment: " . $e->getMessage());
+            return back()->with('error', 'Failed to process payment update.');
         }
     }
 
