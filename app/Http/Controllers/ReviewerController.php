@@ -307,8 +307,24 @@ class ReviewerController extends Controller
         $keterangan_tambahan = "";
 
         if ($status === 'success') {
+
             $pesertaConf->update(['payment' => 'success']);
-           // $pesertaConf->update(['status_abstract' => 'waiting review']);
+            $suffix = "/ICPIP-HE-I/CERTIF/VI/2026";
+            $lastRecord = PesertaConferences::where('no_sertifikat', 'like', '%' . $suffix)
+                ->orderBy('no_sertifikat', 'desc')
+                ->first();
+
+            if ($lastRecord) {
+                $parts = explode('/', $lastRecord->no_sertifikat);
+                $lastNumber = (int)$parts[0];
+                $nextNumber = $lastNumber + 1;
+            } else {
+                $nextNumber = 1;
+            }
+            $formattedNumber = str_pad($nextNumber, 2, '0', STR_PAD_LEFT);
+            $no_sertifikat = $formattedNumber . $suffix;
+
+            $pesertaConf->update(['no_sertifikat' => $no_sertifikat]);
 
             // Logika Pesan Berdasarkan Kategori
             if (str_contains($nama_kategori, 'presenter')) {

@@ -214,7 +214,10 @@
                                                             @php
                                                                 $absStatus = strtolower($submission->status_abstract);
                                                                 $artStatus = strtolower($submission->status_artikel);
-                                                                $isPresenter = str_contains($submission->kategori->nama_ktg, 'presenter');
+                                                                $isPresenter = str_contains(
+                                                                    $submission->kategori->nama_ktg,
+                                                                    'presenter',
+                                                                );
                                                             @endphp
 
                                                             @if ($isPresenter && ($absStatus == null || $absStatus == 'revision required'))
@@ -340,12 +343,39 @@
 
                                                 {{-- Kolom Certificate --}}
                                                 <td class="text-center">
-                                                    @if ($submission && strtolower($submission->status_artikel) == 'accepted')
+                                                    @if ($submission)
                                                         @php
-                                                            $confName = $conf->nama_conf;
-                                                            $templatePath = public_path('assets/file/sertifikat/');
+                                                            $namaKtg = strtolower(
+                                                                $submission->kategori->nama_ktg ?? '',
+                                                            );
+                                                            $isPresenter = str_contains($namaKtg, 'presenter');
+                                                            $isParticipant = str_contains($namaKtg, 'participant');
+                                                            $paymentSuccess = in_array($submission->payment, [
+                                                                'success',
+                                                                'settlement',
+                                                                'capture',
+                                                            ]);
 
-                                                            // Cek apakah ada file dengan nama conference tersebut (mendukung png, jpg, jpeg)
+                                                            // Syarat Download:
+                                                            // 1. Jika Presenter: Harus Accepted Artikelnya
+                                                            // 2. Jika Participant: Cukup Payment Success & No Sertifikat sudah terisi
+                                                            $canDownload = false;
+                                                            if (
+                                                                $isPresenter &&
+                                                                strtolower($submission->status_artikel) == 'accepted'
+                                                            ) {
+                                                                $canDownload = true;
+                                                            } elseif (
+                                                                $isParticipant &&
+                                                                $paymentSuccess &&
+                                                                $submission->no_sertifikat != null
+                                                            ) {
+                                                                $canDownload = true;
+                                                            }
+
+                                                            // Cek fisik file template sertifikat
+                                                            $confName = $conf->nama_conf;
+                                                            $templatePath = public_path('uploads/file/sertifikat/');
                                                             $fileExist = false;
                                                             foreach (['png', 'jpg', 'jpeg'] as $ext) {
                                                                 if (
@@ -357,14 +387,26 @@
                                                             }
                                                         @endphp
 
-                                                        @if ($fileExist)
-                                                            <a href="{{ route('participants.download', $submission->id_pc) }}"
-                                                                class="btn btn-sm btn-primary rounded-pill px-3 fw-bold text-white shadow-sm"
-                                                                style="font-size: 10px; background-color: #0d6efd; border: none;">
-                                                                <i class="mdi mdi-download me-1"></i> Download Certificate
-                                                            </a>
+                                                        @if ($canDownload)
+                                                            @if ($fileExist)
+                                                                <a href="{{ route('participants.download', $submission->id_pc) }}"
+                                                                    class="btn btn-sm btn-primary rounded-pill px-3 fw-bold text-white shadow-sm"
+                                                                    style="font-size: 10px; background-color: #0d6efd; border: none; display: inline-flex; align-items: center; gap: 4px;">
+                                                                    <i class="ri-download-2-line"></i> Download Certificate
+                                                                </a>
+                                                            @else
+                                                                <span
+                                                                    class="text-orange-500 small italic font-bold">Template
+                                                                    Not Found</span>
+                                                            @endif
                                                         @else
-                                                            <span class="text-danger small italic">Still Process</span>
+                                                            {{-- Pesan bantuan jika belum memenuhi syarat --}}
+                                                            @if ($isParticipant && $paymentSuccess && $submission->no_sertifikat == null)
+                                                                <span class="text-blue-500 text-[10px] italic">Generating
+                                                                    Certificate...</span>
+                                                            @else
+                                                                <span class="text-muted small">-</span>
+                                                            @endif
                                                         @endif
                                                     @else
                                                         <span class="text-muted small">-</span>

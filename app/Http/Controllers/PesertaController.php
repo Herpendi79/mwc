@@ -320,30 +320,20 @@ class PesertaController extends Controller
         if ($transaction_status === 'settlement') {
             // 1. Tentukan pola string tetap (suffix)
             $suffix = "/ICPIP-HE-I/CERTIF/VI/2026";
-
-            // 2. Cari pendaftar terakhir yang sudah memiliki nomor sertifikat dengan pola tersebut
-            // Kita urutkan berdasarkan no_sertifikat secara descending
             $lastRecord = PesertaConferences::where('no_sertifikat', 'like', '%' . $suffix)
                 ->orderBy('no_sertifikat', 'desc')
                 ->first();
 
             if ($lastRecord) {
-                // Ambil bagian nomor urut (sebelum tanda '/')
                 $parts = explode('/', $lastRecord->no_sertifikat);
                 $lastNumber = (int)$parts[0];
                 $nextNumber = $lastNumber + 1;
             } else {
-                // Jika belum ada peserta yang sukses, mulai dari 1
                 $nextNumber = 1;
             }
-
-            // 3. Format nomor urut menjadi 2 digit (misal: 01, 02, 10, dst)
             $formattedNumber = str_pad($nextNumber, 2, '0', STR_PAD_LEFT);
-
-            // 4. Gabungkan menjadi nomor sertifikat lengkap
             $no_sertifikat = $formattedNumber . $suffix;
 
-            // 5. Update data pendaftar
             $pendaftar->no_sertifikat = $no_sertifikat;
             $pendaftar->payment = 'success'; // Pastikan status pembayaran juga diperbarui
             $namaKategori = $pendaftar->kategori->nama_ktg;
