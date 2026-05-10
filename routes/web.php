@@ -155,7 +155,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('reviewer.registrantwaitvalid.list');
     Route::post('/reviewer/update-status/{id}/{sumber}', [App\Http\Controllers\ReviewerController::class, 'updateStatus'])
         ->name('reviewer.updateStatus');
-    Route::post('/reviewer/update-status-artikel/{id}', [App\Http\Controllers\ReviewerController::class, 'updateStatusArtikel'])
+    Route::post('/reviewer/update-status-artikel/{id}/{sumber}', [App\Http\Controllers\ReviewerController::class, 'updateStatusArtikel'])
         ->name('reviewer.updateStatusArtikel');
     Route::post('/reviewer/update-status-payment/{id}', [App\Http\Controllers\ReviewerController::class, 'updateStatusPayment'])
         ->name('reviewer.updateStatusPayment');

@@ -260,23 +260,40 @@ class ReviewerController extends Controller
     }
 
     //update status artikel (accepted atau revision)
-    public function updateStatusArtikel(Request $request, $id)
+    public function updateStatusArtikel(Request $request, $id, $sumber)
     {
-        $presenter = PesertaConferences::with(['peserta.user', 'kategori.conference'])->findOrFail($id);
+
+        if ($sumber === 'ADAKSI') {
+            $presenter = \App\Models\PesertaConferencesAdaksi::with(['user.anggota', 'kategori.conference'])
+                ->where('id_pca', $id)
+                ->firstOrFail();
+
+            $user = $presenter->user;
+            $nama_peserta = $user->anggota->nama_anggota ?? 'Participant';
+        } else {
+            $presenter = \App\Models\PesertaConferences::with(['peserta.user', 'kategori.conference'])
+                ->where('id_pc', $id)
+                ->firstOrFail();
+
+            $user = $presenter->peserta->user;
+            $nama_peserta = $presenter->peserta->nama ?? 'Participant';
+        }
+
+        if (!$user || !$user->email) {
+            Log::error("User/Email tidak ditemukan untuk ID: {$id} ({$sumber})");
+            return back()->with('error', 'User email not found. Notification failed.');
+        }
 
         $status = $request->input('status');
         $comment = $request->input('comment');
-        $user = $presenter->peserta->user;
-
         $nama_conference = $presenter->kategori->conference->nama_conf;
 
         if ($status === 'revision') {
-            // 1. Hapus file abstract lama
+            // Hapus file artikel lama
             if ($presenter->file_artikel) {
-                //$path = public_path('assets/file/submissions/' . $presenter->file_artikel);
                 $path = config('path.submissions') . $presenter->file_artikel;
-                if (File::exists($path)) {
-                    File::delete($path);
+                if (\Illuminate\Support\Facades\File::exists($path)) {
+                    \Illuminate\Support\Facades\File::delete($path);
                 }
             }
 
@@ -288,7 +305,7 @@ class ReviewerController extends Controller
             ]);
 
             $subject = "Revision Required: Full Paper Submission - " . $nama_conference;
-            $text = "Dear {$presenter->peserta->nama}, your full paper requires revision. Feedback: {$comment}";
+            $text = "Dear {$nama_peserta}, your full paper requires revision. Feedback: {$comment}";
         } else {
             // 1. Update Database ke Accepted
             $presenter->update([
@@ -296,7 +313,7 @@ class ReviewerController extends Controller
             ]);
 
             $subject = "Accepted: Full Paper Submission Notification - " . $nama_conference;
-            $text = "Congratulations {$presenter->peserta->nama}, your Full Paper has been accepted. Please wait the next information.";
+            $text = "Congratulations {$nama_peserta}, your Full Paper has been accepted. Please wait the next information.";
         }
 
         // --- INTEGRASI EMAIL API SERVICE ---
