@@ -214,9 +214,10 @@
                                                             @php
                                                                 $absStatus = strtolower($submission->status_abstract);
                                                                 $artStatus = strtolower($submission->status_artikel);
+                                                                $isPresenter = str_contains($submission->kategori->nama_ktg, 'presenter');
                                                             @endphp
 
-                                                            @if ($absStatus == null || $absStatus == 'revision required')
+                                                            @if ($isPresenter && ($absStatus == null || $absStatus == 'revision required'))
                                                                 {{-- Tombol Revisi Abstract aktif jika belum accepted --}}
                                                                 <button
                                                                     onclick="openRevisionModal('{{ $submission->id_pc }}')"
@@ -334,65 +335,67 @@
                                                         <span class="text-gray-400 text-xs">-</span>
                                                     @endif
                                                 </td>
-                                        
-                                        </td>
 
-                                        {{-- Kolom Certificate --}}
-                                        <td class="text-center">
-                                            @if ($submission && strtolower($submission->status_artikel) == 'accepted')
-                                                @php
-                                                    $confName = $conf->nama_conf;
-                                                    $templatePath = public_path('assets/file/sertifikat/');
+                                                </td>
 
-                                                    // Cek apakah ada file dengan nama conference tersebut (mendukung png, jpg, jpeg)
-                                                    $fileExist = false;
-                                                    foreach (['png', 'jpg', 'jpeg'] as $ext) {
-                                                        if (file_exists($templatePath . $confName . '.' . $ext)) {
-                                                            $fileExist = true;
-                                                            break;
-                                                        }
-                                                    }
-                                                @endphp
+                                                {{-- Kolom Certificate --}}
+                                                <td class="text-center">
+                                                    @if ($submission && strtolower($submission->status_artikel) == 'accepted')
+                                                        @php
+                                                            $confName = $conf->nama_conf;
+                                                            $templatePath = public_path('assets/file/sertifikat/');
 
-                                                @if ($fileExist)
-                                                    <a href="{{ route('participants.download', $submission->id_pc) }}"
-                                                        class="btn btn-sm btn-primary rounded-pill px-3 fw-bold text-white shadow-sm"
-                                                        style="font-size: 10px; background-color: #0d6efd; border: none;">
-                                                        <i class="mdi mdi-download me-1"></i> Download Certificate
-                                                    </a>
-                                                @else
-                                                    <span class="text-danger small italic">Still Process</span>
-                                                @endif
-                                            @else
-                                                <span class="text-muted small">-</span>
-                                            @endif
-                                        </td>
+                                                            // Cek apakah ada file dengan nama conference tersebut (mendukung png, jpg, jpeg)
+                                                            $fileExist = false;
+                                                            foreach (['png', 'jpg', 'jpeg'] as $ext) {
+                                                                if (
+                                                                    file_exists($templatePath . $confName . '.' . $ext)
+                                                                ) {
+                                                                    $fileExist = true;
+                                                                    break;
+                                                                }
+                                                            }
+                                                        @endphp
 
-                                        {{-- Kolom Action --}}
-                                        <td class="px-6 py-4 text-center">
-                                            @php
-                                                $isDeadlinePassed = \Carbon\Carbon::today()->greaterThan(
-                                                    \Carbon\Carbon::parse($conf->deadline_subm),
-                                                );
-                                                $canSubmit =
-                                                    !$isDeadlinePassed &&
-                                                    (!$submission || $submission->payment == 'expired');
-                                            @endphp
+                                                        @if ($fileExist)
+                                                            <a href="{{ route('participants.download', $submission->id_pc) }}"
+                                                                class="btn btn-sm btn-primary rounded-pill px-3 fw-bold text-white shadow-sm"
+                                                                style="font-size: 10px; background-color: #0d6efd; border: none;">
+                                                                <i class="mdi mdi-download me-1"></i> Download Certificate
+                                                            </a>
+                                                        @else
+                                                            <span class="text-danger small italic">Still Process</span>
+                                                        @endif
+                                                    @else
+                                                        <span class="text-muted small">-</span>
+                                                    @endif
+                                                </td>
 
-                                            @if ($canSubmit)
-                                                <a href="{{ url('/participants/submit/' . $conf->id_conf) }}"
-                                                    class="bg-[#c0f037] text-black font-bold py-2 px-4 rounded-xl text-xs">
-                                                    {{ $submission && $submission->payment == 'expired' ? 'Resubmit' : 'Submit' }}
-                                                </a>
-                                            @elseif ($isDeadlinePassed)
-                                                <button disabled
-                                                    class="bg-gray-100 text-gray-400 font-bold py-2 px-4 rounded-xl text-xs cursor-not-allowed">Closed</button>
-                                            @elseif ($submission && in_array($submission->payment, ['success', 'settlement', 'pending']))
-                                                <button disabled
-                                                    class="bg-gray-100 text-gray-400 font-bold py-2 px-4 rounded-xl text-xs cursor-not-allowed">Locked</button>
-                                            @endif
-                                        </td>
-                                        </tr>
+                                                {{-- Kolom Action --}}
+                                                <td class="px-6 py-4 text-center">
+                                                    @php
+                                                        $isDeadlinePassed = \Carbon\Carbon::today()->greaterThan(
+                                                            \Carbon\Carbon::parse($conf->deadline_subm),
+                                                        );
+                                                        $canSubmit =
+                                                            !$isDeadlinePassed &&
+                                                            (!$submission || $submission->payment == 'expired');
+                                                    @endphp
+
+                                                    @if ($canSubmit)
+                                                        <a href="{{ url('/participants/submit/' . $conf->id_conf) }}"
+                                                            class="bg-[#c0f037] text-black font-bold py-2 px-4 rounded-xl text-xs">
+                                                            {{ $submission && $submission->payment == 'expired' ? 'Resubmit' : 'Submit' }}
+                                                        </a>
+                                                    @elseif ($isDeadlinePassed)
+                                                        <button disabled
+                                                            class="bg-gray-100 text-gray-400 font-bold py-2 px-4 rounded-xl text-xs cursor-not-allowed">Closed</button>
+                                                    @elseif ($submission && in_array($submission->payment, ['success', 'settlement', 'pending']))
+                                                        <button disabled
+                                                            class="bg-gray-100 text-gray-400 font-bold py-2 px-4 rounded-xl text-xs cursor-not-allowed">Locked</button>
+                                                    @endif
+                                                </td>
+                                            </tr>
                                         @empty
                                             <tr>
                                                 {{-- UPDATED COLSPAN: 11 --}}
@@ -400,117 +403,117 @@
                                                     No conferences available.
                                                 </td>
                                             </tr>
-                                            @endforelse
-                                        </tbody>
-                                    </table>
-                                    <!-- Modal Revision Abstract -->
-                                    <div id="modal-revision" class="fixed inset-0 z-[9999] hidden overflow-y-auto">
-                                        <!-- Overlay -->
-                                        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"></div>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                                <!-- Modal Revision Abstract -->
+                                <div id="modal-revision" class="fixed inset-0 z-[9999] hidden overflow-y-auto">
+                                    <!-- Overlay -->
+                                    <div class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"></div>
 
-                                        <div class="flex min-h-full items-center justify-center p-4">
-                                            <div
-                                                class="relative w-full max-w-lg transform overflow-hidden rounded-3xl bg-white dark:bg-zinc-900 p-8 shadow-2xl transition-all">
-                                                <!-- Header -->
-                                                <div class="mb-6 flex items-center justify-between">
-                                                    <h3 class="text-xl font-bold dark:text-white">Submit Revised Abstract</h3>
-                                                    <button onclick="closeRevisionModal()"
-                                                        class="text-gray-400 hover:text-gray-600 dark:hover:text-white">
-                                                        <i class="ri-close-line text-2xl"></i>
-                                                    </button>
+                                    <div class="flex min-h-full items-center justify-center p-4">
+                                        <div
+                                            class="relative w-full max-w-lg transform overflow-hidden rounded-3xl bg-white dark:bg-zinc-900 p-8 shadow-2xl transition-all">
+                                            <!-- Header -->
+                                            <div class="mb-6 flex items-center justify-between">
+                                                <h3 class="text-xl font-bold dark:text-white">Submit Revised Abstract</h3>
+                                                <button onclick="closeRevisionModal()"
+                                                    class="text-gray-400 hover:text-gray-600 dark:hover:text-white">
+                                                    <i class="ri-close-line text-2xl"></i>
+                                                </button>
+                                            </div>
+
+                                            <!-- Form -->
+                                            <form id="form-revision" method="POST" enctype="multipart/form-data">
+                                                @csrf
+                                                <div class="space-y-4">
+                                                    <div>
+                                                        <label
+                                                            class="mb-2 block text-sm font-bold text-gray-700 dark:text-gray-300">New
+                                                            Abstract File</label>
+                                                        <input type="file" name="file_abstract" required
+                                                            class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none transition-all focus:ring-2 focus:ring-[#c0f037] dark:border-zinc-700 dark:bg-zinc-800 dark:text-white">
+                                                        <p class="mt-2 text-[10px] text-gray-500">Format: PDF, DOC, or DOCX
+                                                            (Max 2MB). Uploading a new file will replace your previous
+                                                            abstract.</p>
+                                                    </div>
                                                 </div>
 
-                                                <!-- Form -->
-                                                <form id="form-revision" method="POST" enctype="multipart/form-data">
-                                                    @csrf
-                                                    <div class="space-y-4">
-                                                        <div>
-                                                            <label
-                                                                class="mb-2 block text-sm font-bold text-gray-700 dark:text-gray-300">New
-                                                                Abstract File</label>
-                                                            <input type="file" name="file_abstract" required
-                                                                class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none transition-all focus:ring-2 focus:ring-[#c0f037] dark:border-zinc-700 dark:bg-zinc-800 dark:text-white">
-                                                            <p class="mt-2 text-[10px] text-gray-500">Format: PDF, DOC, or DOCX
-                                                                (Max 2MB). Uploading a new file will replace your previous
-                                                                abstract.</p>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="mt-8 flex gap-3">
-                                                        <button type="button" onclick="closeRevisionModal()"
-                                                            class="flex-1 rounded-xl border border-gray-200 py-3 text-sm font-bold text-gray-600 hover:bg-gray-50 dark:border-zinc-700 dark:text-gray-400 dark:hover:bg-zinc-800">
-                                                            Cancel
-                                                        </button>
-                                                        <button type="submit"
-                                                            class="flex-1 rounded-xl bg-[#c0f037] py-3 text-sm font-bold text-black shadow-lg shadow-[#c0f037]/20 hover:opacity-90">
-                                                            <i class="ri-upload-cloud-2-line mr-1"></i> Submit Revision
-                                                        </button>
-                                                    </div>
-                                                </form>
-                                            </div>
+                                                <div class="mt-8 flex gap-3">
+                                                    <button type="button" onclick="closeRevisionModal()"
+                                                        class="flex-1 rounded-xl border border-gray-200 py-3 text-sm font-bold text-gray-600 hover:bg-gray-50 dark:border-zinc-700 dark:text-gray-400 dark:hover:bg-zinc-800">
+                                                        Cancel
+                                                    </button>
+                                                    <button type="submit"
+                                                        class="flex-1 rounded-xl bg-[#c0f037] py-3 text-sm font-bold text-black shadow-lg shadow-[#c0f037]/20 hover:opacity-90">
+                                                        <i class="ri-upload-cloud-2-line mr-1"></i> Submit Revision
+                                                    </button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
-                                    <!-- Modal full artikel -->
-                                    <div id="modal-article" class="fixed inset-0 z-[9999] hidden overflow-y-auto">
-                                        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"></div>
-                                        <div class="flex min-h-full items-center justify-center p-4">
-                                            <div
-                                                class="relative w-full max-w-lg transform overflow-hidden rounded-3xl bg-white dark:bg-zinc-900 p-8 shadow-2xl transition-all">
-                                                <div class="mb-6 flex items-center justify-between">
-                                                    <h3 class="text-xl font-bold dark:text-white">Upload Full Article</h3>
-                                                    <button onclick="closeArticleModal()"
-                                                        class="text-gray-400 hover:text-gray-600 dark:hover:text-white">
-                                                        <i class="ri-close-line text-2xl"></i>
-                                                    </button>
+                                </div>
+                                <!-- Modal full artikel -->
+                                <div id="modal-article" class="fixed inset-0 z-[9999] hidden overflow-y-auto">
+                                    <div class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"></div>
+                                    <div class="flex min-h-full items-center justify-center p-4">
+                                        <div
+                                            class="relative w-full max-w-lg transform overflow-hidden rounded-3xl bg-white dark:bg-zinc-900 p-8 shadow-2xl transition-all">
+                                            <div class="mb-6 flex items-center justify-between">
+                                                <h3 class="text-xl font-bold dark:text-white">Upload Full Article</h3>
+                                                <button onclick="closeArticleModal()"
+                                                    class="text-gray-400 hover:text-gray-600 dark:hover:text-white">
+                                                    <i class="ri-close-line text-2xl"></i>
+                                                </button>
+                                            </div>
+
+                                            <form id="form-article" method="POST" enctype="multipart/form-data">
+                                                @csrf
+                                                <div class="space-y-4">
+                                                    <div
+                                                        class="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-2xl mb-4">
+                                                        <p
+                                                            class="text-xs text-blue-600 dark:text-blue-400 leading-relaxed">
+                                                            <i class="ri-information-line mr-1"></i>
+                                                            Make sure your article follows the target journal template.
+                                                            Status will change to <strong>Waiting Review</strong> after
+                                                            upload.
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <label
+                                                            class="mb-2 block text-sm font-bold text-gray-700 dark:text-gray-300">Full
+                                                            Article File (PDF/DOCX Max 2MB)</label>
+                                                        <input type="file" name="file_artikel" required
+                                                            class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none transition-all focus:ring-2 focus:ring-[#c0f037] dark:border-zinc-700 dark:bg-zinc-800 dark:text-white">
+                                                    </div>
                                                 </div>
 
-                                                <form id="form-article" method="POST" enctype="multipart/form-data">
-                                                    @csrf
-                                                    <div class="space-y-4">
-                                                        <div
-                                                            class="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-2xl mb-4">
-                                                            <p
-                                                                class="text-xs text-blue-600 dark:text-blue-400 leading-relaxed">
-                                                                <i class="ri-information-line mr-1"></i>
-                                                                Make sure your article follows the target journal template.
-                                                                Status will change to <strong>Waiting Review</strong> after
-                                                                upload.
-                                                            </p>
-                                                        </div>
-                                                        <div>
-                                                            <label
-                                                                class="mb-2 block text-sm font-bold text-gray-700 dark:text-gray-300">Full
-                                                                Article File (PDF/DOCX Max 2MB)</label>
-                                                            <input type="file" name="file_artikel" required
-                                                                class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none transition-all focus:ring-2 focus:ring-[#c0f037] dark:border-zinc-700 dark:bg-zinc-800 dark:text-white">
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="mt-8 flex gap-3">
-                                                        <button type="button" onclick="closeArticleModal()"
-                                                            class="flex-1 rounded-xl border border-gray-200 py-3 text-sm font-bold text-gray-600 hover:bg-gray-50 dark:border-zinc-700 dark:text-gray-400 dark:hover:bg-zinc-800">
-                                                            Cancel
-                                                        </button>
-                                                        <button type="submit"
-                                                            class="flex-1 rounded-xl bg-red-500 py-3 text-sm font-bold text-white shadow-lg shadow-red-500/20 hover:bg-red-600">
-                                                            <i class="ri-upload-cloud-2-line mr-1"></i> Submit Article
-                                                        </button>
-                                                    </div>
-                                                </form>
-                                            </div>
+                                                <div class="mt-8 flex gap-3">
+                                                    <button type="button" onclick="closeArticleModal()"
+                                                        class="flex-1 rounded-xl border border-gray-200 py-3 text-sm font-bold text-gray-600 hover:bg-gray-50 dark:border-zinc-700 dark:text-gray-400 dark:hover:bg-zinc-800">
+                                                        Cancel
+                                                    </button>
+                                                    <button type="submit"
+                                                        class="flex-1 rounded-xl bg-red-500 py-3 text-sm font-bold text-white shadow-lg shadow-red-500/20 hover:bg-red-600">
+                                                        <i class="ri-upload-cloud-2-line mr-1"></i> Submit Article
+                                                    </button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        {{-- Footer dipanggil di dalam container agar sejajar di bawah --}}
-                        @include('participants.partials._footer')
                     </div>
-                </main>
-            </div>
+
+                    {{-- Footer dipanggil di dalam container agar sejajar di bawah --}}
+                    @include('participants.partials._footer')
+                </div>
+            </main>
         </div>
-    @endsection
+    </div>
+@endsection
 
 @section('scripts')
     <script src="{{ asset('assets/js/dark-mode.js') }}" defer></script>
