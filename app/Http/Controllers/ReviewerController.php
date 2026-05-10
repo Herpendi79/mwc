@@ -227,7 +227,7 @@ class ReviewerController extends Controller
             ]);
 
             $subject = "Revision Required: Abstract Submission - " . $nama_conference;
-            $text = "Dear {$presenter->peserta->nama}, your abstract requires revision. Feedback: {$comment}";
+            $text = "Dear {$nama_peserta}, your abstract requires revision. Feedback: {$comment}";
         } else {
             // 1. Update Database ke Accepted
             $presenter->update([
@@ -235,7 +235,7 @@ class ReviewerController extends Controller
             ]);
 
             $subject = "Accepted: Abstract Submission Notification - " . $nama_conference;
-            $text = "Congratulations {$presenter->peserta->nama}, your abstract has been accepted. Please upload your full paper.";
+            $text = "Congratulations {$nama_peserta}, your abstract has been accepted. Please upload your full paper.";
         }
 
         // --- INTEGRASI EMAIL API SERVICE ---
