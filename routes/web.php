@@ -197,7 +197,7 @@ Route::get('submit/payment/{snapToken}', function ($snapToken) {
     $currentPesertaId = Auth::user()->peserta->id ?? null;
 
     // 2. PERBAIKAN: Bandingkan dengan kolom id_peserta di data pendaftaran
-    if ($currentPesertaId !== $anggota->id) {
+    if ($currentPesertaId != $anggota->id) {
         Log::warning("Akses ditolak: User " . Auth::id() . " (Peserta ID: $currentPesertaId) mencoba mengakses invoice milik Peserta ID: " . $anggota->id);
         abort(403, 'Unauthorized action. This invoice does not belong to you.');
     }

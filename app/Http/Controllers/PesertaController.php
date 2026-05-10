@@ -69,14 +69,26 @@ class PesertaController extends Controller
         if ($today->greaterThan(\Carbon\Carbon::parse($conference->deadline_subm))) {
             return redirect()->route('participants.conferences')->with('error', 'Submission deadline has passed.');
         }
+        $user = Auth::user();
+        $negaraPeserta = 'Indonesia'; // Default
+        if ($user && $user->peserta) {
+            $negaraPeserta = $user->peserta->negara;
+        }
 
-        // Ambil daftar kategori yang HANYA berelasi dengan id_conf ini
-        $kategoris = Kategori::where('id_conf', $id_conf)->get();
+        $queryKategori = Kategori::where('id_conf', $id_conf);
 
-        // --- TAMBAHKAN BARIS INI ---
+        if (strtolower($negaraPeserta) !== 'indonesia') {
+            // Jika bukan orang Indonesia, hanya tampilkan kategori International
+            $queryKategori->where('domisili', 'international');
+        } else {
+            // Jika orang Indonesia, tampilkan semua kategori (atau bisa difilter hanya domestic saja)
+            // Umumnya domestik tetap bisa melihat international, tapi jika ingin eksklusif:
+            $queryKategori->where('domisili', '!=', 'international');
+        }
+
+        $kategoris = $queryKategori->get();
         $publikasis = Publikasi::all();
 
-        // Masukkan $publikasis ke dalam compact
         return view('participants.submit', compact('conference', 'kategoris', 'publikasis'));
     }
 

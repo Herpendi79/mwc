@@ -287,18 +287,14 @@
                                                 {{-- Kolom Payment Note --}}
                                                 <td class="px-6 py-4">
                                                     @if ($submission)
-                                                        {{-- 1. Cek jika ada bukti transfer (Prioritas untuk International/Manual) --}}
+                                                        {{-- 1. Kondisi: Sudah Upload Bukti Manual (Menunggu Validasi) --}}
                                                         @if ($submission->file_bukti_tf != null && $submission->payment == 'pending')
                                                             <div class="flex flex-col gap-2">
-                                                                {{-- Tombol Lihat Bukti --}}
                                                                 <a href="{{ asset(config('path.submissions_url') . $submission->file_bukti_tf) }}"
                                                                     target="_blank"
                                                                     class="inline-flex items-center text-[10px] font-bold text-blue-600 hover:text-blue-800 transition-colors">
-                                                                    <i class="ri-file-search-line mr-1"></i> View
-                                                                    Receipt
+                                                                    <i class="ri-file-search-line mr-1"></i> View Receipt
                                                                 </a>
-
-                                                                {{-- Status Box --}}
                                                                 <div
                                                                     class="text-[10px] leading-tight text-orange-600 bg-orange-100 p-2 rounded-lg border border-orange-200">
                                                                     <i class="ri-time-line mr-1"></i> Waiting for
@@ -306,38 +302,38 @@
                                                                 </div>
                                                             </div>
 
-                                                            {{-- 2. Status Pending (Belum bayar Midtrans & Belum upload bukti manual) --}}
-                                                        @elseif ($submission->payment == 'pending')
-
+                                                            {{-- 2. Kondisi: Belum Bayar (Tampilkan Tombol Bayar Midtrans) --}}
                                                         @elseif ($submission->payment == 'pending')
                                                             <a href="{{ url('submit/payment/' . $submission->snap) }}"
                                                                 class="inline-flex items-center justify-center w-full px-4 py-2 text-[11px] font-bold text-white bg-orange-500 hover:bg-orange-600 rounded-lg shadow-sm transition-all active:scale-95">
-                                                                <i class="ri-wallet-3-line mr-2 text-sm"></i>
-                                                                COMPLETE PAYMENT
+                                                                <i class="ri-wallet-3-line mr-2 text-sm"></i> COMPLETE
+                                                                PAYMENT
                                                             </a>
+
+                                                            {{-- 3. Kondisi: Pembayaran Expired --}}
+                                                        @elseif ($submission->payment == 'expired')
+                                                            <div
+                                                                class="text-[10px] leading-tight text-red-600 bg-red-100 p-2 rounded-lg border border-red-200">
+                                                                <i class="ri-error-warning-line mr-1"></i> Payment expired.
+                                                            </div>
+
+                                                            {{-- 4. Kondisi: Pembayaran Berhasil (Verified) --}}
+                                                        @elseif (in_array($submission->payment, ['settlement', 'success', 'capture']))
+                                                            <span
+                                                                class="px-2 py-1 bg-green-500/10 text-green-500 text-[10px] font-bold rounded-full uppercase">
+                                                                <i class="ri-checkbox-circle-line mr-1"></i> Verified
+                                                            </span>
+
+                                                            {{-- 5. Kondisi Lain (Cancel/Deny) --}}
+                                                        @else
+                                                            <span class="text-gray-400 text-xs">-</span>
                                                         @endif
-
-                                                        {{-- 3. Status Expired --}}
-                                                    @elseif ($submission->payment == 'expired')
-                                                        <div
-                                                            class="text-[10px] leading-tight text-red-600 bg-red-100 p-2 rounded-lg border border-red-200">
-                                                            <i class="ri-error-warning-line mr-1"></i> Payment expired.
-                                                        </div>
-
-                                                        {{-- 4. Status Berhasil (Settlement/Success/Capture) --}}
-                                                    @elseif (in_array($submission->payment, ['settlement', 'success', 'capture']))
-                                                        <span
-                                                            class="px-2 py-1 bg-green-500/10 text-green-500 text-[10px] font-bold rounded-full uppercase">
-                                                            Verified
-                                                        </span>
-
-                                                        {{-- 5. Jika ada status lain (misal: Deny/Cancel) --}}
                                                     @else
+                                                        {{-- Jika tidak ada submission --}}
                                                         <span class="text-gray-400 text-xs">-</span>
                                                     @endif
-                                                @else
-                                                    <span class="text-gray-400 text-xs">-</span>
-                                        @endif
+                                                </td>
+                                        
                                         </td>
 
                                         {{-- Kolom Certificate --}}
