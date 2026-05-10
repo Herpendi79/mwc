@@ -6,9 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Peserta;
 use App\Models\Publikasi;
 use App\Models\Conferences;
+use App\Models\PesertaConferences;
+use App\Models\PesertaConferencesAdaksi;
 use App\Models\Kategori; // Pastikan Model Kategori di-import
 use App\Models\MonitoringParticipant;
-use App\Models\PesertaConferences;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -180,11 +181,31 @@ class ReviewerController extends Controller
     // Fungsi untuk update status abstract (revision atau accepted)
     public function updateStatus(Request $request, $id, $sumber)
     {
-        $presenter = PesertaConferences::with(['peserta.user', 'kategori.conference'])->findOrFail($id);
+        if ($sumber === 'ADAKSI') {
+            // Menggunakan id_pca untuk tabel Adaksi
+            $presenter = PesertaConferencesAdaksi::with(['user.anggota', 'kategori.conference'])
+                ->where('id_pca', $id)
+                ->firstOrFail();
+
+            // Ambil info user & nama (Relasi Adaksi: PCA -> User -> Anggota)
+            $user = $presenter->user;
+            $nama_peserta = $presenter->user->anggota->nama_anggota ?? 'Participant';
+        } else {
+            // Menggunakan id_pc untuk tabel Umum
+            $presenter = PesertaConferences::with(['peserta.user', 'kategori.conference'])
+                ->where('id_pc', $id)
+                ->firstOrFail();
+
+            // Ambil info user & nama (Relasi Umum: PC -> Peserta -> User)
+            $user = $presenter->peserta->user;
+            $nama_peserta = $presenter->peserta->nama ?? 'Participant';
+        }
+
+        //$presenter = PesertaConferences::with(['peserta.user', 'kategori.conference'])->findOrFail($id);
 
         $status = $request->input('status');
         $comment = $request->input('comment');
-        $user = $presenter->peserta->user;
+        //$user = $presenter->peserta->user;
 
         $nama_conference = $presenter->kategori->conference->nama_conf;
 
