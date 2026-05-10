@@ -188,8 +188,8 @@ class ReviewerController extends Controller
                 ->firstOrFail();
 
             // Ambil info user & nama (Relasi Adaksi: PCA -> User -> Anggota)
-            $user = $presenter->user;
-            $nama_peserta = $presenter->user->anggota->nama_anggota ?? 'Participant';
+            $user = $presenter->user; // Mengambil objek User
+            $nama_peserta = $user->anggota->nama_anggota ?? 'Participant';
         } else {
             // Menggunakan id_pc untuk tabel Umum
             $presenter = PesertaConferences::with(['peserta.user', 'kategori.conference'])
@@ -201,7 +201,10 @@ class ReviewerController extends Controller
             $nama_peserta = $presenter->peserta->nama ?? 'Participant';
         }
 
-        //$presenter = PesertaConferences::with(['peserta.user', 'kategori.conference'])->findOrFail($id);
+        if (!$user || !$user->email) {
+            Log::error("User atau Email tidak ditemukan untuk ID: {$id} pada sumber: {$sumber}");
+            return back()->with('error', 'User email not found. Status updated in database, but notification failed.');
+        }
 
         $status = $request->input('status');
         $comment = $request->input('comment');
