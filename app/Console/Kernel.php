@@ -17,7 +17,8 @@ class Kernel extends ConsoleKernel
     {
         Log::info('Schedule ran at: ' . now()); // ← Tambahkan baris ini
 
-        $schedule->command('queue:work --queue=conference --stop-when-empty')->everyMinute();
+        $schedule->command('queue:work --queue=conference --stop-when-empty --tries=3')
+            ->everyMinute();
     }
 
 
