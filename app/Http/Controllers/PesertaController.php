@@ -8,6 +8,7 @@ use App\Models\Publikasi;
 use App\Models\Conferences;
 use App\Models\Kategori; // Pastikan Model Kategori di-import
 use App\Models\PesertaConferences;
+use App\Models\PesertaConferencesAdaksi; // Import model Adaksi jika diperlukan
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -382,8 +383,17 @@ class PesertaController extends Controller
             }
         } elseif (in_array(strtolower($transaction_status), ['expire', 'expired'])) {
             $pendaftar = PesertaConferences::where('order_id', $order_id)->first();
-            $pendaftar->payment = 'expired'; // Pastikan status pembayaran juga diperbarui
-            $pendaftar->save();
+            //$pendaftar->payment = 'expired'; // Pastikan status pembayaran juga diperbarui
+            //$pendaftar->save();
+            if (!$pendaftar) {
+                $pendaftar = PesertaConferencesAdaksi::where('order_id', $order_id)->first();
+            }
+
+            // 3. Eksekusi penghapusan jika data ditemukan
+            if ($pendaftar) {
+                $pendaftar->delete();
+                Log::info("Data pendaftaran dengan Order ID: {$order_id} telah dihapus karena status pembayaran Expired.");
+            }
 
             Log::info('Pendaftaran expired', ['order_id' => $order_id]);
         }
