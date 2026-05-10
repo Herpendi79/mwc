@@ -243,7 +243,7 @@ class PesertaController extends Controller
             $randomNumber = str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
             $order_id = "INV-ICPIP-{$typeCode}-{$today}-{$randomNumber}";
 
-            $durationInMinutes = 180;
+            $durationInMinutes = 1;
 
             \Midtrans\Config::$serverKey = config('midtrans.serverKey');
             \Midtrans\Config::$isProduction = config('midtrans.isProduction');
