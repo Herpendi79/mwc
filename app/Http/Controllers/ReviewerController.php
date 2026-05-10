@@ -183,14 +183,12 @@ class ReviewerController extends Controller
     {
         if ($sumber === 'ADAKSI') {
             // Menggunakan id_pca untuk tabel Adaksi
-            $presenter = PesertaConferencesAdaksi::with(['user.anggota', 'kategori.conference'])
+            $presenter = \App\Models\PesertaConferencesAdaksi::with(['user.anggota', 'kategori.conference'])
                 ->where('id_pca', $id)
                 ->firstOrFail();
-            dd($presenter->toArray());
 
             // Ambil info user & nama (Relasi Adaksi: PCA -> User -> Anggota)
-            $user = $presenter->user; // Mengambil objek User
-            dd($user);
+            $user = $presenter->user;
             $nama_peserta = $user->anggota->nama_anggota ?? 'Participant';
         } else {
             // Menggunakan id_pc untuk tabel Umum

@@ -35,8 +35,8 @@ class PesertaConferencesAdaksi extends Model
      */
     public function user()
     {
-        // Relasi ke tabel users melalui kolom id_user
-        return $this->belongsTo(User::class, 'id_user', 'id');
+        // Arahkan ke model User khusus ADAKSI
+        return $this->belongsTo(UserAdaksi::class, 'id_user', 'id_user');
     }
 
     /**
