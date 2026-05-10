@@ -214,7 +214,7 @@
                         <div class="w-full max-w-[280px]">
                             <div class="overflow-hidden rounded-2xl relative bg-[#6AC3FF] group" data-sal="slide-up"
                                 data-sal-duration="800" data-sal-delay="200">
-                                <img src="{{ asset('assets/images/speakers/fasli.jpg') }}" alt="Prof. Dr. H. Fasli Jalal"
+                                <img src="{{ asset('assets/images/speakers/fasli4.jpg') }}" alt="Prof. Dr. H. Fasli Jalal"
                                     class="w-full h-auto object-cover">
                                 <div
                                     class="bg-white dark:bg-black border rounded-xl p-4 overflow-hidden absolute bottom-4 left-1/2 transform -translate-x-1/2 w-[92%] h-24 group-hover:h-44 transition-all duration-500 shadow-lg">
