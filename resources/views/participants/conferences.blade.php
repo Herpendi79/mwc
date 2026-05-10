@@ -216,7 +216,8 @@
                                                                 $artStatus = strtolower($submission->status_artikel);
                                                             @endphp
 
-                                                            @if ($absStatus == 'revision required')
+                                                            @if ($absStatus == null || $absStatus == 'revision required')
+                                                                {{-- Tombol Revisi Abstract aktif jika belum accepted --}}
                                                                 <button
                                                                     onclick="openRevisionModal('{{ $submission->id_pc }}')"
                                                                     class="bg-orange-500 text-white text-[9px] px-2 py-1 rounded-md font-bold uppercase">Revision
