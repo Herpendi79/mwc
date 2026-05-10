@@ -510,7 +510,7 @@ class PesertaController extends Controller
 
         // 4. Konfigurasi Teks
         $color = imagecolorallocate($image, 0, 0, 0);
-        $fontPath = public_path('assets/fonts/arial.ttf');
+        $fontPath = public_path('assets/fonts/ARIAL.TTF');
 
         if (!file_exists($fontPath)) {
             return redirect()->back()->with('error', 'Font arial.ttf is not found.');
