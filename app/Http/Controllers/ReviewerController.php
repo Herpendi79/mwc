@@ -318,7 +318,7 @@ class ReviewerController extends Controller
 
         // --- INTEGRASI EMAIL API SERVICE ---
         $html = view('emails.review_artikel', [
-            'nama'    => $presenter->peserta->nama,
+            'nama'    => $nama_peserta,
             'status'  => $status,
             'comment' => $comment,
         ])->render();
