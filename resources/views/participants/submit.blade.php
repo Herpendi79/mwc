@@ -74,6 +74,28 @@
                                 </select>
                             </div>
 
+                            <div id="international_field" class="hidden space-y-4">
+                                <div
+                                    class="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl">
+                                    <h5 class="text-sm font-bold text-blue-700 dark:text-blue-400 mb-2 italic">International
+                                        Transfer Information:</h5>
+                                    <p class="text-xs text-blue-600 dark:text-blue-300">
+                                        Swift code / BIC: <b>JAGBIDJA</b><br>
+                                        Bank Account: <b>100968716043</b><br>
+                                        Name: <b>Herfia Rhomadhona</b>
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Transfer
+                                        Receipt (Evidence of Payment)</label>
+                                    <input type="file" name="file_bukti_tf" id="input_bukti_tf"
+                                        class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl px-5 py-3 dark:text-white">
+                                    <p class="text-[10px] text-gray-500 mt-2 italic">*Required for International categories.
+                                        Format: JPG/PNG/PDF (Max 2MB)</p>
+                                </div>
+                            </div>
+
                             <!-- Target Publication (KONDISIONAL: Muncul jika Presenter) -->
                             <div id="publication_field" class="hidden">
                                 <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Target
@@ -97,7 +119,7 @@
                             <!-- Upload KP (Conditional for Students) -->
                             <div id="student_card_field" class="hidden">
                                 <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Upload Student
-                                    Card (KP)</label>
+                                    Card</label>
                                 <input type="file" name="file_kp" id="input_kp"
                                     class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl px-5 py-3 dark:text-white">
                                 <p class="text-xs text-gray-500 mt-2">Required for student categories. (PDF/JPG/PNG, Max
@@ -142,13 +164,34 @@
             const inputKp = document.getElementById('input_kp');
             const inputAbstract = document.getElementById('input_abstract');
             const inputPub = document.getElementById('id_pub');
+            const profileBtn = document.getElementById('profile-menu-button');
+            const profileDropdown = document.getElementById('profile-dropdown');
+
+            if (profileBtn && profileDropdown) {
+                profileBtn.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Mencegah event bubbling
+                    profileDropdown.classList.toggle('hidden');
+                });
+
+                // Menutup dropdown jika klik di luar area profile
+                window.addEventListener('click', function(e) {
+                    if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
+                        profileDropdown.classList.add('hidden');
+                    }
+                });
+            }
 
             selectKategori.addEventListener('change', function() {
                 const selectedOption = this.options[this.selectedIndex];
-                const namaKategori = selectedOption.getAttribute('data-nama') || '';
+                // Ambil data-nama dan ubah ke huruf kecil semua untuk pengecekan
+                const namaKategori = (selectedOption.getAttribute('data-nama') || '').toLowerCase();
 
-                // 1. Logika Student
-                if (namaKategori.includes('Student')) {
+                // Elemen baru
+                const internationalField = document.getElementById('international_field');
+                const inputBukti = document.getElementById('input_bukti_tf');
+
+                // 1. Logika Student (Cek kata 'student' dalam huruf kecil)
+                if (namaKategori.includes('student')) {
                     studentField.classList.remove('hidden');
                     inputKp.setAttribute('required', 'required');
                 } else {
@@ -157,19 +200,28 @@
                 }
 
                 // 2. Logika Presenter vs Participant
-                if (namaKategori.includes('Presenter')) {
-                    // Tampilkan field publikasi & abstrak
+                if (namaKategori.includes('presenter')) {
                     pubField.classList.remove('hidden');
                     abstractField.classList.remove('hidden');
-
                     inputAbstract.setAttribute('required', 'required');
-                } else if (namaKategori.includes('Participant')) {
-                    // Sembunyikan field publikasi & abstrak
+                } else if (namaKategori.includes('participant')) {
                     pubField.classList.add('hidden');
                     abstractField.classList.add('hidden');
-
                     inputAbstract.removeAttribute('required');
-                    inputPub.value = ""; // Reset pilihan publikasi
+                    inputPub.value = "";
+                } else {
+                    // Jika belum pilih apa-apa, sembunyikan semua
+                    pubField.classList.add('hidden');
+                    abstractField.classList.add('hidden');
+                }
+
+                // 3. Logika International
+                if (namaKategori.includes('international')) {
+                    internationalField.classList.remove('hidden');
+                    inputBukti.setAttribute('required', 'required');
+                } else {
+                    internationalField.classList.add('hidden');
+                    inputBukti.removeAttribute('required');
                 }
             });
         });

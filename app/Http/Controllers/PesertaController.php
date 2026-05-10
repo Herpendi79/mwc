@@ -37,12 +37,11 @@ class PesertaController extends Controller
             'submission' => $latestSubmission,
             'totalPeserta' => $totalPeserta
         ]);
-
     }
 
     public function conferences()
     {
-        $conferences = Conferences::orderBy('tgl_mulai', 'asc')->get();
+        $conferences = Conferences::orderBy('tgl_mulai', 'desc')->get();
         $today = \Carbon\Carbon::today();
 
         /** @var \App\Models\User $user */
@@ -86,6 +85,7 @@ class PesertaController extends Controller
         // 1. Ambil data kategori di awal untuk menentukan logika validasi
         $kategori = Kategori::with('conference')->findOrFail($request->id_ktg);
         $conference = $kategori->conference;
+        $isInternational = Str::contains(strtolower($kategori->nama_ktg), 'international');
 
         if (!$conference) {
             return redirect()->back()->with('error', 'Conference data not found for this category.');
@@ -111,6 +111,10 @@ class PesertaController extends Controller
             $rules['file_kp'] = 'required|file|mimes:jpg,jpeg,png,pdf|max:2048';
         }
 
+        if ($isInternational) {
+            $rules['file_bukti_tf'] = 'required|file|mimes:jpg,jpeg,png,pdf|max:2048';
+        }
+
         $request->validate($rules);
 
         Log::info('Memulai proses storeSubmission untuk User ID: ' . Auth::id());
@@ -121,7 +125,10 @@ class PesertaController extends Controller
             $userId = Auth::id();
 
             // 3. Proses Folder & Upload File
-            $path = public_path('assets/file/submissions/');
+            //$path = public_path('../public_html/file/');
+            //$path = public_path('../../public_html/uploads/file/submissions');
+            
+            $path = config('path.submissions');
             if (!file_exists($path)) {
                 mkdir($path, 0777, true);
             }
@@ -138,6 +145,12 @@ class PesertaController extends Controller
                 $request->file_kp->move($path, $fileKP);
             }
 
+            $fileBukti = null;
+            if ($request->hasFile('file_bukti_tf')) {
+                $fileBukti = time() . '_tf_' . $userId . '.' . $request->file_bukti_tf->extension();
+                $request->file_bukti_tf->move($path, $fileBukti);
+            }
+
             // 4. Logika Simpan Data
             $id_conf = $kategori->id_conf;
             $submission = PesertaConferences::where('id', $peserta->id)
@@ -151,6 +164,7 @@ class PesertaController extends Controller
                 'id_pub'        => $request->id_pub, // Nilai ini akan null jika bukan presenter (sesuai input hidden/select)
                 'file_abstract' => $fileAbstract,
                 'file_kp'       => $fileKP,
+                'file_bukti_tf'    => $fileBukti,
                 'payment'       => 'pending',
             ];
 
@@ -161,10 +175,51 @@ class PesertaController extends Controller
                 $submission = PesertaConferences::create($dataSave);
             }
 
+            // 4. LOGIKA PERCABANGAN PEMBAYARAN
+            if ($isInternational) {
+                // KIRIM EMAIL WAITING VALIDATION
+                $isPresenter = Str::contains($kategori->nama_ktg, 'Presenter');
+                $viewEmail = $isPresenter ? 'emails.waiting_validation' : 'emails.waiting_validation_participant';
+
+                $html = view($viewEmail, [
+                    'nama' => $peserta->nama,
+                    'kategori' => $peserta->kategori,
+                    'nama_conference' => $conference->nama_conf
+                ])->render();
+
+                EmailApiService::send($user->email, "Payment Waiting Validation - " . $conference->nama_conf, "Please wait for admin validation.", $html);
+
+                return redirect()->route('participants.conferences')->with('success', 'Registration successful. Please wait for admin to validate your payment.');
+            }
+
             // 5. Konfigurasi Midtrans (Tetap sama)
+
+            $namaKtg = strtolower($kategori->nama_ktg);
             $today = now()->format('Ymd');
+
+            // 1. Tentukan Prefix Awal (Offline/Online)
+            $mode = str_contains($namaKtg, 'online') ? 'ON' : 'OF';
+
+            // 2. Tentukan Kode Peran (Student Presenter, Presenter, atau Participant)
+            $role = '';
+            if (str_contains($namaKtg, 'student presenter')) {
+                $role = 'SP';
+            } elseif (str_contains($namaKtg, 'presenter')) {
+                $role = 'PR';
+            } elseif (str_contains($namaKtg, 'participant')) {
+                $role = 'PA';
+            }
+
+            // 3. Tentukan Region (Domestic/International)
+            $region = str_contains($namaKtg, 'international') ? 'I' : 'D';
+
+            // 4. Gabungkan menjadi Kode Invoice
+            // ICPIP adalah kode statis Anda, mode+role+region digabung
+            $typeCode = $mode . $role . $region;
+
             $randomNumber = str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
-            $order_id = "INV-ICPIP-HE-{$today}-{$randomNumber}";
+            $order_id = "INV-ICPIP-{$typeCode}-{$today}-{$randomNumber}";
+
             $durationInMinutes = 180;
 
             \Midtrans\Config::$serverKey = config('midtrans.serverKey');
@@ -252,7 +307,7 @@ class PesertaController extends Controller
 
         if ($transaction_status === 'settlement') {
             // 1. Tentukan pola string tetap (suffix)
-            $suffix = "/ICPIP-HE-I/CERTIF/ADAKSI/V/2026";
+            $suffix = "/ICPIP-HE-I/CERTIF/VI/2026";
 
             // 2. Cari pendaftar terakhir yang sudah memiliki nomor sertifikat dengan pola tersebut
             // Kita urutkan berdasarkan no_sertifikat secara descending
@@ -346,7 +401,9 @@ class PesertaController extends Controller
             }
 
             $userId = Auth::id();
-            $path = public_path('assets/file/submissions/');
+            //$path = public_path('assets/file/submissions/');
+            //$path = public_path('../../public_html/uploads/file/submissions');
+            $path = config('path.submissions');
 
             // 1. Hapus file lama jika ada untuk menjaga storage
             if ($submission->file_abstract) {
@@ -388,7 +445,9 @@ class PesertaController extends Controller
             }
 
             $userId = Auth::id();
-            $path = public_path('assets/file/submissions/');
+            //$path = public_path('assets/file/submissions/');
+            //$path = public_path('../../public_html/uploads/file/submissions');
+            $path = config('path.submissions');
 
             // Hapus file artikel lama jika ada
             if ($submission->file_artikel) {
@@ -413,5 +472,73 @@ class PesertaController extends Controller
             Log::error('Article Upload Error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Failed to upload article.');
         }
+    }
+
+    public function downloadCertificate($id_pc)
+    {
+        // 1. Load data dengan relasi yang benar sesuai model Anda
+        // PesertaConferences -> peserta (belongsTo)
+        // PesertaConferences -> kategori -> conference
+        $sub = PesertaConferences::with(['peserta', 'kategori.conference'])->findOrFail($id_pc);
+
+        $confName = $sub->kategori->conference->nama_conf;
+
+        // 2. Cari File Background (PNG/JPG/JPEG)
+        //$templateDir = public_path('assets/file/sertifikat/');
+        $path = config('path.sertifikat');
+        $bgFile = null;
+        $extension = null;
+
+        foreach (['png', 'jpg', 'jpeg'] as $ext) {
+            if (file_exists($path . $confName . '.' . $ext)) {
+                $bgFile = $path . $confName . '.' . $ext;
+                $extension = $ext;
+                break;
+            }
+        }
+
+        if (!$bgFile) {
+            return redirect()->back()->with('error', 'Certificate template "' . $confName . '" is not found.');
+        }
+
+        // 3. Buat Objek Gambar
+        $image = ($extension == 'png') ? imagecreatefrompng($bgFile) : imagecreatefromjpeg($bgFile);
+        imagealphablending($image, true);
+        imagesavealpha($image, true);
+
+        // 4. Konfigurasi Teks
+        $color = imagecolorallocate($image, 0, 0, 0);
+        $fontPath = public_path('assets/fonts/arial.ttf');
+
+        if (!file_exists($fontPath)) {
+            return redirect()->back()->with('error', 'Font arial.ttf is not found.');
+        }
+
+        // Ambil Nama dari tabel 'peserta' kolom 'nama'
+        $nama = strtoupper($sub->peserta->nama ?? 'PARTICIPANT');
+        $noSertif = "No: " . ($sub->no_sertifikat ?? '---');
+        $role = \Illuminate\Support\Str::contains($sub->kategori->nama_ktg, 'Presenter') ? "As Presenter" : "As Participant";
+
+        // 5. Fungsi Centering
+        $imageWidth = imagesx($image);
+        $drawCenteredText = function ($img, $size, $y, $color, $font, $text) use ($imageWidth) {
+            $type_space = imagettfbbox($size, 0, $font, $text);
+            $text_width = abs($type_space[4] - $type_space[0]);
+            $x = ($imageWidth - $text_width) / 2;
+            imagettftext($img, $size, 0, $x, $y, $color, $font, $text);
+        };
+
+        // Render Teks
+        $drawCenteredText($image, 20, 450, $color, $fontPath, $noSertif);
+        $drawCenteredText($image, 45, 600, $color, $fontPath, $nama);
+        $drawCenteredText($image, 30, 750, $color, $fontPath, $role);
+
+        // 6. Output
+        $fileName = 'Sertifikat_' . str_replace(' ', '_', $nama) . '.jpg';
+        header('Content-Type: image/jpeg');
+        header('Content-Disposition: attachment; filename="' . $fileName . '"');
+        imagejpeg($image, null, 90);
+        imagedestroy($image);
+        exit;
     }
 }

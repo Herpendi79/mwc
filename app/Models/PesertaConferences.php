@@ -23,6 +23,7 @@ class PesertaConferences extends Model
         'id_pub',
         'file_artikel',
         'status_artikel',
+        'file_bukti_tf',
         'payment',
         'snap',
         'order_id',

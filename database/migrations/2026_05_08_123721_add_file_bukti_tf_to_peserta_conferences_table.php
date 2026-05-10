@@ -12,12 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('peserta_conferences', function (Blueprint $table) {
-            // 1. Hapus Foreign Key constraint terlebih dahulu
-            // Laravel secara default memberi nama: namaTabel_namaKolom_foreign
-            $table->dropForeign(['id_conf']);
-
-            // 2. Baru hapus kolomnya
-            $table->dropColumn('id_conf');
+            // Menambahkan kolom setelah status_artikel
+            $table->string('file_bukti_tf')->nullable()->after('status_artikel');
         });
     }
 
@@ -27,9 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('peserta_conferences', function (Blueprint $table) {
-            // Untuk rollback: tambahkan kembali kolom dan relasinya
-            $table->unsignedBigInteger('id_conf')->after('id');
-            $table->foreign('id_conf')->references('id_conf')->on('conferences')->onDelete('cascade');
+            // Menghapus kolom jika migrasi di-rollback
+            $table->dropColumn('file_bukti_tf');
         });
     }
 };

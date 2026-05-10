@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PesertaController;
+use App\Http\Controllers\ReviewerController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -138,21 +139,35 @@ Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkReques
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetPassword'])->name('password.email');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    // Route Dashboard yang sudah ada
     Route::get('/participants', [PesertaController::class, 'index'])->name('participants.index');
-
-    // Route Profile Settings
     Route::get('/participants/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/participants/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/participants/submit/{id_conf}', [PesertaController::class, 'submitForm'])->name('participants.submit');
-    // Memproses Data
     Route::post('/participants/submit/store', [PesertaController::class, 'storeSubmission'])->name('participants.submit.store');
+
+    Route::get('/reviewer', [ReviewerController::class, 'index'])->name('reviewer.index');
+    Route::get('/reviewer/conferences', [ReviewerController::class, 'conferences'])->name('reviewer.conferences');
+    Route::get('/reviewer/conference/{id_conf}/participants', [ReviewerController::class, 'participantsList'])
+        ->name('reviewer.participants.list');
+    Route::get('/reviewer/conference/{id_conf}/presenters', [ReviewerController::class, 'presentersList'])
+        ->name('reviewer.presenters.list');
+    Route::get('/reviewer/conference/{id_conf}/registrantwaitvalid', [ReviewerController::class, 'registrantWaitValidList'])
+        ->name('reviewer.registrantwaitvalid.list');
+    Route::post('/reviewer/update-status/{id}', [App\Http\Controllers\ReviewerController::class, 'updateStatus'])
+        ->name('reviewer.updateStatus');
+    Route::post('/reviewer/update-status-artikel/{id}', [App\Http\Controllers\ReviewerController::class, 'updateStatusArtikel'])
+        ->name('reviewer.updateStatusArtikel');
+    Route::post('/reviewer/update-status-payment/{id}', [App\Http\Controllers\ReviewerController::class, 'updateStatusPayment'])
+        ->name('reviewer.updateStatusPayment');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/participants', [PesertaController::class, 'index'])->name('participants.index');
     // Rute halaman daftar konferensi
     Route::get('/participants/conferences', [PesertaController::class, 'conferences'])->name('participants.conferences');
+    // Pastikan ada {id_pc} di URL-nya
+    Route::get('/participants/download/{id_pc}', [App\Http\Controllers\PesertaController::class, 'downloadCertificate'])
+        ->name('participants.download');
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -173,18 +188,17 @@ Route::get('/auth-google-redirect', [GoogleController::class, 'redirectToGoogle'
 Route::get('/auth-google-callback', [GoogleController::class, 'handleGoogleCallback']);
 
 Route::get('submit/payment/{snapToken}', function ($snapToken) {
-    // Load data dengan relasi peserta
+    // Load data dengan relasi yang dibutuhkan
     $anggota = \App\Models\PesertaConferences::with(['kategori.conference', 'peserta'])
         ->where('snap', $snapToken)
         ->firstOrFail();
 
-    // PERBAIKAN LOGIKA KEAMANAN:
-    // Kita ambil ID Peserta dari user yang sedang login
+    // 1. Ambil ID Peserta dari user yang sedang login (ID di tabel peserta)
     $currentPesertaId = Auth::user()->peserta->id ?? null;
 
-    // Bandingkan ID Peserta yang login dengan ID Peserta pemilik invoice
+    // 2. PERBAIKAN: Bandingkan dengan kolom id_peserta di data pendaftaran
     if ($currentPesertaId !== $anggota->id) {
-        Log::warning("Akses ditolak: User " . Auth::id() . " mencoba mengakses invoice Peserta " . $anggota->id);
+        Log::warning("Akses ditolak: User " . Auth::id() . " (Peserta ID: $currentPesertaId) mencoba mengakses invoice milik Peserta ID: " . $anggota->id);
         abort(403, 'Unauthorized action. This invoice does not belong to you.');
     }
 

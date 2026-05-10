@@ -92,7 +92,15 @@
                                 {{-- Row 1 --}}
                                 <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
                                     <td class="p-4 border border-gray-200 dark:border-white/10 font-bold">
-                                        Dr. Wenny Hawariyun.
+                                        Emmanuel Kyei, M.A., Ph.D
+                                    </td>
+                                    <td class="p-4 border border-gray-200 dark:border-white/10 text-sm italic">
+                                        Akenten Appiah-Menka University, Cameroon
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <td class="p-4 border border-gray-200 dark:border-white/10 font-bold">
+                                        Dr. Wenny Hawariyun
                                     </td>
                                     <td class="p-4 border border-gray-200 dark:border-white/10 text-sm italic">
                                         Buraimi University, Oman

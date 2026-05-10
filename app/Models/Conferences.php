@@ -39,4 +39,16 @@ class Conferences extends Model
         // Foreign Key: id_conf, Local Key: id_conf
         return $this->hasMany(Kategori::class, 'id_conf', 'id_conf');
     }
+
+    public function pendaftar()
+    {
+        return $this->hasManyThrough(
+            PesertaConferences::class, // Target (Model akhir yang ingin dihitung)
+            Kategori::class,           // Through (Model jembatan)
+            'id_conf',                 // FK di tabel Kategori (merujuk ke Conferences)
+            'id_ktg',                  // FK di tabel PesertaConferences (merujuk ke Kategori)
+            'id_conf',                 // Local key di tabel Conferences
+            'id_ktg'                   // Local key di tabel Kategori
+        );
+    }
 }

@@ -162,4 +162,40 @@
 @section('scripts')
     <script src="{{ asset('assets/js/event-venue.js') }}" defer></script>
     <script src="{{ asset('assets/js/dark-mode.js') }}" defer></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const item = this.parentElement;
+                    const body = this.nextElementSibling;
+                    const icon = this.querySelector('.icon');
+
+                    // Tutup item lain (Opsional: hapus bagian ini jika ingin bisa buka banyak sekaligus)
+                    document.querySelectorAll('.accordion-item').forEach(otherItem => {
+                        if (otherItem !== item) {
+                            otherItem.querySelector('.accordion-body').style.maxHeight =
+                                null;
+                            otherItem.querySelector('.icon').textContent = '+';
+                            otherItem.classList.remove('active');
+                        }
+                    });
+
+                    // Toggle item yang diklik
+                    if (body.style.maxHeight) {
+                        body.style.maxHeight = null;
+                        icon.textContent = '+';
+                        item.classList.remove('active');
+                    } else {
+                        // Mengatur max-height sesuai tinggi konten asli (scrollWidth)
+                        body.style.maxHeight = body.scrollHeight + "px";
+                        icon.textContent = '-';
+                        item.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

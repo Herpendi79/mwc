@@ -47,6 +47,11 @@ class LoginController extends Controller
             // 4. Perbaikan: Redirect ke dashboard peserta (index.blade)
             $request->session()->regenerate();
 
+            if ($user->email === 'reviewericpiphe@gmail.com') {
+                return redirect()->intended('/reviewer')
+                    ->with('success', 'Welcome back, Reviewer!');
+            }
+
             // Mengarahkan ke route 'peserta.index' atau URL '/peserta'
             return redirect()->intended('/participants')
                 ->with('success', 'Welcome back, ' . $user->name . '!');

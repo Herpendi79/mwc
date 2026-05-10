@@ -26,7 +26,6 @@ class ProfileController extends Controller
             'name'     => 'required|string|max:255',
             'country'  => 'required|string|max:100',
             'whatsapp' => 'required|string|max:20',
-            'kategori' => 'required|string',
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
@@ -44,7 +43,6 @@ class ProfileController extends Controller
                 'nama'     => $request->name,
                 'negara'   => $request->country,
                 'no_wa'    => $request->whatsapp,
-                'kategori' => $request->kategori,
             ]);
 
             DB::commit();

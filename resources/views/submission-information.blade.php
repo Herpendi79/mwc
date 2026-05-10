@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', 'Scientific Board Commitee')
+@section('title', 'Submission Information')
 
 @section('content')
 

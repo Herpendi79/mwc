@@ -32,7 +32,7 @@ export default defineConfig({
                 "resources/js/app.js",
                 "resources/assets/js/search.js",
             ],
-            refresh: false,
+            refresh: true,
         }),
         tailwindcss(),
         {

@@ -83,6 +83,19 @@
                                         <input type="text" name="name" value="{{ old('name', $user->name) }}" required
                                             class="w-full border border-gray-200 dark:border-zinc-700 rounded-xl px-4 py-3 form-input-custom shadow-sm outline-none focus:border-[#c0f037]">
                                     </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">
+                                            Email
+                                        </label>
+                                        <input type="text" name="email" value="{{ old('email', $user->email) }}"
+                                            disabled
+                                            class="w-full border border-gray-200 dark:border-zinc-700 rounded-xl px-4 py-3 
+                                            shadow-sm outline-none cursor-not-allowed
+                                            /* Warna untuk mode terang (Light Mode) */
+                                            bg-gray-100 text-gray-500 
+                                            /* Warna untuk mode gelap (Dark Mode) */
+                                            dark:bg-zinc-800 dark:text-zinc-500">
+                                    </div>
 
                                     <!-- Country -->
                                     <div>
@@ -109,35 +122,7 @@
                                         </div>
                                     </div>
 
-                                    <!-- Category -->
-                                    <div>
-                                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Category</label>
-                                        <select name="kategori" required
-                                            class="w-full border border-gray-200 dark:border-zinc-700 rounded-xl px-4 py-3 form-input-custom shadow-sm outline-none focus:border-[#c0f037] appearance-none">
-                                            <option value="" class="text-black">Select Category</option>
-                                            @php
-                                                $categories = [
-                                                    'Offline Presenter Domestic',
-                                                    'Online Presenter Domestic',
-                                                    'Offline Student Presenter Domestic',
-                                                    'Online Student Presenter Domestic',
-                                                    'Offline Participant Domestic',
-                                                    'Online Participant Domestic',
-                                                    'Offline Presenter International',
-                                                    'Online Presenter International',
-                                                    'Offline Student Presenter International',
-                                                    'Online Student Presenter International',
-                                                    'Offline Participant International',
-                                                    'Online Participant International',
-                                                ];
-                                            @endphp
-                                            @foreach ($categories as $cat)
-                                                <option value="{{ $cat }}"
-                                                    {{ $user->peserta->kategori == $cat ? 'selected' : '' }}
-                                                    class="text-black">{{ $cat }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+
                                 </div>
 
                                 <hr class="border-gray-100 dark:border-zinc-800 my-4">
