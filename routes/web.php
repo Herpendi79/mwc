@@ -191,7 +191,12 @@ Route::get('submit/payment/{snapToken}', function ($snapToken) {
     // Load data dengan relasi yang dibutuhkan
     $anggota = \App\Models\PesertaConferences::with(['kategori.conference', 'peserta'])
         ->where('snap', $snapToken)
-        ->firstOrFail();
+        ->first();
+
+    if (!$anggota) {
+        return redirect()->route('participants.conferences')
+            ->with('error', 'The payment session has expired or the data has been removed. Please re-register or contact the administrator.');
+    }
 
     // 1. Ambil ID Peserta dari user yang sedang login (ID di tabel peserta)
     $currentPesertaId = Auth::user()->peserta->id ?? null;
