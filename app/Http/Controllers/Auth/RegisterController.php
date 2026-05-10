@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth; // Untuk mengatasi Undefined method 'login'
+use App\Jobs\SendSubmissionEmail;
 
 class RegisterController extends Controller
 {
@@ -22,7 +24,7 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
-        // 1. Validasi input
+        // 1. Validasi input (Tetap sama)
         $validator = Validator::make($request->all(), [
             'name'     => 'required|string|max:255',
             'email'    => 'required|string|email|max:255',
@@ -35,8 +37,7 @@ class RegisterController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        // --- 2. CEK EMAIL DI TABEL USERS (ANGGOTA ADAKSI) ---
-        // Menggunakan DB query untuk memastikan pengecekan ke tabel 'users' anggota
+        // 2. Cek Member ADAKSI & User Existing (Tetap sama)
         $isAdaksiMember = \Illuminate\Support\Facades\DB::table('users')
             ->where('email', $request->email)
             ->exists();
@@ -47,7 +48,6 @@ class RegisterController extends Controller
                 ->withInput();
         }
 
-        // --- 3. CEK EMAIL DI TABEL USERS_ICPIPHE (PESERTA KONFERENSI) ---
         $existingConferenceUser = User::where('email', $request->email)->first();
         if ($existingConferenceUser) {
             return redirect()->route('login')
@@ -56,14 +56,13 @@ class RegisterController extends Controller
 
         DB::beginTransaction();
         try {
-            // 4. Simpan User Konferensi
+            // 4. Simpan User & Peserta
             $user = User::create([
                 'name'     => $request->name,
                 'email'    => $request->email,
                 'password' => Hash::make($request->password),
             ]);
 
-            // 5. Simpan Peserta
             $peserta = Peserta::create([
                 'user_id'  => $user->id,
                 'nama'     => $request->name,
@@ -72,35 +71,38 @@ class RegisterController extends Controller
                 'status'   => 'waiting',
             ]);
 
-            // 6. Generate Link Verifikasi
+            // 5. Generate Link Verifikasi
             $url = URL::temporarySignedRoute(
                 'verification.verify',
                 now()->addHours(24),
                 ['id' => $user->id, 'hash' => sha1($user->email)]
             );
 
-            // 7. Kirim Email melalui API
+            // 6. Siapkan Data Email untuk Antrean
             $html = view('emails.aktivasi-peserta', compact('peserta', 'url'))->render();
-            $text = "Hello {$peserta->nama}, Thank you for registering for ICPIP-HE 2026. Please verify your email by clicking the link below:\n\n{$url}";
+            $text = "Hello {$peserta->nama}, please verify your email: {$url}";
 
-            \App\Services\EmailApiService::send(
-                $user->email,
-                'Registration Email Verification for ICPIP-HE 2026',
-                $text,
-                $html
-            );
+            $emailData = [
+                'to'      => $user->email,
+                'subject' => 'Registration Email Verification for ICPIP-HE 2026',
+                'text'    => $text,
+                'html'    => $html,
+            ];
+
+            // DISPATCH KE QUEUE: Ini yang membuat proses jadi sangat cepat
+            SendSubmissionEmail::dispatch($emailData);
 
             DB::commit();
 
-            auth()->login($user);
+            Auth::login($user);
 
             return redirect()->route('verification.notice')
                 ->with('success', 'Registration successful! Please check your email.');
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error('Email/Register Error: ' . $e->getMessage());
+            Log::error('Register Error: ' . $e->getMessage());
             return redirect()->back()
-                ->with('error', 'Something went wrong: ' . $e->getMessage())
+                ->with('error', 'Something went wrong, please try again.')
                 ->withInput();
         }
     }
