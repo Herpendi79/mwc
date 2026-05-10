@@ -331,7 +331,7 @@ class ReviewerController extends Controller
                 $pesertaConf->update(['status_abstract' => 'waiting review']);
                 $keterangan_tambahan = "The next process is the review of your abstract by the reviewer.";
             } else {
-                $keterangan_tambahan = "Congratulations, your payment is valid. See you on the conference day!";
+                $keterangan_tambahan = "Congratulations, your payment is valid. See you on the conference day!. You can download your certificate after the conference ends.";
             }
 
             $subject = "Payment Verified: " . $nama_conference;
