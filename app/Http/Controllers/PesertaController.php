@@ -76,7 +76,10 @@ class PesertaController extends Controller
         }
 
         $queryKategori = Kategori::where('id_conf', $id_conf);
-        $queryKategori->where('keterangan', 'NOT LIKE', '%Adaksi%');
+        $queryKategori->where(function ($q) {
+            $q->where('keterangan', 'NOT LIKE', '%Adaksi%')
+                ->orWhereNull('keterangan');
+        });
 
         if (strtolower($negaraPeserta) !== 'indonesia') {
             // Jika bukan orang Indonesia, hanya tampilkan kategori International
