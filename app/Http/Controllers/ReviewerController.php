@@ -178,7 +178,7 @@ class ReviewerController extends Controller
     }
 
     // Fungsi untuk update status abstract (revision atau accepted)
-    public function updateStatus(Request $request, $id)
+    public function updateStatus(Request $request, $id, $sumber)
     {
         $presenter = PesertaConferences::with(['peserta.user', 'kategori.conference'])->findOrFail($id);
 

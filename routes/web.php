@@ -153,7 +153,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('reviewer.presenters.list');
     Route::get('/reviewer/conference/{id_conf}/registrantwaitvalid', [ReviewerController::class, 'registrantWaitValidList'])
         ->name('reviewer.registrantwaitvalid.list');
-    Route::post('/reviewer/update-status/{id}', [App\Http\Controllers\ReviewerController::class, 'updateStatus'])
+    Route::post('/reviewer/update-status/{id}/{sumber}', [App\Http\Controllers\ReviewerController::class, 'updateStatus'])
         ->name('reviewer.updateStatus');
     Route::post('/reviewer/update-status-artikel/{id}', [App\Http\Controllers\ReviewerController::class, 'updateStatusArtikel'])
         ->name('reviewer.updateStatusArtikel');
