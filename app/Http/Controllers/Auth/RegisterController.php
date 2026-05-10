@@ -90,7 +90,7 @@ class RegisterController extends Controller
             ];
 
             // DISPATCH KE QUEUE: Ini yang membuat proses jadi sangat cepat
-            SendSubmissionEmail::dispatch($emailData);
+            SendSubmissionEmail::dispatch($emailData)->onQueue('conference');
 
             DB::commit();
 
