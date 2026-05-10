@@ -299,16 +299,15 @@
                                 class="absolute inset-0 w-full h-full object-contain scale-110 pointer-events-none transition-transform duration-500 group-hover:rotate-6">
                             <div
                                 class="relative w-full h-full rounded-full border border-[#E6E8E7] overflow-hidden transition-transform duration-500 group-hover:-translate-y-2">
-                                <img src="{{ asset('assets/images/speakers/angus2.jpeg') }}"
+                                <img src="{{ asset('assets/images/speakers/aziz2.jpg') }}"
                                     class="w-full h-full object-cover rounded-full">
                             </div>
                         </div>
                         <div class="mt-6">
                             <h3 class="font-semibold text-lg hover:text-[#c0f037] transition-colors">
-                                <a href="https://www.linkedin.com/in/angusphillips/" target="_blank">Prof. Angus
-                                    Phillips</a>
+                                <a href="https://www.linkedin.com/in/mohamed-alkhuzamy-aziz/" target="_blank">Prof. Dr. Mohamed Alkhuzamy Aziz, B.A., M.Sc., PhD.Sc</a>
                             </h3>
-                            <p class="text-gray-400 mt-1">Oxford Brookes University, United Kingdom</p>
+                            <p class="text-gray-400 mt-1">Fayoum University, Egypt</p>
                         </div>
                     </div>
 
@@ -319,16 +318,15 @@
                                 class="absolute inset-0 w-full h-full object-contain scale-110 pointer-events-none transition-transform duration-500 group-hover:rotate-6">
                             <div
                                 class="relative w-full h-full rounded-full border border-[#E6E8E7] overflow-hidden transition-transform duration-500 group-hover:-translate-y-2">
-                                <img src="{{ asset('assets/images/speakers/lisa2.jpeg') }}"
+                                <img src="{{ asset('assets/images/speakers/amy.jpg') }}"
                                     class="w-full h-full object-cover rounded-full">
                             </div>
                         </div>
                         <div class="mt-6">
                             <h3 class="font-semibold text-lg hover:text-[#c0f037] transition-colors">
-                                <a href="https://www.linkedin.com/in/lisa-kuitert-5336875/" target="_blank">Prof. Dr. Lisa
-                                    Kuitert</a>
+                                <a href="https://www.linkedin.com/in/amy-kuo-somchanhmavong-8a662797/" target="_blank">Amy Somchanhmavong</a>
                             </h3>
-                            <p class="text-gray-400 mt-1">University of Amsterdam, Netherlands</p>
+                            <p class="text-gray-400 mt-1">Cornell University, United States</p>
                         </div>
                     </div>
 

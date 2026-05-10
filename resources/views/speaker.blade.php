@@ -260,13 +260,13 @@
                         <div class="w-full max-w-[280px]">
                             <div class="overflow-hidden rounded-2xl relative bg-[#6AC3FF] group" data-sal="slide-up"
                                 data-sal-duration="800" data-sal-delay="200">
-                                <img src="{{ asset('assets/images/speakers/angus.jpeg') }}" alt="Prof. Angus Phillips"
+                                <img src="{{ asset('assets/images/speakers/aziz3.jpg') }}" alt="Prof. Aziz"
                                     class="w-full h-auto object-cover">
                                 <div
                                     class="bg-white dark:bg-black border rounded-xl p-4 overflow-hidden absolute bottom-4 left-1/2 transform -translate-x-1/2 w-[92%] h-24 group-hover:h-44 transition-all duration-500 shadow-lg">
                                     <h3
                                         class="font-bold hover:text-[#6AC3FF] transition-all duration-300 text-sm leading-tight">
-                                        <a href="#!">Prof. Angus Phillips</a>
+                                        <a href="#!">Prof. Dr. Mohamed Alkhuzamy Aziz, B.A., M.Sc., PhD.Sc</a>
                                     </h3>
                                    <div class="mt-4 text-left"> <!-- Menghapus flex agar list bisa turun ke bawah -->
                                         <p class="text-gray-700 dark:text-gray-400 text-[10px] font-bold">
@@ -275,15 +275,19 @@
                                         <ul class="list-disc ml-5 mt-1 space-y-1">
                                             <li
                                                 class="text-gray-700 dark:text-gray-400 text-[10px] font-medium leading-tight">
-                                                Innovation in the Creative Industries
+                                                Cartography and spatial analysis
                                             </li>
                                             <li
                                                 class="text-gray-700 dark:text-gray-400 text-[10px] font-medium leading-tight">
-                                                Digital Transformation in Publishing
+                                                Teaching and mentoring students
                                             </li>
                                             <li
                                                 class="text-gray-700 dark:text-gray-400 text-[10px] font-medium leading-tight">
-                                                Global Book Market Analysis
+                                               Leadership and management abilities
+                                            </li>
+                                            <li
+                                                class="text-gray-700 dark:text-gray-400 text-[10px] font-medium leading-tight">
+                                               Research and analytical skills
                                             </li>
 
                                         </ul>
@@ -296,14 +300,14 @@
                         <div class="w-full max-w-[280px]">
                             <div class="overflow-hidden rounded-2xl relative bg-[#6AC3FF] group" data-sal="slide-up"
                                 data-sal-duration="800" data-sal-delay="200">
-                                <img src="{{ asset('assets/images/speakers/lisa.jpeg') }}"
-                                    alt="Prof. Dr. Lisa Kuitert (University of Amsterdam, NL)"
+                                <img src="{{ asset('assets/images/speakers/amy2.jpg') }}"
+                                    alt="Amy)"
                                     class="w-full h-auto object-cover">
                                 <div
                                     class="bg-white dark:bg-black border rounded-xl p-4 overflow-hidden absolute bottom-4 left-1/2 transform -translate-x-1/2 w-[92%] h-24 group-hover:h-44 transition-all duration-500 shadow-lg">
                                     <h3
                                         class="font-bold hover:text-[#6AC3FF] transition-all duration-300 text-sm leading-tight">
-                                        <a href="#!">Prof. Dr. Lisa Kuitert</a>
+                                        <a href="#!">Amy Somchanhmavong</a>
                                     </h3>
                                     <div class="mt-4 text-left"> <!-- Menghapus flex agar list bisa turun ke bawah -->
                                         <p class="text-gray-700 dark:text-gray-400 text-[10px] font-bold">
@@ -312,15 +316,23 @@
                                         <ul class="list-disc ml-5 mt-1 space-y-1">
                                             <li
                                                 class="text-gray-700 dark:text-gray-400 text-[10px] font-medium leading-tight">
-                                                European Book Industry
+                                                Global Community-Engaged Learning
                                             </li>
                                             <li
                                                 class="text-gray-700 dark:text-gray-400 text-[10px] font-medium leading-tight">
-                                                Book History and Print Culture
+                                                Strategic Partnership Development
                                             </li>
                                             <li
                                                 class="text-gray-700 dark:text-gray-400 text-[10px] font-medium leading-tight">
-                                                Bibliography and Manuscript Studies
+                                                International Service-Learning
+                                            </li>
+                                            <li
+                                                class="text-gray-700 dark:text-gray-400 text-[10px] font-medium leading-tight">
+                                                Civic Engagement and Leadership
+                                            </li>
+                                            <li
+                                                class="text-gray-700 dark:text-gray-400 text-[10px] font-medium leading-tight">
+                                                Cross-Cultural Program Management
                                             </li>
 
                                         </ul>
