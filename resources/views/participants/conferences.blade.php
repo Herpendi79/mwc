@@ -375,7 +375,7 @@
 
                                                             // Cek fisik file template sertifikat
                                                             $confName = $conf->nama_conf;
-                                                            $templatePath = config('path.submissions') ;
+                                                            $templatePath = config('path.sertifikat') ;
                                                             $fileExist = false;
                                                             foreach (['png', 'jpg', 'jpeg'] as $ext) {
                                                                 if (
