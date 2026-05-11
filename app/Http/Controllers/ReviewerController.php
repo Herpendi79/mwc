@@ -182,7 +182,7 @@ class ReviewerController extends Controller
     // Fungsi untuk update status abstract (revision atau accepted)
     public function updateStatus(Request $request, $id, $sumber)
     {
-        // 1. Fetch data berdasarkan sumber (ADAKSI atau Umum)
+        // 1. Fetch data berdasarkan sumber
         if ($sumber === 'ADAKSI') {
             $presenter = \App\Models\PesertaConferencesAdaksi::with(['user.anggota', 'kategori.conference'])
                 ->where('id_pca', $id)
@@ -191,37 +191,43 @@ class ReviewerController extends Controller
             $user = $presenter->user;
             $nama_peserta = $user->anggota->nama_anggota ?? 'Participant';
         } else {
-            $presenter = PesertaConferences::with(['peserta.user', 'kategori.conference'])
+            // PERBAIKAN: Gunakan relasi 'user.peserta' karena PC langsung punya user_id
+            $presenter = PesertaConferences::with(['user.peserta', 'kategori.conference'])
                 ->where('id_pc', $id)
                 ->firstOrFail();
 
-            $user = $presenter->peserta->user ?? null;
-            $nama_peserta = $presenter->peserta->nama ?? 'Participant';
+            // Langsung ambil dari relasi user
+            $user = $presenter->user;
+
+            // Ambil nama dari profil peserta, jika tidak ada gunakan nama di tabel user
+            $nama_peserta = $user->peserta->nama ?? ($user->name ?? 'Participant');
         }
 
         if (!$user || !$user->email) {
             Log::error("User atau Email tidak ditemukan untuk ID: {$id} pada sumber: {$sumber}");
-            return back()->with('error', 'User email not found. Status updated in database, but notification failed.');
+            return back()->with('error', 'User email not found. Notification failed.');
         }
 
         $status = $request->input('status');
         $comment = $request->input('comment');
         $nama_conference = $presenter->kategori->conference->nama_conf;
 
-        // Mulai Transaksi Database
         DB::beginTransaction();
         try {
             if ($status === 'revision') {
-                // 2. Logika Revision: Hapus file lama dan kosongkan status
+                // Hapus file lama jika ada
                 if ($presenter->file_abstract) {
-                    $path = config('path.submissions') . $presenter->file_abstract;
+                    // Pastikan path menggunakan '/' agar tidak error di server
+                    $path = rtrim(config('path.submissions'), '/') . '/' . $presenter->file_abstract;
                     if (File::exists($path)) {
                         File::delete($path);
                     }
                 }
 
+                // Update database: status_abstract diset ke 'revision required' 
+                // (Atau null sesuai preferensi Anda, tapi 'revision required' lebih informatif untuk user)
                 $presenter->update([
-                    'status_abstract' => null,
+                    'status_abstract' => 'revision required',
                     'file_abstract'   => null,
                     'keterangan'      => $comment,
                 ]);
@@ -229,7 +235,7 @@ class ReviewerController extends Controller
                 $subject = "Revision Required: Abstract Submission - " . $nama_conference;
                 $text = "Dear {$nama_peserta}, your abstract requires revision. Feedback: {$comment}";
             } else {
-                // 3. Logika Accepted
+                // Logika Accepted
                 $presenter->update([
                     'status_abstract' => 'accepted',
                 ]);
@@ -238,7 +244,7 @@ class ReviewerController extends Controller
                 $text = "Congratulations {$nama_peserta}, your abstract has been accepted.";
             }
 
-            // 4. Siapkan View Email
+            // Siapkan View Email
             $html = view('emails.review_abstract', [
                 'nama'    => $nama_peserta,
                 'status'  => $status,
@@ -246,18 +252,18 @@ class ReviewerController extends Controller
                 'nama_conference' => $nama_conference
             ])->render();
 
-            // 5. Masukkan ke Queue (Antrean)
+            // Dispatch ke Queue
             SendSubmissionEmail::dispatch([
                 'to'      => $user->email,
                 'subject' => $subject,
                 'text'    => $text,
                 'html'    => $html,
-            ])->onQueue('conference'); // Jalur khusus agar tidak bentrok dengan adaksi.org
+            ])->onQueue('conference');
 
             DB::commit();
-            Log::info("Status abstract updated & job dispatched for: " . $user->email);
+            Log::info("Status updated & email queued for: " . $user->email);
 
-            return back()->with('success', 'Decision submitted and notification email is being processed in background.');
+            return back()->with('success', 'Decision submitted successfully.');
         } catch (\Exception $e) {
             DB::rollback();
             Log::error("Gagal update status review: " . $e->getMessage());
@@ -277,12 +283,16 @@ class ReviewerController extends Controller
             $user = $presenter->user;
             $nama_peserta = $user->anggota->nama_anggota ?? 'Participant';
         } else {
-            $presenter = \App\Models\PesertaConferences::with(['peserta.user', 'kategori.conference'])
+            // PERBAIKAN: Gunakan relasi 'user.peserta' karena PC langsung punya user_id
+            $presenter = \App\Models\PesertaConferences::with(['user.peserta', 'kategori.conference'])
                 ->where('id_pc', $id)
                 ->firstOrFail();
 
-            $user = $presenter->peserta->user ?? null;
-            $nama_peserta = $presenter->peserta->nama ?? 'Participant';
+            // Langsung ambil dari relasi user
+            $user = $presenter->user;
+
+            // Ambil nama dari profil peserta, jika tidak ada gunakan nama di tabel user
+            $nama_peserta = $user->peserta->nama ?? ($user->name ?? 'Participant');
         }
 
         if (!$user || !$user->email) {
@@ -300,15 +310,16 @@ class ReviewerController extends Controller
             if ($status === 'revision') {
                 // Hapus file artikel lama jika ada revisi
                 if ($presenter->file_artikel) {
-                    $path = config('path.submissions') . $presenter->file_artikel;
+                    // Gunakan separator path yang aman
+                    $path = rtrim(config('path.submissions'), '/') . '/' . $presenter->file_artikel;
                     if (\Illuminate\Support\Facades\File::exists($path)) {
                         \Illuminate\Support\Facades\File::delete($path);
                     }
                 }
 
-                // Update Database (Kosongkan file agar user bisa upload ulang)
+                // Update Database (Set ke 'revision required' agar sinkron dengan logika tombol di Blade)
                 $presenter->update([
-                    'status_artikel' => null,
+                    'status_artikel' => 'revision required',
                     'file_artikel'   => null,
                     'keterangan'      => $comment,
                 ]);
@@ -344,7 +355,7 @@ class ReviewerController extends Controller
             DB::commit();
             Log::info("Full Paper review processed for: " . $user->email);
 
-            return back()->with('success', 'Full Paper decision submitted. Notification email is being sent in background.');
+            return back()->with('success', 'Full Paper decision submitted.');
         } catch (\Exception $e) {
             DB::rollback();
             Log::error("Gagal update status artikel: " . $e->getMessage());
@@ -354,15 +365,18 @@ class ReviewerController extends Controller
 
     public function updateStatusPayment(Request $request, $id)
     {
-        // 1. Load data
-        $pesertaConf = PesertaConferences::with(['peserta.user', 'kategori.conference'])->findOrFail($id);
+        // 1. Load data dengan relasi baru: user.peserta
+        $pesertaConf = PesertaConferences::with(['user.peserta', 'kategori.conference'])->findOrFail($id);
 
         $status = $request->input('status');
         $comment = $request->input('comment');
-        $user = $pesertaConf->peserta->user;
-        $nama_peserta = $pesertaConf->peserta->nama ?? 'Participant';
+
+        // Perbaikan pengambilan user dan nama
+        $user = $pesertaConf->user;
+        $nama_peserta = $user->peserta->nama ?? ($user->name ?? 'Participant');
+
         $nama_conference = $pesertaConf->kategori->conference->nama_conf;
-        $nama_kategori = strtolower($pesertaConf->kategori->nama_ktg);
+        $nama_kategori = strtolower($pesertaConf->kategori->nama_ktg ?? '');
 
         $keterangan_tambahan = "";
         $recipientEmail = $user->email;
@@ -371,7 +385,7 @@ class ReviewerController extends Controller
         DB::beginTransaction();
         try {
             if ($status === 'success') {
-                // Logika Sertifikat
+                // Logika Penomoran Sertifikat
                 $suffix = "/ICPIP-HE-I/CERTIF/VI/2026";
                 $lastRecord = PesertaConferences::where('no_sertifikat', 'like', '%' . $suffix)
                     ->orderBy('no_sertifikat', 'desc')
@@ -385,20 +399,22 @@ class ReviewerController extends Controller
                     'no_sertifikat' => $no_sertifikat
                 ];
 
+                // Tentukan status selanjutnya berdasarkan kategori
                 if (str_contains($nama_kategori, 'presenter')) {
                     $updateData['status_abstract'] = 'waiting review';
-                    $keterangan_tambahan = "The next process is the review of your abstract by the reviewer.";
+                    $keterangan_tambahan = "The next process is the review of your abstract by our team.";
                 } else {
                     $keterangan_tambahan = "Congratulations, your payment is valid. See you on the conference day! You can download your certificate after the conference ends.";
                 }
 
                 $pesertaConf->update($updateData);
+
                 $subject = "Payment Verified: " . $nama_conference;
                 $text = "Dear {$nama_peserta}, your payment has been successfully verified. {$keterangan_tambahan}";
             } else if ($status === 'nonvalid') {
-                // Hapus file bukti transfer
+                // Hapus file bukti transfer jika ada
                 if ($pesertaConf->file_bukti_tf) {
-                    $filePath = config('path.submissions') . $pesertaConf->file_bukti_tf;
+                    $filePath = rtrim(config('path.submissions'), '/') . '/' . $pesertaConf->file_bukti_tf;
                     if (File::exists($filePath)) {
                         File::delete($filePath);
                     }
@@ -407,16 +423,7 @@ class ReviewerController extends Controller
                 $subject = "Payment Rejected: " . $nama_conference;
                 $text = "Dear {$nama_peserta}, your payment proof was rejected. Reason: {$comment}.";
 
-                // Simpan info ke variabel sebelum data dihapus
-                $htmlData = [
-                    'nama' => $nama_peserta,
-                    'status' => $status,
-                    'comment' => $comment,
-                    'nama_conference' => $nama_conference,
-                    'keterangan_tambahan' => ""
-                ];
-
-                // Hapus data (jika ini memang alur yang diinginkan untuk nonvalid)
+                // Hapus pendaftaran jika data dianggap tidak valid (opsional, tergantung kebijakan Anda)
                 $pesertaConf->delete();
             }
 
@@ -441,8 +448,8 @@ class ReviewerController extends Controller
             return back()->with('success', 'Payment status updated and notification is being sent.');
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error("Gagal update status payment: " . $e->getMessage());
-            return back()->with('error', 'Failed to process payment update.');
+            Log::error("Gagal update status payment untuk User ID {$user->id}: " . $e->getMessage());
+            return back()->with('error', 'Failed to process payment update: ' . $e->getMessage());
         }
     }
 
