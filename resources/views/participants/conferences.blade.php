@@ -125,25 +125,63 @@
                                                 {{-- Kolom Action --}}
                                                 <td class="px-6 py-4 text-center">
                                                     @php
+                                                        // 1. Tentukan status deadline conference
                                                         $isDeadlinePassed = \Carbon\Carbon::today()->greaterThan(
                                                             \Carbon\Carbon::parse($conf->deadline_subm),
                                                         );
+
+                                                        // 2. Logika expired 3 jam untuk status pending
+                                                        $isPendingExpired = false;
+                                                        if ($submission && $submission->payment == 'pending') {
+                                                            // Kita paksa ke timezone Asia/Jakarta agar akurat dengan jam lokal kita sekarang
+                                                            $expiryTime = \Carbon\Carbon::parse(
+                                                                $submission->created_at,
+                                                                'Asia/Jakarta',
+                                                            )->addHours(3);
+                                                            $isPendingExpired = \Carbon\Carbon::now(
+                                                                'Asia/Jakarta',
+                                                            )->greaterThan($expiryTime);
+                                                        }
+
+                                                        // 3. Tentukan apakah tombol submit/resubmit bisa muncul
+                                                        // Muncul jika: Belum deadline DAN (Belum ada data pendaftaran ATAU sudah expired 3 jam)
                                                         $canSubmit =
-                                                            !$isDeadlinePassed &&
-                                                            (!$submission || $submission->payment == 'expired');
+                                                            !$isDeadlinePassed && (!$submission || $isPendingExpired);
                                                     @endphp
 
                                                     @if ($canSubmit)
-                                                        <a href="{{ url('/participants/submit/' . $conf->id_conf) }}"
-                                                            class="bg-[#c0f037] text-black font-bold py-2 px-4 rounded-xl text-xs">
-                                                            {{ $submission && $submission->payment == 'expired' ? 'Resubmit' : 'Submit' }}
-                                                        </a>
+                                                        {{-- Jika expired, arahkan ke route resubmit (Delete & Redirect), jika baru arahkan ke form submit --}}
+                                                        @if ($isPendingExpired)
+                                                            <form
+                                                                action="{{ route('participants.resubmit', $submission->id_pc) }}"
+                                                                method="POST"
+                                                                onsubmit="return confirm('Your previous pending session has expired. Re-submit now?')">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit"
+                                                                    class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-xl text-xs shadow-sm transition-all">
+                                                                    <i class="ri-refresh-line"></i> Resubmit
+                                                                </button>
+                                                            </form>
+                                                        @else
+                                                            <a href="{{ url('/participants/submit/' . $conf->id_conf) }}"
+                                                                class="bg-[#c0f037] hover:bg-[#b2e032] text-black font-bold py-2 px-4 rounded-xl text-xs shadow-sm transition-all">
+                                                                Submit
+                                                            </a>
+                                                        @endif
                                                     @elseif ($isDeadlinePassed)
                                                         <button disabled
                                                             class="bg-gray-100 text-gray-400 font-bold py-2 px-4 rounded-xl text-xs cursor-not-allowed">Closed</button>
                                                     @elseif ($submission && in_array($submission->payment, ['success', 'settlement', 'pending']))
+                                                        {{-- Tombol terkunci jika pendaftaran masih berjalan (belum 3 jam) atau sudah sukses --}}
                                                         <button disabled
-                                                            class="bg-gray-100 text-gray-400 font-bold py-2 px-4 rounded-xl text-xs cursor-not-allowed">Locked</button>
+                                                            class="bg-gray-100 text-gray-400 font-bold py-2 px-4 rounded-xl text-xs cursor-not-allowed">
+                                                            @if ($submission->payment == 'pending')
+                                                                In Progress
+                                                            @else
+                                                                Registered
+                                                            @endif
+                                                        </button>
                                                     @endif
                                                 </td>
                                                 <td class="px-6 py-4">
@@ -333,11 +371,37 @@
 
                                                             {{-- 2. Kondisi: Belum Bayar (Tampilkan Tombol Bayar Midtrans) --}}
                                                         @elseif ($submission->payment == 'pending')
-                                                            <a href="{{ url('submit/payment/' . $submission->snap) }}"
-                                                                class="inline-flex items-center justify-center w-full px-4 py-2 text-[11px] font-bold text-white bg-orange-500 hover:bg-orange-600 rounded-lg shadow-sm transition-all active:scale-95">
-                                                                <i class="ri-wallet-3-line mr-2 text-sm"></i> COMPLETE
-                                                                PAYMENT
-                                                            </a>
+                                                            @php
+                                                                // Ambil waktu sekarang di Jakarta
+                                                                $now = \Carbon\Carbon::now('Asia/Jakarta');
+
+                                                                // Ambil waktu data dibuat dan set ke Jakarta (untuk memastikan perbandingan apel ke apel)
+                                                                $createdAt = \Carbon\Carbon::parse(
+                                                                    $submission->created_at,
+                                                                )->setTimezone('Asia/Jakarta');
+
+                                                                // Tambahkan 3 jam
+                                                                $expiryTime = $createdAt->copy()->addHours(3);
+
+                                                                // Cek apakah sekarang sudah melewati waktu expired
+                                                                $isExpired = $now->greaterThan($expiryTime);
+                                                            @endphp
+
+                                                            @if ($isExpired)
+                                                                <div
+                                                                    class="text-center p-2 bg-red-50 rounded-lg border border-red-100">
+                                                                    <p class="text-[10px] text-red-600 font-medium mb-2">
+                                                                        <i class="ri-error-warning-line mr-1"></i> Payment
+                                                                        Expired
+                                                                        ({{ $expiryTime->format('H:i') }} WIB)
+                                                                    </p>
+                                                                </div>
+                                                            @else
+                                                                <a href="{{ url('submit/payment/' . $submission->snap) }}"
+                                                                    class="bg-orange-500 ...">
+                                                                    COMPLETE PAYMENT
+                                                                </a>
+                                                            @endif
 
                                                             {{-- 3. Kondisi: Pembayaran Expired --}}
                                                         @elseif ($submission->payment == 'expired')

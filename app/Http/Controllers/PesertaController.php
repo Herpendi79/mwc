@@ -97,6 +97,30 @@ class PesertaController extends Controller
         return view('participants.submit', compact('conference', 'kategoris', 'publikasis'));
     }
 
+    public function resubmit($id_pc)
+    {
+        $submission = PesertaConferences::findOrFail($id_pc);
+        $id_conf = $submission->kategori->id_conf;
+
+        // 1. Hapus file-file fisik yang sudah diupload agar tidak memenuhi storage
+        $files = [$submission->file_abstract, $submission->file_kp, $submission->file_bukti_tf];
+        foreach ($files as $file) {
+            if ($file) {
+                $path = config('path.submissions') . $file;
+                if (\Illuminate\Support\Facades\File::exists($path)) {
+                    \Illuminate\Support\Facades\File::delete($path);
+                }
+            }
+        }
+
+        // 2. Hapus data dari database
+        $submission->delete();
+
+        // 3. Alihkan ke halaman submitForm dengan ID Conference sebelumnya
+        return redirect()->route('participants.submit', $id_conf)
+            ->with('info', 'Your previous pending session has been cleared. Please re-submit your data.');
+    }
+
     public function storeSubmission(Request $request)
     {
         // 1. Ambil data kategori di awal untuk menentukan logika validasi

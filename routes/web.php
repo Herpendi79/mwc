@@ -144,6 +144,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/participants/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/participants/submit/{id_conf}', [PesertaController::class, 'submitForm'])->name('participants.submit');
     Route::post('/participants/submit/store', [PesertaController::class, 'storeSubmission'])->name('participants.submit.store');
+    Route::delete('/participants/resubmit/{id_pc}', [PesertaController::class, 'resubmit'])
+        ->name('participants.resubmit')
+        ->middleware(['auth']);
 
     Route::get('/reviewer', [ReviewerController::class, 'index'])->name('reviewer.index');
     Route::get('/reviewer/conferences', [ReviewerController::class, 'conferences'])->name('reviewer.conferences');
