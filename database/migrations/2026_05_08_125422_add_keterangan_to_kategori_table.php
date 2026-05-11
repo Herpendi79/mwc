@@ -9,23 +9,22 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::table('kategori', function (Blueprint $table) {
-            // Menambahkan kolom keterangan setelah id_conf
-            // nullable() agar data lama yang sudah ada tidak error
-            $table->string('keterangan')->nullable()->after('id_conf');
-        });
+        // Tambahkan pengecekan Schema::hasColumn
+        if (!Schema::hasColumn('kategori', 'keterangan')) {
+            Schema::table('kategori', function (Blueprint $table) {
+                $table->string('keterangan')->nullable()->after('id_conf');
+            });
+        }
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
-        Schema::table('kategori', function (Blueprint $table) {
-            // Menghapus kolom jika di-rollback
-            $table->dropColumn('keterangan');
-        });
+        if (Schema::hasColumn('kategori', 'keterangan')) {
+            Schema::table('kategori', function (Blueprint $table) {
+                $table->dropColumn('keterangan');
+            });
+        }
     }
 };

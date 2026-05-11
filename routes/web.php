@@ -195,30 +195,29 @@ Route::get('/auth-google-redirect', [GoogleController::class, 'redirectToGoogle'
 Route::get('/auth-google-callback', [GoogleController::class, 'handleGoogleCallback']);
 
 Route::get('submit/payment/{snapToken}', function ($snapToken) {
-    // Load data dengan relasi yang dibutuhkan
-    $anggota = \App\Models\PesertaConferences::with(['kategori.conference', 'peserta'])
+    // 1. Load data dengan relasi 'user' (karena sekarang konek langsung ke user)
+    // dan relasi 'kategori.conference'
+    $submission = \App\Models\PesertaConferences::with(['kategori.conference', 'user'])
         ->where('snap', $snapToken)
         ->first();
 
-    if (!$anggota) {
+    if (!$submission) {
         return redirect()->route('participants.conferences')
-            ->with('error', 'The payment session has expired or the data has been removed. Please re-register or contact the administrator.');
+            ->with('error', 'The payment session has expired or the data has been removed.');
     }
 
-    // 1. Ambil ID Peserta dari user yang sedang login (ID di tabel peserta)
-    $currentPesertaId = Auth::user()->peserta->id ?? null;
-
-    // 2. PERBAIKAN: Bandingkan dengan kolom id_peserta di data pendaftaran
-    if ($currentPesertaId != $anggota->id) {
-        Log::warning("Akses ditolak: User " . Auth::id() . " (Peserta ID: $currentPesertaId) mencoba mengakses invoice milik Peserta ID: " . $anggota->id);
+    // 2. Validasi Kepemilikan: Langsung bandingkan user_id pendaftaran dengan ID user yang login
+    if ($submission->user_id != Auth::id()) {
+        Log::warning("Akses ditolak: User " . Auth::id() . " mencoba mengakses invoice milik User ID: " . $submission->user_id);
         abort(403, 'Unauthorized action. This invoice does not belong to you.');
     }
 
     return view('participants.payment', [
         'snapToken'      => $snapToken,
-        'status_payment' => $anggota->payment,
-        'biaya'          => $anggota->kategori->fee ?? 0,
-        'nama'           => $anggota->peserta?->nama ?? 'Participant',
-        'conference'     => $anggota->kategori->conference,
+        'status_payment' => $submission->payment,
+        'biaya'          => $submission->kategori->fee ?? 0,
+        // Ambil nama dari tabel users_iciphe (melalui relasi user)
+        'nama'           => $submission->user?->name ?? 'Participant',
+        'conference'     => $submission->kategori->conference,
     ]);
-})->middleware(['auth'])->name('payment');
+})->middleware(['auth', 'verified'])->name('payment');

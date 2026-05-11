@@ -11,9 +11,9 @@ return new class extends Migration
         Schema::create('peserta_conferences', function (Blueprint $table) {
             $table->id('id_pc'); // Primary Key
 
-            // Relasi ke tabel peserta
-            $table->foreignId('id')
-                ->constrained('peserta')
+            // Relasi LANGSUNG ke tabel users_iciphe
+            $table->foreignId('user_id')
+                ->constrained('users_iciphe')
                 ->onDelete('cascade');
 
             // Relasi One to Many: id_ktg (Kategori) -> id_ktg (Peserta Conferences)
@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('file_artikel')->nullable();
             $table->string('status_artikel')->nullable();
             $table->enum('payment', ['pending', 'expired', 'success'])->default('pending');
+            $table->unsignedBigInteger('id_sc')->nullable();
             $table->string('snap')->nullable();
             $table->string('order_id')->nullable();
             $table->timestamps();

@@ -27,8 +27,8 @@ return new class extends Migration {
         pc.payment COLLATE utf8mb4_unicode_ci AS payment,
         pc.created_at
     FROM peserta_conferences pc
-    JOIN peserta p ON pc.id = p.id
-    JOIN users_iciphe u ON p.user_id = u.id
+    -- JOIN langsung ke users_iciphe menggunakan user_id
+    JOIN users_iciphe u ON pc.user_id = u.id 
     JOIN kategori ktg1 ON pc.id_ktg = ktg1.id_ktg
 
     UNION ALL
@@ -44,7 +44,7 @@ return new class extends Migration {
         pca.status_abstract COLLATE utf8mb4_unicode_ci AS status_abstract,
         pca.file_artikel COLLATE utf8mb4_unicode_ci AS file_artikel,
         pca.status_artikel COLLATE utf8mb4_unicode_ci AS status_artikel,
-        CAST(NULL AS CHAR) COLLATE utf8mb4_unicode_ci AS file_kp, -- NULL juga harus di-cast
+        CAST(NULL AS CHAR) COLLATE utf8mb4_unicode_ci AS file_kp,
         pca.payment COLLATE utf8mb4_unicode_ci AS payment,
         pca.created_at
     FROM peserta_conferences_adaksi pca

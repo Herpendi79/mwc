@@ -6,21 +6,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+// File: app/Models/PesertaConferences.php
+
 class PesertaConferences extends Model
 {
-    use HasFactory;
-
     protected $table = 'peserta_conferences';
     protected $primaryKey = 'id_pc';
 
     protected $fillable = [
-        'id',
+        'user_id', // Ubah dari 'id' menjadi 'user_id'
         'id_ktg',
+        'id_sc',
+        'id_pub',
         'no_sertifikat',
         'file_kp',
         'file_abstract',
         'status_abstract',
-        'id_pub',
         'file_artikel',
         'status_artikel',
         'file_bukti_tf',
@@ -30,23 +31,20 @@ class PesertaConferences extends Model
     ];
 
     /**
-     * Relasi balik ke Peserta
+     * Relasi balik LANGSUNG ke User
      */
-    public function peserta(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Peserta::class, 'id', 'id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    /**
-     * Relasi ke Kategori
-     */
     public function kategori(): BelongsTo
     {
         return $this->belongsTo(Kategori::class, 'id_ktg', 'id_ktg');
     }
-
     public function publikasi()
     {
+        // Parameter: Model tujuan, foreign key di pendaftaran, primary key di publikasi
         return $this->belongsTo(Publikasi::class, 'id_pub', 'id_pub');
     }
 }

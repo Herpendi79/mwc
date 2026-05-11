@@ -9,23 +9,23 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::table('peserta', function (Blueprint $table) {
-            // Menghapus kolom kategori
-            $table->dropColumn('kategori');
-        });
+        // Cek dulu apakah kolom 'kategori' ada sebelum mencoba menghapusnya
+        if (Schema::hasColumn('peserta', 'kategori')) {
+            Schema::table('peserta', function (Blueprint $table) {
+                $table->dropColumn('kategori');
+            });
+        }
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
-        Schema::table('peserta', function (Blueprint $table) {
-            // Mengembalikan kolom jika migrasi dibatalkan (rollback)
-            // Sesuaikan tipe datanya dengan tipe data sebelumnya (misal: string)
-            $table->string('kategori')->nullable();
-        });
+        // Kebalikannya, cek dulu apakah kolom 'kategori' BELUM ada sebelum menambahkannya kembali
+        if (!Schema::hasColumn('peserta', 'kategori')) {
+            Schema::table('peserta', function (Blueprint $table) {
+                $table->string('kategori')->nullable();
+            });
+        }
     }
 };

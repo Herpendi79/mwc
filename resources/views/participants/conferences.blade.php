@@ -293,35 +293,54 @@
 
                                                             {{-- LOGIKA TOMBOL UPLOAD ARTIKEL --}}
                                                             @php
-                                                                $absStatus = strtolower($submission->status_abstract);
-                                                                $artStatus = strtolower($submission->status_artikel);
+                                                                // Gunakan null-safe operator dan trim untuk memastikan data bersih
+                                                                $absStatus = $submission->status_abstract
+                                                                    ? strtolower($submission->status_abstract)
+                                                                    : null;
+                                                                $artStatus = $submission->status_artikel
+                                                                    ? strtolower($submission->status_artikel)
+                                                                    : null;
+
+                                                                // Pastikan pengecekan kategori tidak case-sensitive
                                                                 $isPresenter = str_contains(
-                                                                    $submission->kategori->nama_ktg,
+                                                                    strtolower($submission->kategori->nama_ktg ?? ''),
                                                                     'presenter',
                                                                 );
                                                             @endphp
 
-                                                            @if ($isPresenter && ($absStatus == null || $absStatus == 'revision required'))
-                                                                {{-- Tombol Revisi Abstract aktif jika belum accepted --}}
-                                                                <button
-                                                                    onclick="openRevisionModal('{{ $submission->id_pc }}')"
-                                                                    class="bg-orange-500 text-white text-[9px] px-2 py-1 rounded-md font-bold uppercase">Revision
-                                                                    Abstract</button>
-                                                            @elseif ($absStatus == 'accepted')
-                                                                @if (!$submission->file_artikel || $artStatus == 'revision required')
-                                                                    {{-- Tombol Aktif jika belum upload ATAU butuh revisi artikel --}}
+                                                            {{-- LOGIKA TOMBOL --}}
+                                                            @if ($isPresenter)
+                                                                {{-- Jika status null ATAU string kosong ATAU 'waiting review' (opsional) ATAU 'revision required' --}}
+                                                                @if (empty($absStatus))
                                                                     <button
-                                                                        onclick="openArticleModal('{{ $submission->id_pc }}')"
-                                                                        class="bg-red-500 text-white text-[9px] px-2 py-1 rounded-md font-bold uppercase hover:bg-red-600">
-                                                                        {{ $artStatus == 'revision required' ? 'Upload Revision Article' : 'Upload Full Article' }}
+                                                                        onclick="openRevisionModal('{{ $submission->id_pc }}')"
+                                                                        class="bg-orange-500 text-white text-[9px] px-2 py-1 rounded-md font-bold uppercase">
+                                                                        {{ empty($absStatus) ? 'Submit Abstract' : 'Revision Abstract' }}
                                                                     </button>
-                                                                @elseif ($artStatus == 'accepted')
-                                                                    {{-- Tombol Disable jika sudah Accepted --}}
-                                                                    <span
-                                                                        class="text-[9px] text-green-600 font-bold uppercase"><i
-                                                                            class="ri-checkbox-circle-line"></i> Article
-                                                                        Accepted</span>
+                                                                @elseif ($absStatus == 'accepted')
+                                                                    {{-- Logika Upload Artikel --}}
+                                                                    @if (empty($artStatus) || $artStatus == 'revision required')
+                                                                        <button
+                                                                            onclick="openArticleModal('{{ $submission->id_pc }}')"
+                                                                            class="bg-red-500 text-white text-[9px] px-2 py-1 rounded-md font-bold uppercase hover:bg-red-600">
+                                                                            {{ $artStatus == 'revision required' ? 'Upload Revision Article' : 'Upload Full Article' }}
+                                                                        </button>
+                                                                    @elseif ($artStatus == 'accepted')
+                                                                        <span
+                                                                            class="text-[9px] text-green-600 font-bold uppercase">
+                                                                            <i class="ri-checkbox-circle-line"></i> Article
+                                                                            Accepted
+                                                                        </span>
+                                                                    @else
+                                                                        <span
+                                                                            class="text-[9px] text-blue-600 font-bold uppercase">Article
+                                                                            Under Review</span>
+                                                                    @endif
                                                                 @endif
+                                                            @else
+                                                                {{-- Jika bukan presenter (Participant), mungkin hanya muncul status --}}
+                                                                <span class="text-gray-400 text-[10px]">No Action
+                                                                    Needed</span>
                                                             @endif
                                                         </div>
                                                     @else

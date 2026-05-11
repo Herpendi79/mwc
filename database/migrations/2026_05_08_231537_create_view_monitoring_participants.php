@@ -23,8 +23,8 @@ return new class extends Migration {
                 pc.created_at AS tanggal_daftar,
                 pc.file_bukti_tf COLLATE utf8mb4_unicode_ci AS file_bukti_tf
             FROM peserta_conferences pc
-            JOIN peserta p ON pc.id = p.id
-            JOIN users_iciphe u ON p.user_id = u.id
+            JOIN users_iciphe u ON pc.user_id = u.id
+            LEFT JOIN peserta p ON u.id = p.user_id 
             JOIN kategori ktg1 ON pc.id_ktg = ktg1.id_ktg
 
             UNION ALL
