@@ -130,32 +130,42 @@
                                                             \Carbon\Carbon::parse($conf->deadline_subm),
                                                         );
 
-                                                        // 2. Logika expired 3 jam untuk status pending
+                                                        // 2. Logika expired 4 jam (Hanya untuk Domestic)
                                                         $isPendingExpired = false;
+
                                                         if ($submission && $submission->payment == 'pending') {
-                                                            // Kita paksa ke timezone Asia/Jakarta agar akurat dengan jam lokal kita sekarang
-                                                            $expiryTime = \Carbon\Carbon::parse(
-                                                                $submission->created_at,
-                                                                'Asia/Jakarta',
-                                                            )->addHours(4);
-                                                            $isPendingExpired = \Carbon\Carbon::now(
-                                                                'Asia/Jakarta',
-                                                            )->greaterThan($expiryTime);
+                                                            // Cek apakah kategori domestic (tidak mengandung kata 'international')
+                                                            $namaKategori = strtolower(
+                                                                $submission->kategori->nama_ktg ?? '',
+                                                            );
+                                                            $isDomestic = !str_contains($namaKategori, 'international');
+
+                                                            if ($isDomestic) {
+                                                                // Aturan 4 jam hanya untuk Domestic
+                                                                $expiryTime = \Carbon\Carbon::parse(
+                                                                    $submission->created_at,
+                                                                    'Asia/Jakarta',
+                                                                )->addHours(4);
+                                                                $isPendingExpired = \Carbon\Carbon::now(
+                                                                    'Asia/Jakarta',
+                                                                )->greaterThan($expiryTime);
+                                                            } else {
+                                                                // Untuk International, biasanya tidak di-auto-expire karena transfer manual butuh waktu lama
+                                                                $isPendingExpired = false;
+                                                            }
                                                         }
 
                                                         // 3. Tentukan apakah tombol submit/resubmit bisa muncul
-                                                        // Muncul jika: Belum deadline DAN (Belum ada data pendaftaran ATAU sudah expired 3 jam)
                                                         $canSubmit =
                                                             !$isDeadlinePassed && (!$submission || $isPendingExpired);
                                                     @endphp
 
                                                     @if ($canSubmit)
-                                                        {{-- Jika expired, arahkan ke route resubmit (Delete & Redirect), jika baru arahkan ke form submit --}}
                                                         @if ($isPendingExpired)
                                                             <form
                                                                 action="{{ route('participants.resubmit', $submission->id_pc) }}"
                                                                 method="POST"
-                                                                onsubmit="return confirm('Your previous pending session has expired. Re-submit now?')">
+                                                                onsubmit="return confirm('Your previous pending session has expired (Domestic 4-hour limit). Re-submit now?')">
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button type="submit"
@@ -173,7 +183,6 @@
                                                         <button disabled
                                                             class="bg-gray-100 text-gray-400 font-bold py-2 px-4 rounded-xl text-xs cursor-not-allowed">Closed</button>
                                                     @elseif ($submission && in_array($submission->payment, ['success', 'settlement', 'pending']))
-                                                        {{-- Tombol terkunci jika pendaftaran masih berjalan (belum 3 jam) atau sudah sukses --}}
                                                         <button disabled
                                                             class="bg-gray-100 text-gray-400 font-bold py-2 px-4 rounded-xl text-xs cursor-not-allowed">
                                                             @if ($submission->payment == 'pending')
