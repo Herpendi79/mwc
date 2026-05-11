@@ -137,7 +137,7 @@
                                                             $expiryTime = \Carbon\Carbon::parse(
                                                                 $submission->created_at,
                                                                 'Asia/Jakarta',
-                                                            )->addHours(3);
+                                                            )->addHours(4);
                                                             $isPendingExpired = \Carbon\Carbon::now(
                                                                 'Asia/Jakarta',
                                                             )->greaterThan($expiryTime);
