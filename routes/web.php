@@ -53,6 +53,10 @@ Route::get('/registration-fee', function () {
     return view('registration-fee');
 })->name('registration-fee');
 
+Route::get('/accommodation', function () {
+    return view('accommodation');
+})->name('accommodation');
+
 Route::get('/commitee', function () {
     return view('commitee');
 })->name('commitee');

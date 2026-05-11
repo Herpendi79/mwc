@@ -111,6 +111,14 @@
                                 Registration Fee
                             </a>
                         </li>
+                        <li>
+                            <a href="accommodation" 
+                                class="relative flex items-center gap-3 px-5 py-2 font-medium text-[18px] transition-all duration-300 hover:text-[#c0f037] group/underline hover:translate-x-2">
+                                <span
+                                    class="before:content-[''] before:absolute before:left-3 before:top-1/2 before:h-0 before:w-0.75 before:bg-[#c0f037] before:-translate-y-1/2 before:rounded-full before:transition-all before:duration-300 group-hover/underline:before:h-5"></span>
+                                Nearby Accommodation
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </li>
@@ -338,6 +346,14 @@
                                     <span
                                         class="before:content-[''] before:absolute before:left-2 before:top-1/2 before:h-0 before:w-0.75 before:bg-[#c0f037] before:-translate-y-1/2 before:rounded-full before:transition-all before:duration-300 group-hover/underline:before:h-5"></span>
                                     Registration Fee
+                                </a>
+                            </li>
+                            <li>
+                                <a href="accommodation"
+                                    class="block relative px-4 py-2 text-gray-600 font-medium text-[18px] transition-all duration-300 hover:text-[#c0f037] group/underline hover:translate-x-2">
+                                    <span
+                                        class="before:content-[''] before:absolute before:left-2 before:top-1/2 before:h-0 before:w-0.75 before:bg-[#c0f037] before:-translate-y-1/2 before:rounded-full before:transition-all before:duration-300 group-hover/underline:before:h-5"></span>
+                                    Nearby Accommodation 
                                 </a>
                             </li>
                         </ul>
