@@ -125,19 +125,18 @@
                             <div
                                 class="bg-white dark:bg-zinc-900 rounded-3xl border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
                                 <div class="p-6 border-b border-gray-100 dark:border-zinc-800">
-                                    <div class="flex flex-col lg:flex-row items-end justify-between gap-4">
+                                    {{-- Container Utama: Menggunakan Flex Wrap agar responsif --}}
+                                    <div class="flex flex-wrap items-end justify-between gap-6">
 
-                                        {{-- Grup Filter & Search (Kiri) --}}
-                                        <div class="flex flex-wrap items-end gap-3 flex-grow">
-
-                                            
+                                        {{-- Grup Kiri: Status, Category, Scope, Search --}}
+                                        <div class="flex flex-wrap items-end gap-4 flex-grow">
 
                                             {{-- Filter Status --}}
-                                            <div class="w-full md:w-80">
+                                            <div class="w-full md:w-48">
                                                 <label
                                                     class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Status</label>
                                                 <select id="filterStatus"
-                                                    class="w-full p-2 rounded-xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800 dark:text-white text-xs outline-none focus:ring-2 focus:ring-blue-500">
+                                                    class="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800 dark:text-white text-xs outline-none focus:ring-2 focus:ring-blue-500">
                                                     <option value="">All Status</option>
                                                     <option value="abs_waiting">Abs: Waiting</option>
                                                     <option value="abs_accepted">Abs: Accepted</option>
@@ -147,11 +146,11 @@
                                             </div>
 
                                             {{-- Filter Kategori --}}
-                                            <div class="w-full md:w-80">
+                                            <div class="w-full md:w-48">
                                                 <label
                                                     class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Category</label>
                                                 <select id="filterCategory"
-                                                    class="w-full p-2 rounded-xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800 dark:text-white text-xs outline-none focus:ring-2 focus:ring-blue-500">
+                                                    class="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800 dark:text-white text-xs outline-none focus:ring-2 focus:ring-blue-500">
                                                     <option value="">All Categories</option>
                                                     @foreach ($stats as $catName => $group)
                                                         <option value="{{ $catName }}">{{ $catName }}</option>
@@ -160,41 +159,43 @@
                                             </div>
 
                                             {{-- Filter Scope --}}
-                                            <div class="w-full md:w-80">
+                                            <div class="w-full md:w-48">
                                                 <label
                                                     class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Scope</label>
                                                 <select id="filterScope"
-                                                    class="w-full p-2 rounded-xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800 dark:text-white text-xs outline-none focus:ring-2 focus:ring-blue-500">
+                                                    class="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800 dark:text-white text-xs outline-none focus:ring-2 focus:ring-blue-500">
                                                     <option value="">All Scopes</option>
                                                     @foreach ($scopes as $sc)
                                                         <option value="{{ $sc->nama_sc }}">{{ $sc->nama_sc }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
-                                        </div>
 
-                                        {{-- Grup Tombol Export (Kanan) --}}
-                                        <div class="flex items-center gap-2">
-                                            <button onclick="exportExcel()"
-                                                class="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-all font-bold text-xs shadow-lg shadow-emerald-500/20 whitespace-nowrap">
-                                                <i class="ri-file-excel-line"></i> Excel
-                                            </button>
-                                            <button onclick="exportPdf()"
-                                                class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-bold text-xs shadow-lg shadow-blue-500/20 whitespace-nowrap">
-                                                <i class="ri-file-pdf-line"></i> PDF
-                                            </button>
-                                        </div>
-                                        {{-- Search Input --}}
-                                            <div class="w-full md:w-48">
+                                            {{-- Search Input --}}
+                                            <div class="w-full md:w-60">
                                                 <label
                                                     class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Search</label>
                                                 <div class="relative">
                                                     <i
                                                         class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                                                    <input type="text" id="searchInput" placeholder="Name..."
-                                                        class="pl-9 pr-4 py-2 w-full rounded-xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                    <input type="text" id="searchInput"
+                                                        placeholder="Search name or email..."
+                                                        class="pl-9 pr-4 py-2.5 w-full rounded-xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
                                                 </div>
                                             </div>
+                                        </div>
+
+                                        {{-- Grup Kanan: Tombol Export --}}
+                                        <div class="flex items-center gap-3 pb-0.5">
+                                            <button onclick="exportExcel()"
+                                                class="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-all font-bold text-xs shadow-lg shadow-emerald-500/20 whitespace-nowrap">
+                                                <i class="ri-file-excel-line"></i> Excel
+                                            </button>
+                                            <button onclick="exportPdf()"
+                                                class="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-bold text-xs shadow-lg shadow-blue-500/20 whitespace-nowrap">
+                                                <i class="ri-file-pdf-line"></i> PDF
+                                            </button>
+                                        </div>
 
                                     </div>
                                 </div>
