@@ -124,75 +124,76 @@
                             @endif
                             <div
                                 class="bg-white dark:bg-zinc-900 rounded-3xl border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
-                                <div class="p-6 border-b border-gray-100 dark:border-zinc-800">
-                                    {{-- Container Utama: Menggunakan Flex Wrap agar responsif --}}
-                                    <div class="flex flex-wrap items-end justify-between gap-6">
+                                <div class="p-6 border-b border-gray-100 dark:border-zinc-800" style="background: #fdfdfd;">
+                                    {{-- Menggunakan Grid System yang lebih kaku agar tidak meluap --}}
+                                    <div
+                                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; align-items: end;">
 
-                                        {{-- Grup Kiri: Status, Category, Scope, Search --}}
-                                        <div class="flex flex-wrap items-end gap-4 flex-grow">
 
-                                            {{-- Filter Status --}}
-                                            <div class="w-full md:w-48">
-                                                <label
-                                                    class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Status</label>
-                                                <select id="filterStatus"
-                                                    class="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800 dark:text-white text-xs outline-none focus:ring-2 focus:ring-blue-500">
-                                                    <option value="">All Status</option>
-                                                    <option value="abs_waiting">Abs: Waiting</option>
-                                                    <option value="abs_accepted">Abs: Accepted</option>
-                                                    <option value="art_waiting">Art: Waiting</option>
-                                                    <option value="art_accepted">Art: Accepted</option>
-                                                </select>
-                                            </div>
-
-                                            {{-- Filter Kategori --}}
-                                            <div class="w-full md:w-48">
-                                                <label
-                                                    class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Category</label>
-                                                <select id="filterCategory"
-                                                    class="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800 dark:text-white text-xs outline-none focus:ring-2 focus:ring-blue-500">
-                                                    <option value="">All Categories</option>
-                                                    @foreach ($stats as $catName => $group)
-                                                        <option value="{{ $catName }}">{{ $catName }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-
-                                            {{-- Filter Scope --}}
-                                            <div class="w-full md:w-48">
-                                                <label
-                                                    class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Scope</label>
-                                                <select id="filterScope"
-                                                    class="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800 dark:text-white text-xs outline-none focus:ring-2 focus:ring-blue-500">
-                                                    <option value="">All Scopes</option>
-                                                    @foreach ($scopes as $sc)
-                                                        <option value="{{ $sc->nama_sc }}">{{ $sc->nama_sc }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-
-                                            {{-- Search Input --}}
-                                            <div class="w-full md:w-60">
-                                                <label
-                                                    class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Search</label>
-                                                <div class="relative">
-                                                    <i
-                                                        class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                                                    <input type="text" id="searchInput"
-                                                        placeholder="Search name or email..."
-                                                        class="pl-9 pr-4 py-2.5 w-full rounded-xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                </div>
+                                        {{-- Card Search --}}
+                                        <div
+                                            style="background: white; padding: 10px; border-radius: 12px; border: 1px solid #eee;">
+                                            <label
+                                                style="display: block; font-size: 10px; font-weight: bold; color: #999; text-transform: uppercase; margin-bottom: 5px;">Search
+                                                Participant</label>
+                                            <div style="position: relative;">
+                                                <input type="text" id="searchInput" placeholder="Name or email..."
+                                                    style="width: 100%; padding: 8px; padding-left: 30px; font-size: 12px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa;">
+                                                <i class="ri-search-line"
+                                                    style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #aaa;"></i>
                                             </div>
                                         </div>
+                                        {{-- Card Filter Status --}}
+                                        <div
+                                            style="background: white; padding: 10px; border-radius: 12px; border: 1px solid #eee;">
+                                            <label
+                                                style="display: block; font-size: 10px; font-weight: bold; color: #999; text-transform: uppercase; margin-bottom: 5px;">Status</label>
+                                            <select id="filterStatus"
+                                                style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa;">
+                                                <option value="">All Status</option>
+                                                <option value="abs_waiting">Abstract Status: Waiting</option>
+                                                <option value="abs_accepted">Abstract Status: Accepted</option>
+                                                <option value="art_waiting">Article Status: Waiting</option>
+                                                <option value="art_accepted">Article Status: Accepted</option>
+                                            </select>
+                                        </div>
 
-                                        {{-- Grup Kanan: Tombol Export --}}
-                                        <div class="flex items-center gap-3 pb-0.5">
-                                            <button onclick="exportExcel()"
-                                                class="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-all font-bold text-xs shadow-lg shadow-emerald-500/20 whitespace-nowrap">
+                                        {{-- Card Filter Category --}}
+                                        <div
+                                            style="background: white; padding: 10px; border-radius: 12px; border: 1px solid #eee;">
+                                            <label
+                                                style="display: block; font-size: 10px; font-weight: bold; color: #999; text-transform: uppercase; margin-bottom: 5px;">Category</label>
+                                            <select id="filterCategory"
+                                                style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa;">
+                                                <option value="">All Categories</option>
+                                                @foreach ($stats as $catName => $group)
+                                                    <option value="{{ $catName }}">{{ $catName }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        {{-- Card Filter Scope --}}
+                                        <div
+                                            style="background: white; padding: 10px; border-radius: 12px; border: 1px solid #eee;">
+                                            <label
+                                                style="display: block; font-size: 10px; font-weight: bold; color: #999; text-transform: uppercase; margin-bottom: 5px;">Scope</label>
+                                            <select id="filterScope"
+                                                style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa;">
+                                                <option value="">All Scopes</option>
+                                                @foreach ($scopes as $sc)
+                                                    <option value="{{ $sc->nama_sc }}">{{ $sc->nama_sc }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        {{-- Action Buttons --}}
+                                        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                                            <button onclick="exportExcel()" class="bg-emerald-600"
+                                                style="padding: 10px 20px; color: white; border-radius: 10px; font-weight: bold; font-size: 12px; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px;">
                                                 <i class="ri-file-excel-line"></i> Excel
                                             </button>
-                                            <button onclick="exportPdf()"
-                                                class="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-bold text-xs shadow-lg shadow-blue-500/20 whitespace-nowrap">
+                                            <button onclick="exportPdf()" class="bg-blue-600"
+                                                style="padding: 10px 20px; color: white; border-radius: 10px; font-weight: bold; font-size: 12px; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px;">
                                                 <i class="ri-file-pdf-line"></i> PDF
                                             </button>
                                         </div>
