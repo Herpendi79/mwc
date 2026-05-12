@@ -26,6 +26,7 @@ class PesertaConferences extends Model
         'status_artikel',
         'file_bukti_tf',
         'payment',
+        'id_sc',
         'snap',
         'order_id',
     ];

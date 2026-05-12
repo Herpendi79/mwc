@@ -9,12 +9,13 @@ return new class extends Migration {
         // Menghapus view jika sudah ada sebelumnya
         DB::statement("DROP VIEW IF EXISTS view_monitoring_presenters");
 
-        // Membuat View yang menggabungkan kedua tabel
+        // Membuat View yang menggabungkan kedua tabel dengan kolom id_sc
         DB::statement("
     CREATE VIEW view_monitoring_presenters AS
     SELECT 
         pc.id_pc AS id_global,
         pc.id_ktg,
+        pc.id_sc, 
         ktg1.id_conf,
         CAST('Non ADAKSI' AS CHAR) COLLATE utf8mb4_unicode_ci AS sumber,
         u.name COLLATE utf8mb4_unicode_ci AS nama_user,
@@ -27,7 +28,6 @@ return new class extends Migration {
         pc.payment COLLATE utf8mb4_unicode_ci AS payment,
         pc.created_at
     FROM peserta_conferences pc
-    -- JOIN langsung ke users_iciphe menggunakan user_id
     JOIN users_iciphe u ON pc.user_id = u.id 
     JOIN kategori ktg1 ON pc.id_ktg = ktg1.id_ktg
 
@@ -36,6 +36,7 @@ return new class extends Migration {
     SELECT 
         pca.id_pca AS id_global,
         pca.id_ktg,
+        pca.id_sc, 
         ktg2.id_conf,
         CAST('ADAKSI' AS CHAR) COLLATE utf8mb4_unicode_ci AS sumber,
         ang.nama_anggota COLLATE utf8mb4_unicode_ci AS nama_user,

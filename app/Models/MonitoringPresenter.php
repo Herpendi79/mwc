@@ -12,6 +12,9 @@ class MonitoringPresenter extends Model
 
     // Karena ini view, primary key tidak auto-increment secara standar
     protected $primaryKey = 'id_global';
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
     public $incrementing = false;
 
     // View bersifat Read-Only (hanya baca)
@@ -23,5 +26,17 @@ class MonitoringPresenter extends Model
     public function kategori(): BelongsTo
     {
         return $this->belongsTo(Kategori::class, 'id_ktg', 'id_ktg');
+    }
+    public function scope()
+    {
+        return $this->belongsTo(Scope::class, 'id_sc', 'id_sc');
+    }
+    public function user(): BelongsTo
+    {
+        // Parameter: Model User, Foreign Key di VIEW, Owner Key di tabel users
+        // Jika sumber 'Non ADAKSI', user_id merujuk ke users_iciphe.id
+        // Jika sumber 'ADAKSI', id_global (id_pca) merujuk ke users.id_user (lewat logika join di view)
+
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

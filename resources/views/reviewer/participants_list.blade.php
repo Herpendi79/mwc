@@ -44,11 +44,10 @@
                                 <a href="{{ route('reviewer.conferences') }}"
                                     class="hover:text-primary transition-colors">Conferences</a>
                                 <span class="mx-2">/</span>
-                                <span class="dark:text-gray-300">Participants List</span>
+                                <span class="dark:text-gray-300">Participants List of {{ $conference->nama_conf }}</span>
                             </nav>
-                            <h2 class="text-3xl font-bold mb-2 dark:text-white">{{ $conference->nama_conf }}</h2>
-                            <p class="text-gray-500">Managing {{ $participants->count() }} registered participants for this
-                                event.</p>
+                            <h5>Managing {{ $participants->count() }} registered participants for this
+                                event.</h5>
                         </div>
 
                         <div class="force-show" data-sal="slide-up" data-sal-duration="1000">
@@ -71,15 +70,55 @@
 
                             <div
                                 class="bg-white dark:bg-zinc-900 rounded-3xl border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
-                                <div
-                                    class="p-6 border-b border-gray-100 dark:border-zinc-800 flex flex-col md:flex-row justify-between items-md-center gap-4">
-                                    <h3 class="text-lg font-bold dark:text-white text-left">Registered Participants</h3>
+                                <div class="p-6 border-b border-gray-100 dark:border-zinc-800">
+                                    <div class="flex flex-col lg:flex-row items-end justify-between gap-4">
 
-                                    <div class="relative">
-                                        <i
-                                            class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                                        <input type="text" id="searchInput" placeholder=""
-                                            class="pl-10 pr-4 py-2 rounded-xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 w-full md:w-64">
+                                        {{-- Grup Filter & Search (Kiri) --}}
+                                        <div class="flex flex-wrap items-end gap-3 flex-grow">
+
+
+                                            {{-- Filter Kategori --}}
+                                            <div class="w-full md:w-64">
+                                                <label
+                                                    class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Category</label>
+                                                <select id="filterCategory"
+                                                    class="w-full p-2 rounded-xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800 dark:text-white text-xs outline-none focus:ring-2 focus:ring-blue-500">
+                                                    <option value="">All Categories</option>
+                                                    @foreach ($stats as $catName => $group)
+                                                        <option value="{{ $catName }}">{{ $catName }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
+                                            {{-- Grup Tombol Export (Kanan) --}}
+                                            <div class="flex items-center gap-2">
+                                                {{-- Tombol Excel --}}
+                                                <button onclick="exportExcel()"
+                                                    class="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-all font-bold text-xs shadow-lg shadow-emerald-500/20 whitespace-nowrap">
+                                                    <i class="ri-file-excel-line"></i> Excel
+                                                </button>
+
+                                                {{-- Tombol PDF --}}
+                                                <button onclick="exportPdf()"
+                                                    class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-bold text-xs shadow-lg shadow-blue-500/20 whitespace-nowrap">
+                                                    <i class="ri-file-pdf-line"></i> PDF
+                                                </button>
+                                            </div>
+
+                                        </div>
+
+                                        {{-- Search Input --}}
+                                        <div class="w-full md:w-48">
+                                            <label
+                                                class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Search</label>
+                                            <div class="relative">
+                                                <i
+                                                    class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                                <input type="text" id="searchInput" placeholder="Name..."
+                                                    class="pl-9 pr-4 py-2 w-full rounded-xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
 
@@ -97,29 +136,44 @@
                                         </thead>
                                         <tbody class="divide-y divide-gray-100 dark:divide-zinc-800">
                                             @forelse($participants as $p)
-                                                <tr class="hover:bg-gray-50/50 dark:hover:bg-zinc-800/30 transition-colors">
-                                                    <td class="p-4 text-sm text-gray-500">{{ $loop->iteration }}</td>
+                                                {{-- Tambahkan class 'searchable-row' di sini --}}
+                                                <tr class="searchable-row hover:bg-gray-50/50 dark:hover:bg-zinc-800/30 transition-colors"
+                                                    data-name="{{ strtolower($p->nama_user) }}"
+                                                    data-email="{{ strtolower($p->email_user) }}"
+                                                    data-category="{{ $p->kategori->nama_ktg }}">
+
+                                                    <td class="p-4 text-sm text-gray-500">
+                                                        {{ ($participants->currentPage() - 1) * $participants->perPage() + $loop->iteration }}
+                                                    </td>
+
                                                     <td class="p-4">
                                                         <div class="font-bold dark:text-white">{{ $p->nama_user }}</div>
                                                         <div class="text-[11px] text-gray-400">{{ $p->email_user }}</div>
                                                     </td>
+
                                                     <td class="p-4">
-                                                        <div class="text-sm dark:text-gray-300"><i
-                                                                class="ri-whatsapp-line mr-1 text-green-500"></i>{{ $p->no_telp ?? '-' }}
+                                                        {{-- Gunakan data mapping jika ada, atau data asli jika tidak --}}
+                                                        <div class="text-sm dark:text-gray-300">
+                                                            <i class="ri-whatsapp-line mr-1 text-green-500"></i>
+                                                            {{ $p->whatsapp_final ?? ($p->no_telp ?? '-') }}
                                                         </div>
-                                                        <div class="text-[11px] text-gray-400"><i
-                                                                class="ri-global-line mr-1 text-blue-500"></i>{{ $p->negara ?? '-' }}
+                                                        <div class="text-[11px] text-gray-400">
+                                                            <i class="ri-global-line mr-1 text-blue-500"></i>
+                                                            {{ $p->negara_final ?? ($p->negara ?? '-') }}
                                                         </div>
                                                     </td>
+
                                                     <td class="p-4 text-sm dark:text-gray-300">
                                                         {{ $p->kategori->nama_ktg }}
                                                     </td>
+
                                                     <td class="p-4">
                                                         <span
                                                             class="px-2 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider {{ $p->sumber == 'ADAKSI' ? 'bg-blue-100 text-blue-600' : 'bg-emerald-100 text-emerald-600' }}">
                                                             {{ $p->sumber }}
                                                         </span>
                                                     </td>
+
                                                     <td class="p-4 text-sm dark:text-gray-300">
                                                         {{ \Carbon\Carbon::parse($p->tanggal_daftar)->format('d M Y, H:i') }}
                                                     </td>
@@ -151,56 +205,57 @@
 @section('scripts')
     <script src="{{ asset('assets/js/dark-mode.js') }}" defer></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const sidebar = document.getElementById('main-sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            const btnOpen = document.getElementById('sidebar-open');
-            const btnClose = document.getElementById('sidebar-close');
-            const profileBtn = document.getElementById('profile-menu-button');
-            const profileDropdown = document.getElementById('profile-dropdown');
+        // Pastikan fungsi ini di luar DOMContentLoaded agar terbaca oleh onclick
+        function exportPdf() {
+            const id_conf = "{{ $conference->id_conf }}";
+            const category = document.getElementById('filterCategory')?.value || '';
+            const search = document.getElementById('searchInput')?.value || '';
 
-            if (profileBtn && profileDropdown) {
-                profileBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    profileDropdown.classList.toggle('hidden');
-                });
-                window.addEventListener('click', (e) => {
-                    if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
-                        profileDropdown.classList.add('hidden');
-                    }
-                });
-            }
+            const params = new URLSearchParams({
+                id_conf,
+                category,
+                search
+            }).toString();
+            window.location.href = `{{ route('reviewer.exportParticipantsPdf') }}?${params}`;
+        }
 
-            function toggleSidebar() {
-                sidebar.classList.toggle('-translate-x-full');
-                overlay.classList.toggle('hidden');
-                document.body.classList.toggle('overflow-hidden');
-            }
-            if (btnOpen) btnOpen.addEventListener('click', toggleSidebar);
-            if (btnClose) btnClose.addEventListener('click', toggleSidebar);
-            if (overlay) overlay.addEventListener('click', toggleSidebar);
-        });
+        function exportExcel() {
+            const id_conf = "{{ $conference->id_conf }}";
+            const category = document.getElementById('filterCategory')?.value || '';
+            const search = document.getElementById('searchInput')?.value || '';
+
+            const params = new URLSearchParams({
+                id_conf,
+                category,
+                search
+            }).toString();
+            window.location.href = `{{ route('reviewer.exportParticipantsExcel') }}?${params}`;
+        }
 
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('searchInput');
+            const filterCategory = document.getElementById('filterCategory');
             const rows = document.querySelectorAll('.searchable-row');
 
-            searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
+            function filterTable() {
+                if (!rows.length) return;
+                const searchTerm = searchInput.value.toLowerCase();
+                const categoryTerm = filterCategory.value;
 
                 rows.forEach(row => {
-                    // Mengambil teks dari kolom Nama dan Negara
-                    const name = row.querySelector('.participant-name').textContent.toLowerCase();
-                    const country = row.querySelector('.participant-country').textContent
-                        .toLowerCase();
+                    const name = row.getAttribute('data-name') || '';
+                    const email = row.getAttribute('data-email') || '';
+                    const category = row.getAttribute('data-category') || '';
 
-                    if (name.includes(searchTerm) || country.includes(searchTerm)) {
-                        row.style.display = "";
-                    } else {
-                        row.style.display = "none";
-                    }
+                    const matchesSearch = name.includes(searchTerm) || email.includes(searchTerm);
+                    const matchesCategory = categoryTerm === "" || category === categoryTerm;
+
+                    row.style.display = (matchesSearch && matchesCategory) ? "" : "none";
                 });
-            });
+            }
+
+            if (searchInput) searchInput.addEventListener('input', filterTable);
+            if (filterCategory) filterCategory.addEventListener('change', filterTable);
         });
     </script>
 @endsection

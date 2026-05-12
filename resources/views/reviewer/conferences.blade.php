@@ -53,9 +53,11 @@
                                             <tr class="bg-gray-50 dark:bg-zinc-800/50">
                                                 <th class="p-4 text-gray-500 font-semibold text-sm text-left">Conference
                                                     Name</th>
-                                                <th class="p-4 text-gray-500 font-semibold text-sm text-center">Valid Registrants
+                                                <th class="p-4 text-gray-500 font-semibold text-sm text-center">Valid
+                                                    Registrants
                                                 </th>
-                                                <th class="p-4 text-gray-500 font-semibold text-sm text-center">Waiting for Payment Validation
+                                                <th class="p-4 text-gray-500 font-semibold text-sm text-center">Waiting for
+                                                    Payment Validation
                                                 </th>
                                                 <th class="p-4 text-gray-500 font-semibold text-sm text-center">Presenter
                                                 </th>
@@ -67,12 +69,14 @@
                                             @forelse($conferences as $conf)
                                                 <tr class="hover:bg-gray-50/50 dark:hover:bg-zinc-800/30 transition-colors">
                                                     <td class="p-4">
-                                                        <div class="font-bold dark:text-white">{{ $conf->nama_conf }}</div>
+                                                        <div class="font-bold dark:text-white">
+                                                            {{ \Illuminate\Support\Str::limit($conf->nama_conf, 50, '...') }}
+                                                        </div>
                                                         <div class="text-[10px] text-red-400">Deadline:
                                                             {{ $conf->deadline_subm->format('d M Y') }}</div>
                                                         <div class="text-[10px] text-green-400">Event Date:
                                                             {{ $conf->tgl_mulai->format('d M') }} -
-                                                        {{ $conf->tgl_selesai->format('d M Y') }}</div>
+                                                            {{ $conf->tgl_selesai->format('d M Y') }}</div>
                                                     </td>
 
                                                     {{-- Total All --}}
@@ -86,7 +90,7 @@
                                                         <div
                                                             class="inline-flex items-center px-2 py-1 bg-red-500/10 text-red-600 rounded-lg text-xs font-bold">
                                                             <i class="ri-book-line mr-1"></i>
-                                                           {{ $conf->antrean_review }}
+                                                            {{ $conf->antrean_review }}
                                                         </div>
                                                         <a href="{{ route('reviewer.registrantwaitvalid.list', $conf->id_conf) }}"
                                                             class="btn btn-sm btn-primary rounded-pill px-3 fw-bold text-white shadow-sm"

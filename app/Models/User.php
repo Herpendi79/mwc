@@ -50,8 +50,11 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Relasi ke tabel peserta (Jika masih digunakan)
      */
-    public function peserta(): HasOne
+    // app/Models/User.php
+
+    public function peserta()
     {
-        return $this->hasOne(Peserta::class, 'user_id');
+        // Hubungkan 'id' di tabel users_iciphe ke 'user_id' di tabel peserta
+        return $this->hasOne(Peserta::class, 'user_id', 'id');
     }
 }

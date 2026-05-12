@@ -26,6 +26,7 @@ class PesertaConferencesAdaksi extends Model
         'file_artikel',
         'status_artikel',
         'payment',
+        'id_sc',
         'snap',
         'order_id',
     ];

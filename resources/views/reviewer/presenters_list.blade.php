@@ -48,13 +48,12 @@
                                 <a href="{{ route('reviewer.conferences') }}"
                                     class="hover:text-primary transition-colors">Conferences</a>
                                 <span class="mx-2">/</span>
-                                <span class="dark:text-gray-300">Presenters List</span>
+                                <span class="dark:text-gray-300">Presenters List of {{ $conference->nama_conf }}</span>
                             </nav>
-                            <h2 class="text-3xl font-bold mb-2 dark:text-white">{{ $conference->nama_conf }}</h2>
-                            <p class="text-gray-500">Managing {{ $totalCount }} registered presenters for this
-                                event.</p>
+                            <h5>Managing {{ $totalCount }} registered presenters for this
+                                event</h5>
                         </div>
-
+                        <hr class="mb-6 border-gray-200 dark:border-zinc-800">
                         <div class="force-show" data-sal="slide-up" data-sal-duration="1000">
                             {{-- Statistik Badge --}}
                             <div class="flex flex-wrap gap-2 mb-6">
@@ -72,6 +71,24 @@
                                     </div>
                                 @endforeach
                             </div>
+                            <hr class="mb-6 border-gray-200 dark:border-zinc-800">
+                            {{-- Statistik Scope --}}
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                @foreach ($statsSC as $nama_sc => $group)
+                                    <div
+                                        class="inline-flex items-center px-3 py-1 rounded-full border dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-300 shadow-sm bg-white">
+                                        <span
+                                            class="text-[10px] font-bold uppercase tracking-tight mr-2 text-emerald-600 dark:text-emerald-400">
+                                            {{ $nama_sc ?? 'No Scope' }}
+                                        </span>
+                                        <span
+                                            class="text-xs font-black border-l border-gray-200 dark:border-zinc-700 pl-2 text-blue-600 dark:text-blue-400">
+                                            {{ $group->count() }}
+                                        </span>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <hr class="mb-6 border-gray-200 dark:border-zinc-800">
                             @if (session('success'))
                                 <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)"
                                     x-transition:leave="transition ease-in duration-300"
@@ -107,15 +124,78 @@
                             @endif
                             <div
                                 class="bg-white dark:bg-zinc-900 rounded-3xl border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
-                                <div
-                                    class="p-6 border-b border-gray-100 dark:border-zinc-800 flex flex-col md:flex-row justify-between items-md-center gap-4">
-                                    <h3 class="text-lg font-bold dark:text-white text-left">Registered Presenters</h3>
+                                <div class="p-6 border-b border-gray-100 dark:border-zinc-800">
+                                    <div class="flex flex-col lg:flex-row items-end justify-between gap-4">
 
-                                    <div class="relative">
-                                        <i
-                                            class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                                        <input type="text" id="searchInput" placeholder=""
-                                            class="pl-10 pr-4 py-2 rounded-xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 w-full md:w-64">
+                                        {{-- Grup Filter & Search (Kiri) --}}
+                                        <div class="flex flex-wrap items-end gap-3 flex-grow">
+
+                                            
+
+                                            {{-- Filter Status --}}
+                                            <div class="w-full md:w-80">
+                                                <label
+                                                    class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Status</label>
+                                                <select id="filterStatus"
+                                                    class="w-full p-2 rounded-xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800 dark:text-white text-xs outline-none focus:ring-2 focus:ring-blue-500">
+                                                    <option value="">All Status</option>
+                                                    <option value="abs_waiting">Abs: Waiting</option>
+                                                    <option value="abs_accepted">Abs: Accepted</option>
+                                                    <option value="art_waiting">Art: Waiting</option>
+                                                    <option value="art_accepted">Art: Accepted</option>
+                                                </select>
+                                            </div>
+
+                                            {{-- Filter Kategori --}}
+                                            <div class="w-full md:w-80">
+                                                <label
+                                                    class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Category</label>
+                                                <select id="filterCategory"
+                                                    class="w-full p-2 rounded-xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800 dark:text-white text-xs outline-none focus:ring-2 focus:ring-blue-500">
+                                                    <option value="">All Categories</option>
+                                                    @foreach ($stats as $catName => $group)
+                                                        <option value="{{ $catName }}">{{ $catName }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
+                                            {{-- Filter Scope --}}
+                                            <div class="w-full md:w-80">
+                                                <label
+                                                    class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Scope</label>
+                                                <select id="filterScope"
+                                                    class="w-full p-2 rounded-xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800 dark:text-white text-xs outline-none focus:ring-2 focus:ring-blue-500">
+                                                    <option value="">All Scopes</option>
+                                                    @foreach ($scopes as $sc)
+                                                        <option value="{{ $sc->nama_sc }}">{{ $sc->nama_sc }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        {{-- Grup Tombol Export (Kanan) --}}
+                                        <div class="flex items-center gap-2">
+                                            <button onclick="exportExcel()"
+                                                class="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-all font-bold text-xs shadow-lg shadow-emerald-500/20 whitespace-nowrap">
+                                                <i class="ri-file-excel-line"></i> Excel
+                                            </button>
+                                            <button onclick="exportPdf()"
+                                                class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-bold text-xs shadow-lg shadow-blue-500/20 whitespace-nowrap">
+                                                <i class="ri-file-pdf-line"></i> PDF
+                                            </button>
+                                        </div>
+                                        {{-- Search Input --}}
+                                            <div class="w-full md:w-48">
+                                                <label
+                                                    class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Search</label>
+                                                <div class="relative">
+                                                    <i
+                                                        class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                                    <input type="text" id="searchInput" placeholder="Name..."
+                                                        class="pl-9 pr-4 py-2 w-full rounded-xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                </div>
+                                            </div>
+
                                     </div>
                                 </div>
 
@@ -126,6 +206,7 @@
                                                 <th class="p-4 text-gray-500 font-semibold text-sm">No</th>
                                                 <th class="p-4 text-gray-500 font-semibold text-sm">Name</th>
                                                 <th class="p-4 text-gray-500 font-semibold text-sm">Category</th>
+                                                <th class="p-4 text-gray-500 font-semibold text-sm">Scope</th>
                                                 <th class="p-4 text-gray-500 font-semibold text-sm">Abstract & Status</th>
                                                 <th class="p-4 text-gray-500 font-semibold text-sm">Review Abstract</th>
                                                 <th class="p-4 text-gray-500 font-semibold text-sm">Article & Status</th>
@@ -135,8 +216,12 @@
                                         <tbody id="presenterTableBody"
                                             class="divide-y divide-gray-100 dark:divide-zinc-800">
                                             @forelse($presenters as $p)
-                                                <tr
-                                                    class="searchable-row hover:bg-gray-50/50 dark:hover:bg-zinc-800/30 transition-colors">
+                                                <tr class="searchable-row hover:bg-gray-50/50 dark:hover:bg-zinc-800/30 transition-colors"
+                                                    data-name="{{ strtolower($p->nama_user) }}"
+                                                    data-category="{{ $p->kategori->nama_ktg }}"
+                                                    data-scope="{{ $p->scope->nama_sc ?? '' }}"
+                                                    data-abs-status="{{ strtolower($p->status_abstract) }}"
+                                                    data-art-status="{{ strtolower($p->status_artikel) }}">
                                                     <td class="p-4 text-sm text-gray-500 dark:text-gray-400">
                                                         {{ $loop->iteration }}
                                                     </td>
@@ -163,6 +248,11 @@
                                                         @else
                                                             <span class="text-gray-400 italic text-xs">Not Student</span>
                                                         @endif
+                                                    </td>
+                                                    <td class="p-4">
+                                                        <span class="text-sm dark:text-gray-300">
+                                                            {{ $p->scope?->nama_sc ?? '-' }}
+                                                        </span>
                                                     </td>
                                                     <td class="p-4">
                                                         @php
@@ -240,19 +330,23 @@
                                                                                     action="{{ route('reviewer.updateStatus', ['id' => $p->id_global, 'sumber' => $p->sumber]) }}"
                                                                                     method="POST">
                                                                                     @csrf
-                                                                                    <div class="space-y-3">
+                                                                                    <div class="space-y-3"
+                                                                                        x-data="{ decision: '' }">
+                                                                                        {{-- Radio Revision --}}
                                                                                         <label
                                                                                             class="flex items-center p-3 border rounded-2xl cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-colors border-gray-100 dark:border-zinc-800">
                                                                                             <input type="radio"
                                                                                                 name="status"
                                                                                                 value="revision"
                                                                                                 x-model="decision"
-                                                                                                class="w-4 h-4 text-blue-600">
+                                                                                                class="w-4 h-4 text-blue-600"
+                                                                                                required>
                                                                                             <span
                                                                                                 class="ml-3 text-sm font-semibold text-gray-700 dark:text-gray-300">Revision
                                                                                                 Required</span>
                                                                                         </label>
 
+                                                                                        {{-- Radio Accepted --}}
                                                                                         <label
                                                                                             class="flex items-center p-3 border rounded-2xl cursor-pointer hover:bg-emerald-50 dark:hover:bg-emerald-900/10 transition-colors border-gray-100 dark:border-zinc-800">
                                                                                             <input type="radio"
@@ -264,6 +358,28 @@
                                                                                                 class="ml-3 text-sm font-semibold text-gray-700 dark:text-gray-300">Accepted</span>
                                                                                         </label>
 
+                                                                                        {{-- Dropdown Scope (Muncul jika Accepted) --}}
+                                                                                        <div x-show="decision === 'accepted'"
+                                                                                            x-transition x-cloak
+                                                                                            class="pt-2">
+                                                                                            <label
+                                                                                                class="block mb-2 text-[10px] font-bold text-gray-500 uppercase ml-1">Select
+                                                                                                Conference Scope</label>
+                                                                                            <select name="id_sc"
+                                                                                                x-bind:required="decision === 'accepted'"
+                                                                                                class="w-full p-3 rounded-2xl border border-gray-200 dark:border-zinc-800 dark:bg-zinc-800 dark:text-white text-xs outline-none focus:ring-2 focus:ring-emerald-500">
+                                                                                                <option value="">--
+                                                                                                    Choose Scope --</option>
+                                                                                                @foreach ($scopes as $sc)
+                                                                                                    <option
+                                                                                                        value="{{ $sc->id_sc }}">
+                                                                                                        {{ $sc->nama_sc }}
+                                                                                                    </option>
+                                                                                                @endforeach
+                                                                                            </select>
+                                                                                        </div>
+
+                                                                                        {{-- Textarea Revision (Muncul jika Revision) --}}
                                                                                         <div x-show="decision === 'revision'"
                                                                                             x-transition x-cloak
                                                                                             class="pt-2">
@@ -466,8 +582,50 @@
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="{{ asset('assets/js/dark-mode.js') }}" defer></script>
     <script>
+        function exportPdf() {
+            const id_conf = "{{ $conference->id_conf }}";
+            const status = document.getElementById('filterStatus').value;
+            const category = document.getElementById('filterCategory').value;
+            const scope = document.getElementById('filterScope').value;
+            const search = document.getElementById('searchInput').value;
+
+            // Gunakan encodeURIComponent untuk keamanan karakter di URL
+            const params = new URLSearchParams({
+                id_conf: id_conf,
+                status: status,
+                category: category,
+                scope: scope,
+                search: search
+            }).toString();
+
+            // Arahkan ke route export dengan query string
+            const url =
+                `{{ route('reviewer.exportPresentersPdf') }}?id_conf=${id_conf}&status=${status}&category=${category}&scope=${scope}&search=${search}`;
+            window.location.href = url;
+        }
+
+        function exportExcel() {
+            const id_conf = "{{ $conference->id_conf }}";
+            const status = document.getElementById('filterStatus').value;
+            const category = document.getElementById('filterCategory').value;
+            const scope = document.getElementById('filterScope').value;
+            const search = document.getElementById('searchInput').value;
+
+            const params = new URLSearchParams({
+                id_conf: id_conf,
+                status: status,
+                category: category,
+                scope: scope,
+                search: search
+            }).toString();
+
+            // Arahkan ke route excel
+            const url = `{{ route('reviewer.exportPresentersExcel') }}?${params}`;
+            window.location.href = url;
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
-            // Sidebar & Profile Logic
+            // UI Elements
             const sidebar = document.getElementById('main-sidebar');
             const overlay = document.getElementById('sidebar-overlay');
             const btnOpen = document.getElementById('sidebar-open');
@@ -475,15 +633,79 @@
             const profileBtn = document.getElementById('profile-menu-button');
             const profileDropdown = document.getElementById('profile-dropdown');
 
+            // Filter Elements
+            const searchInput = document.getElementById('searchInput');
+            const filterStatus = document.getElementById('filterStatus');
+            const filterCategory = document.getElementById('filterCategory');
+            const filterScope = document.getElementById('filterScope');
+            const rows = document.querySelectorAll('.searchable-row'); // Pastikan class sesuai
+            const presenterTableBody = document.getElementById('presenterTableBody');
+
+            function filterTable() {
+                const searchTerm = searchInput.value.toLowerCase().trim();
+                const statusTerm = filterStatus.value;
+                const categoryTerm = filterCategory.value;
+                const scopeTerm = filterScope.value;
+
+                let hasVisibleRow = false;
+
+                rows.forEach(row => {
+                    const name = row.getAttribute('data-name') || '';
+                    const cat = row.getAttribute('data-category') || '';
+                    const scope = row.getAttribute('data-scope') || '';
+                    const absStatus = (row.getAttribute('data-abs-status') || '').toLowerCase();
+                    const artStatus = (row.getAttribute('data-art-status') || '').toLowerCase();
+
+                    // 1. Logika Pencarian Nama/Email
+                    const matchSearch = name.includes(searchTerm);
+
+                    // 2. Logika Filter Kategori & Scope
+                    const matchCategory = categoryTerm === "" || cat === categoryTerm;
+                    const matchScope = scopeTerm === "" || scope === scopeTerm;
+
+                    // 3. Logika Filter Status Kompleks
+                    let matchStatus = true;
+                    if (statusTerm === 'abs_waiting') matchStatus = (absStatus.includes('waiting'));
+                    else if (statusTerm === 'abs_accepted') matchStatus = (absStatus === 'accepted');
+                    else if (statusTerm === 'art_waiting') matchStatus = (artStatus.includes('waiting'));
+                    else if (statusTerm === 'art_accepted') matchStatus = (artStatus === 'accepted');
+
+                    // Eksekusi Tampilkan/Sembunyikan
+                    if (matchSearch && matchCategory && matchScope && matchStatus) {
+                        row.style.display = "";
+                        hasVisibleRow = true;
+                    } else {
+                        row.style.display = "none";
+                    }
+                });
+
+                // Logika "No Results Found"
+                const oldNoResults = document.getElementById('noResults');
+                if (oldNoResults) oldNoResults.remove();
+
+                if (!hasVisibleRow && presenterTableBody) {
+                    const noResultsTr = document.createElement('tr');
+                    noResultsTr.id = 'noResults';
+                    noResultsTr.innerHTML =
+                        `<td colspan="8" class="p-12 text-center text-gray-400 italic">No matches found for your filter criteria.</td>`;
+                    presenterTableBody.appendChild(noResultsTr);
+                }
+            }
+
+            // Event Listeners (Hanya satu set saja)
+            if (searchInput) searchInput.addEventListener('input', filterTable);
+            if (filterStatus) filterStatus.addEventListener('change', filterTable);
+            if (filterCategory) filterCategory.addEventListener('change', filterTable);
+            if (filterScope) filterScope.addEventListener('change', filterTable);
+
+            // Sidebar & Profile Logic (Tetap sama)
             if (profileBtn && profileDropdown) {
                 profileBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     profileDropdown.classList.toggle('hidden');
                 });
                 window.addEventListener('click', (e) => {
-                    if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
-                        profileDropdown.classList.add('hidden');
-                    }
+                    if (!profileBtn.contains(e.target)) profileDropdown.classList.add('hidden');
                 });
             }
 
@@ -496,45 +718,7 @@
             if (btnClose) btnClose.addEventListener('click', toggleSidebar);
             if (overlay) overlay.addEventListener('click', toggleSidebar);
 
-            // --- SEARCH FUNCTIONALITY ---
-            const searchInput = document.getElementById('searchInput');
 
-            if (searchInput) {
-                searchInput.addEventListener('input', function() {
-                    const searchTerm = this.value.toLowerCase().trim();
-                    const rows = document.querySelectorAll('.searchable-row');
-                    let hasVisibleRow = false;
-
-                    rows.forEach(row => {
-                        const name = row.querySelector('.presenters-name').textContent
-                            .toLowerCase();
-                        const email = row.querySelector('.presenters-email').textContent
-                            .toLowerCase();
-
-                        if (name.includes(searchTerm) || email.includes(searchTerm)) {
-                            row.style.display = "";
-                            hasVisibleRow = true;
-                        } else {
-                            row.style.display = "none";
-                        }
-                    });
-
-                    // Logika jika data tidak ditemukan saat search
-                    const emptyRow = document.getElementById('emptyRow');
-                    if (searchTerm !== "" && !hasVisibleRow) {
-                        if (!document.getElementById('noResults')) {
-                            const noResultsTr = document.createElement('tr');
-                            noResultsTr.id = 'noResults';
-                            noResultsTr.innerHTML =
-                                `<td colspan="5" class="p-12 text-center text-gray-400 italic">No matches found for "${this.value}"</td>`;
-                            document.getElementById('presenterTableBody').appendChild(noResultsTr);
-                        }
-                    } else {
-                        const noResultsTr = document.getElementById('noResults');
-                        if (noResultsTr) noResultsTr.remove();
-                    }
-                });
-            }
         });
     </script>
 @endsection

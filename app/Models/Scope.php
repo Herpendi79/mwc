@@ -16,7 +16,6 @@ class Scope extends Model
 
     protected $fillable = [
         'nama_sc',
-        'keterangan',
         'id_conf',
     ];
 

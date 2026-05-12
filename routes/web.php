@@ -166,6 +166,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('reviewer.updateStatusArtikel');
     Route::post('/reviewer/update-status-payment/{id}', [App\Http\Controllers\ReviewerController::class, 'updateStatusPayment'])
         ->name('reviewer.updateStatusPayment');
+    Route::get('/reviewer/export-presenters-pdf', [ReviewerController::class, 'exportPresentersPdf'])
+        ->name('reviewer.exportPresentersPdf');
+    Route::get('/reviewer/export-presenters-excel', [ReviewerController::class, 'exportPresentersExcel'])
+        ->name('reviewer.exportPresentersExcel');
+    Route::get('/reviewer/export-participants-pdf', [ReviewerController::class, 'exportParticipantsPdf'])
+        ->name('reviewer.exportParticipantsPdf');
+    Route::get('/reviewer/export-participants-excel', [ReviewerController::class, 'exportParticipantsExcel'])
+        ->name('reviewer.exportParticipantsExcel');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

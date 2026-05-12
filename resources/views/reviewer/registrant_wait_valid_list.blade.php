@@ -45,12 +45,11 @@
                                 <a href="{{ route('reviewer.conferences') }}"
                                     class="hover:text-primary transition-colors">Conferences</a>
                                 <span class="mx-2">/</span>
-                                <span class="dark:text-gray-300">Participants List</span>
+                                <span class="dark:text-gray-300">Participants List of {{ $conference->nama_conf }}</span>
                             </nav>
-                            <h2 class="text-3xl font-bold mb-2 dark:text-white">{{ $conference->nama_conf }}</h2>
-                            <p class="text-gray-500">Managing {{ $participants->count() }} registered participants waiting
+                            <h5>Managing {{ $participants->count() }} registered participants waiting
                                 payment validation for this
-                                event.</p>
+                                event.</h5>
                         </div>
 
                         <div class="force-show" data-sal="slide-up" data-sal-duration="1000">
