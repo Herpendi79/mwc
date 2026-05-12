@@ -70,53 +70,56 @@
 
                             <div
                                 class="bg-white dark:bg-zinc-900 rounded-3xl border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
-                                <div class="p-6 border-b border-gray-100 dark:border-zinc-800">
-                                    <div class="flex flex-col lg:flex-row items-end justify-between gap-4">
-
-                                        {{-- Grup Filter & Search (Kiri) --}}
-                                        <div class="flex flex-wrap items-end gap-3 flex-grow">
-
-
-                                            {{-- Filter Kategori --}}
-                                            <div class="w-full md:w-64">
-                                                <label
-                                                    class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Category</label>
-                                                <select id="filterCategory"
-                                                    class="w-full p-2 rounded-xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800 dark:text-white text-xs outline-none focus:ring-2 focus:ring-blue-500">
-                                                    <option value="">All Categories</option>
-                                                    @foreach ($stats as $catName => $group)
-                                                        <option value="{{ $catName }}">{{ $catName }}</option>
-                                                    @endforeach
-                                                </select>
+                                <div class="p-6 border-b border-gray-100 dark:border-zinc-800" style="background: #f8fafc;">
+                                    {{-- Container Utama dengan Grid --}}
+                                    <div
+                                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; align-items: end;">
+                                        {{-- Card Search --}}
+                                        <div
+                                            style="background: white; padding: 12px; border-radius: 14px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                                            <label
+                                                style="display: block; font-size: 10px; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px; margin-left: 4px;">
+                                                Search Participant
+                                            </label>
+                                            <div style="position: relative;">
+                                                <i class="ri-search-line"
+                                                    style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
+                                                <input type="text" id="searchInput" placeholder="Search by name..."
+                                                    style="width: 100%; padding: 10px; padding-left: 36px; font-size: 12px; border: 1px solid #cbd5e1; border-radius: 10px; background: #f1f5f9; color: #334155; outline: none;">
                                             </div>
-
-                                            {{-- Grup Tombol Export (Kanan) --}}
-                                            <div class="flex items-center gap-2">
-                                                {{-- Tombol Excel --}}
-                                                <button onclick="exportExcel()"
-                                                    class="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-all font-bold text-xs shadow-lg shadow-emerald-500/20 whitespace-nowrap">
-                                                    <i class="ri-file-excel-line"></i> Excel
-                                                </button>
-
-                                                {{-- Tombol PDF --}}
-                                                <button onclick="exportPdf()"
-                                                    class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-bold text-xs shadow-lg shadow-blue-500/20 whitespace-nowrap">
-                                                    <i class="ri-file-pdf-line"></i> PDF
-                                                </button>
-                                            </div>
-
+                                        </div>
+                                        {{-- Card Filter Category --}}
+                                        <div
+                                            style="background: white; padding: 12px; border-radius: 14px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                                            <label
+                                                style="display: block; font-size: 10px; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px; margin-left: 4px;">
+                                                Category
+                                            </label>
+                                            <select id="filterCategory"
+                                                style="width: 100%; padding: 10px; font-size: 12px; border: 1px solid #cbd5e1; border-radius: 10px; background: #f1f5f9; color: #334155; outline: none;">
+                                                <option value="">All Categories</option>
+                                                @foreach ($stats as $catName => $group)
+                                                    <option value="{{ $catName }}">{{ $catName }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
 
-                                        {{-- Search Input --}}
-                                        <div class="w-full md:w-48">
-                                            <label
-                                                class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Search</label>
-                                            <div class="relative">
-                                                <i
-                                                    class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                                                <input type="text" id="searchInput" placeholder="Name..."
-                                                    class="pl-9 pr-4 py-2 w-full rounded-xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                            </div>
+
+
+                                        {{-- Card Export Buttons --}}
+                                        <div
+                                            style="background: white; padding: 12px; border-radius: 14px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; gap: 8px; justify-content: center;">
+                                            {{-- Tombol Excel --}}
+                                            <button onclick="exportExcel()"
+                                                style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px; background: #10b981; color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 12px; cursor: pointer; transition: background 0.2s;">
+                                                <i class="ri-file-excel-line"></i> Excel
+                                            </button>
+
+                                            {{-- Tombol PDF --}}
+                                            <button onclick="exportPdf()"
+                                                style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px; background: #2563eb; color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 12px; cursor: pointer; transition: background 0.2s;">
+                                                <i class="ri-file-pdf-line"></i> PDF
+                                            </button>
                                         </div>
 
                                     </div>

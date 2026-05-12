@@ -187,7 +187,9 @@
                                         </div>
 
                                         {{-- Action Buttons --}}
-                                        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                                        <div
+                                            style="background: white; padding: 10px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; gap: 8px; justify-content: center;">
+                                            {{-- Tombol Excel --}}
                                             <button onclick="exportExcel()" class="bg-emerald-600"
                                                 style="padding: 10px 20px; color: white; border-radius: 10px; font-weight: bold; font-size: 12px; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px;">
                                                 <i class="ri-file-excel-line"></i> Excel
