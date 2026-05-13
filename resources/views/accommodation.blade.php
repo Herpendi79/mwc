@@ -86,7 +86,7 @@
 
                     <!-- MOBILE INFO -->
                     <div class="md:hidden bg-[#065039] text-white text-center text-xs py-2">
-                        Geser tabel ke kiri / kanan →
+                        Swipe left / right →
                     </div>
 
                     <!-- SCROLL AREA -->
@@ -263,6 +263,413 @@
                                         IDR 650.000++
                                     </td>
 
+                                </tr>
+
+                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">
+                                        4
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039] whitespace-nowrap">
+                                        Hotel Bumi Wiyata
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
+                                        ★★★
+                                    </td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
+                                        Margonda Raya St. No.281, Depok.
+                                        <br>
+                                        <a href="https://maps.app.goo.gl/9ZRE785k4C6YatX8A" target="_blank"
+                                            class="text-blue-600 hover:underline italic font-semibold">
+                                            View on Maps
+                                        </a>
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center whitespace-nowrap">
+                                        2.1 KM
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center whitespace-nowrap">
+                                        +62 21 7778040
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600 whitespace-nowrap">
+                                        IDR 675.000++
+                                    </td>
+                                </tr>
+
+                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">
+                                        5
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039] whitespace-nowrap">
+                                        Wisma Makara UI
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
+                                        ★★★
+                                    </td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
+                                        UI Campus Area, Depok.
+                                        <br>
+                                        <a href="https://maps.app.goo.gl/9ZRE785k4C6YatX8A" target="_blank"
+                                            class="text-blue-600 hover:underline italic font-semibold">
+                                            View on Maps
+                                        </a>
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center whitespace-nowrap">
+                                        0 KM (Inside)
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center whitespace-nowrap">
+                                        +62 21 78883670
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600 whitespace-nowrap">
+                                        IDR 450.000++
+                                    </td>
+                                </tr>
+
+                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">
+                                        6
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039] whitespace-nowrap">
+                                        favehotel Margonda
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
+                                        ★★
+                                    </td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
+                                        Margonda Raya St. No.166, Depok.
+                                        <br>
+                                        <a href="#" target="_blank"
+                                            class="text-blue-600 hover:underline italic font-semibold">
+                                            View on Maps
+                                        </a>
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center whitespace-nowrap">
+                                        2.5 KM
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center whitespace-nowrap">
+                                        +62 21 29503999
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600 whitespace-nowrap">
+                                        IDR 480.000++
+                                    </td>
+                                </tr>
+
+                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">
+                                        7
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039] whitespace-nowrap">
+                                        Zest Hotel Margonda
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
+                                        ★★
+                                    </td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
+                                        Margonda Raya St. No.225, Depok.
+                                        <br>
+                                        <a href="#" target="_blank"
+                                            class="text-blue-600 hover:underline italic font-semibold">
+                                            View on Maps
+                                        </a>
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center whitespace-nowrap">
+                                        1.8 KM
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center whitespace-nowrap">
+                                        +62 21 29311133
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600 whitespace-nowrap">
+                                        IDR 400.000++
+                                    </td>
+                                </tr>
+
+                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">
+                                        8
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039] whitespace-nowrap">
+                                        Margonda Residence II
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
+                                        Apt
+                                    </td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
+                                        Margonda Raya St. No.417, Depok.
+                                        <br>
+                                        <a href="#" target="_blank"
+                                            class="text-blue-600 hover:underline italic font-semibold">
+                                            View on Maps
+                                        </a>
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center whitespace-nowrap">
+                                        0.8 KM
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center whitespace-nowrap">
+                                        +62 21 78890456
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600 whitespace-nowrap">
+                                        IDR 300.000++
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">
+                                        9
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039] whitespace-nowrap">
+                                        RedDoorz @ Margonda
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
+                                        GH
+                                    </td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
+                                        Margonda Raya St. No.500, Depok.
+                                        <br>
+                                        <a href="#" target="_blank"
+                                            class="text-blue-600 hover:underline italic font-semibold">
+                                            View on Maps
+                                        </a>
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center whitespace-nowrap">
+                                        0.5 KM
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center whitespace-nowrap">
+                                        +62 21 80629666
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600 whitespace-nowrap">
+                                        IDR 250.000++
+                                    </td>
+                                </tr>
+
+                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">
+                                        10
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039] whitespace-nowrap">
+                                        Wisma Hijau
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
+                                        GH
+                                    </td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
+                                        Mekarsari St. No.15, Depok.
+                                        <br>
+                                        <a href="#" target="_blank"
+                                            class="text-blue-600 hover:underline italic font-semibold">
+                                            View on Maps
+                                        </a>
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center whitespace-nowrap">
+                                        4.2 KM
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center whitespace-nowrap">
+                                        +62 21 8729060
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600 whitespace-nowrap">
+                                        IDR 350.000++
+                                    </td>
+                                </tr>
+
+                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">
+                                        11
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039] whitespace-nowrap">
+                                        OYO 1520 Green Lake
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
+                                        GH
+                                    </td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
+                                        Situ Indah St. No.116, Depok.
+                                        <br>
+                                        <a href="#" target="_blank"
+                                            class="text-blue-600 hover:underline italic font-semibold">
+                                            View on Maps
+                                        </a>
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center whitespace-nowrap">
+                                        2.1 KM
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center whitespace-nowrap">
+                                        +62 21 29707601
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600 whitespace-nowrap">
+                                        IDR 220.000++
+                                    </td>
+                                </tr>
+
+                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">
+                                        12
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039] whitespace-nowrap">
+                                        Evenciio Apartment
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
+                                        Apt
+                                    </td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
+                                        Margonda Raya St. No.492, Depok.
+                                        <br>
+                                        <a href="#" target="_blank"
+                                            class="text-blue-600 hover:underline italic font-semibold">
+                                            View on Maps
+                                        </a>
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center whitespace-nowrap">
+                                        0.3 KM
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center whitespace-nowrap">
+                                        -
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600 whitespace-nowrap">
+                                        IDR 350.000++
+                                    </td>
+                                </tr>
+
+                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">
+                                        13
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039] whitespace-nowrap">
+                                        Atlanta Residence
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
+                                        Apt
+                                    </td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
+                                        Margonda Raya St. No.28, Depok.
+                                        <br>
+                                        <a href="#" target="_blank"
+                                            class="text-blue-600 hover:underline italic font-semibold">
+                                            View on Maps
+                                        </a>
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center whitespace-nowrap">
+                                        2.2 KM
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center whitespace-nowrap">
+                                        -
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600 whitespace-nowrap">
+                                        IDR 320.000++
+                                    </td>
+                                </tr>
+
+                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">
+                                        14
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039] whitespace-nowrap">
+                                        Wisma Ristekdikti
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
+                                        GH
+                                    </td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
+                                        Kukusan St., Depok.
+                                        <br>
+                                        <a href="#" target="_blank"
+                                            class="text-blue-600 hover:underline italic font-semibold">
+                                            View on Maps
+                                        </a>
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center whitespace-nowrap">
+                                        1.0 KM
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center whitespace-nowrap">
+                                        -
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600 whitespace-nowrap">
+                                        IDR 250.000++
+                                    </td>
+                                </tr>
+
+                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">
+                                        15
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039] whitespace-nowrap">
+                                        RedDoorz near UI
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
+                                        GH
+                                    </td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
+                                        Palakali St. No.22, Depok.
+                                        <br>
+                                        <a href="#" target="_blank"
+                                            class="text-blue-600 hover:underline italic font-semibold">
+                                            View on Maps
+                                        </a>
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center whitespace-nowrap">
+                                        1.1 KM
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center whitespace-nowrap">
+                                        -
+                                    </td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600 whitespace-nowrap">
+                                        IDR 200.000++
+                                    </td>
                                 </tr>
 
                             </tbody>
