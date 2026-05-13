@@ -74,49 +74,94 @@
                     </h2>
                 </div>
 
-                <div class="overflow-hidden rounded-2xl border border-gray-200 dark:border-white/10 shadow-lg"
-                    data-sal="slide-up" data-sal-duration="800">
-                    <div class="overflow-x-auto w-full">
-                        <table class="min-w-[1200px] w-full text-left border-collapse">
+                <div class="rounded-2xl border border-gray-200 dark:border-white/10 shadow-lg" data-sal="slide-up"
+                    data-sal-duration="800">
+
+                    <div class="w-full overflow-x-auto">
+
+                        <table class="w-full min-w-[1100px] border-collapse text-xs md:text-sm">
+
                             <thead>
                                 <tr class="bg-[#065039] text-white">
+
                                     <th
-                                        class="p-4 border border-white/20 text-center align-middle font-bold uppercase tracking-wider">
-                                        No</th>
+                                        class="p-2 md:p-4 border border-white/20 text-center align-middle font-bold uppercase tracking-wider">
+                                        No
+                                    </th>
+
                                     <th
-                                        class="p-4 border border-white/20 text-center align-middle font-bold uppercase tracking-wider">
-                                        Hotel Name</th>
+                                        class="p-2 md:p-4 border border-white/20 text-center align-middle font-bold uppercase tracking-wider">
+                                        Hotel Name
+                                    </th>
+
                                     <th
-                                        class="p-4 border border-white/20 text-center align-middle font-bold uppercase tracking-wider">
-                                        Rating</th>
+                                        class="p-2 md:p-4 border border-white/20 text-center align-middle font-bold uppercase tracking-wider">
+                                        Rating
+                                    </th>
+
                                     <th
-                                        class="p-4 border border-white/20 text-center align-middle font-bold uppercase tracking-wider">
-                                        Address & Maps</th>
+                                        class="p-2 md:p-4 border border-white/20 text-center align-middle font-bold uppercase tracking-wider">
+                                        Address & Maps
+                                    </th>
+
                                     <th
-                                        class="p-4 border border-white/20 text-center align-middle font-bold uppercase tracking-wider">
-                                        Distance to UI</th>
+                                        class="p-2 md:p-4 border border-white/20 text-center align-middle font-bold uppercase tracking-wider">
+                                        Distance to UI
+                                    </th>
+
                                     <th
-                                        class="p-4 border border-white/20 text-center align-middle font-bold uppercase tracking-wider">
-                                        Phone Number</th>
+                                        class="p-2 md:p-4 border border-white/20 text-center align-middle font-bold uppercase tracking-wider">
+                                        Phone Number
+                                    </th>
+
                                     <th
-                                        class="p-4 border border-white/20 text-center align-middle font-bold uppercase tracking-wider">
-                                        Est. Price</th>
+                                        class="p-2 md:p-4 border border-white/20 text-center align-middle font-bold uppercase tracking-wider">
+                                        Est. Price
+                                    </th>
+
                                 </tr>
                             </thead>
 
-                            <tbody class="bg-white dark:bg-[#1F1F1F] text-gray-800 dark:text-gray-200 text-sm">
+                            <tbody class="bg-white dark:bg-[#1F1F1F] text-gray-800 dark:text-gray-200">
+
                                 <tr class="hover:bg-gray-50 transition-colors">
-                                    <td class="p-3 border border-gray-200 text-center">1</td>
-                                    <td class="p-3 border border-gray-200 font-bold text-[#065039]">The Margo Hotel</td>
-                                    <td class="p-3 border border-gray-200 text-center text-yellow-500">★★★★</td>
-                                    <td class="p-3 border border-gray-200">Margonda Raya St. No.358, Depok. <br> <a
-                                            href="https://maps.app.goo.gl/9ZRE785k4C6YatX8A" target="_blank"
-                                            class="text-blue-600 hover:underline italic font-semibold">View on Maps</a></td>
-                                    <td class="p-3 border border-gray-200 text-center">1.2 KM</td>
-                                    <td class="p-3 border border-gray-200 text-center">+62 21 29515888</td>
-                                    <td class="p-3 border border-gray-200 text-center font-bold text-green-600">IDR
-                                        950.000++</td>
+
+                                    <td class="p-2 md:p-3 border border-gray-200 text-center">
+                                        1
+                                    </td>
+
+                                    <td class="p-2 md:p-3 border border-gray-200 font-bold text-[#065039]">
+                                        The Margo Hotel
+                                    </td>
+
+                                    <td class="p-2 md:p-3 border border-gray-200 text-center text-yellow-500">
+                                        ★★★★
+                                    </td>
+
+                                    <td class="p-2 md:p-3 border border-gray-200">
+                                        Margonda Raya St. No.358, Depok.
+                                        <br>
+
+                                        <a href="https://maps.app.goo.gl/9ZRE785k4C6YatX8A" target="_blank"
+                                            class="text-blue-600 hover:underline italic font-semibold">
+                                            View on Maps
+                                        </a>
+                                    </td>
+
+                                    <td class="p-2 md:p-3 border border-gray-200 text-center">
+                                        1.2 KM
+                                    </td>
+
+                                    <td class="p-2 md:p-3 border border-gray-200 text-center">
+                                        +62 21 29515888
+                                    </td>
+
+                                    <td class="p-2 md:p-3 border border-gray-200 text-center font-bold text-green-600">
+                                        IDR 950.000++
+                                    </td>
+
                                 </tr>
+
                                 <tr class="hover:bg-gray-50 transition-colors">
                                     <td class="p-3 border border-gray-200 text-center">2</td>
                                     <td class="p-3 border border-gray-200 font-bold text-[#065039]">Hotel Santika Depok</td>
@@ -304,9 +349,13 @@
                                     <td class="p-3 border border-gray-200 text-center font-bold text-green-600">IDR
                                         200.000++</td>
                                 </tr>
+
                             </tbody>
+
                         </table>
+
                     </div>
+
                 </div>
         </section>
         <!-- End pricing -->
