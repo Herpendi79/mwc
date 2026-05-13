@@ -80,7 +80,8 @@ class RegisterController extends Controller
 
             // 6. Siapkan Data Email untuk Antrean
             $html = view('emails.aktivasi-peserta', compact('peserta', 'url'))->render();
-            $text = "Hello {$peserta->nama}, please verify your email: {$url}";
+            //$text = "Hello {$peserta->nama}, please verify your email: {$url}";
+            $text = "Hello {$peserta->nama}, Thank you for registering for ICPIP-HE 2026. Please verify your email by clicking the link below:\n\n{$url}";
 
             $emailData = [
                 'to'      => $user->email,
@@ -105,6 +106,11 @@ class RegisterController extends Controller
             DB::commit();
 
             Auth::login($user);
+
+            Log::info("Dispatching Register Job to Queue", [
+                'email' => $user->email,
+                'queue' => 'conference'
+            ]);
 
             return redirect()->route('verification.notice')
                 ->with('success', 'Registration successful! Please check your email.');
@@ -139,7 +145,8 @@ class RegisterController extends Controller
 
             // 4. Render konten email (Gunakan view aktivasi-peserta yang sudah kita buat)
             $html = view('emails.aktivasi-peserta', compact('peserta', 'url'))->render();
-            $text = "Hello {$peserta->nama}, please verify your email by clicking this link: {$url}";
+            //$text = "Hello {$peserta->nama}, please verify your email by clicking this link: {$url}";
+            $text = "Hello {$peserta->nama}, Thank you for registering for ICPIP-HE 2026. Please verify your email by clicking the link below:\n\n{$url}";
 
 
             // 6. Siapkan Data Email untuk Antrean

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use App\Jobs\SendSubmissionEmail;
 
 class ForgotPasswordController extends Controller
 {
@@ -54,12 +55,24 @@ class ForgotPasswordController extends Controller
             $text = "Hello {$namaPeserta},\n\nYour password has been reset. Your new 6-digit password is: {$newPassword}\n\nPlease login and change your password immediately.\n\nRegards,\nICPIP-HE 2026 Team";
 
             // 6. Kirim via API Service
-            EmailApiService::send(
+            /* EmailApiService::send(
                 $user->email,
                 'Your New Password - ICPIP-HE 2026',
                 $text,
                 $html
-            );
+            ); */
+
+            $emailData = [
+                'to'      => $user->email,
+                'subject' => 'Registration Email Verification for ICPIP-HE 2026',
+                'text'    => $text,
+                'html'    => $html,
+            ];
+            SendSubmissionEmail::dispatch($emailData)->onQueue('conference');
+            Log::info("Dispatching Reset Password Job to Queue", [
+                'email' => $user->email,
+                'queue' => 'conference'
+            ]);
 
             return back()->with('success', 'A new 6-digit password has been sent to your email. Please check your Inbox or Spam folder.');
         } catch (\Exception $e) {

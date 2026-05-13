@@ -25,10 +25,9 @@
                     <h2 class="xl:text-7xl md:text-5xl leading-snug font-bold tracking-[1px] mb-4" data-sal="zoom-in"
                         data-sal-duration="800" data-sal-delay="200"> Nearby Accommodation </h2>
                     <p class="text-[20px] text-gray-200 max-w-2xl mx-auto" data-sal="slide-right" data-sal-duration="800"
-                        data-sal-delay="200">berikut beberapa rekomendasi akomodasi terdekat dengan tempat konferensi
-                        digelar. pilih tempat terbaik untuk momen terbaik selama di Jakarta dan menjadikan konferensi lebih
-                        bermakna.
-                        translate.</p>
+                        data-sal-delay="200">Here are several accommodation recommendations located near the conference
+                        venue. Choose the best place to create the best moments during your stay in Jakarta and make the
+                        conference experience more meaningful.</p>
                     <div class="flex items-center justify-center gap-4 text-[22px] mt-6" data-sal="slide-left"
                         data-sal-duration="800" data-sal-delay="200">
                         <p><a href="{{ url('/') }}">Home</a></p>
@@ -77,8 +76,8 @@
 
                 <div class="overflow-hidden rounded-2xl border border-gray-200 dark:border-white/10 shadow-lg"
                     data-sal="slide-up" data-sal-duration="800">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
+                    <div class="overflow-x-auto w-full">
+                        <table class="min-w-[1200px] w-full text-left border-collapse">
                             <thead>
                                 <tr class="bg-[#065039] text-white">
                                     <th
