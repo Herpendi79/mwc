@@ -229,13 +229,13 @@ class PesertaController extends Controller
                     'nama_conference' => $conference->nama_conf
                 ])->render();
 
-                //EmailApiService::send($user->email, "Payment Waiting Validation - " . $conference->nama_conf, "Please wait for admin validation.", $html);
-                SendSubmissionEmail::dispatch([
+                EmailApiService::send($user->email, "Payment Waiting Validation - " . $conference->nama_conf, "Please wait for admin validation.", $html);
+                /*SendSubmissionEmail::dispatch([
                     'to'      => $user->email,
                     'subject' => "Payment Waiting Validation - " . $conference->nama_conf,
                     'text'    => "Please wait for admin validation.",
                     'html'    => $html
-                ])->onQueue('conference');
+                ])->onQueue('conference'); */
                 DB::commit();
                 return redirect()->route('participants.conferences')->with('success', 'Registration successful. Please wait for admin to validate your payment.');
             }
@@ -313,17 +313,19 @@ class PesertaController extends Controller
                 'urlPembayaran'   => $urlPembayaran,
             ])->render();
 
-            SendSubmissionEmail::dispatch([
+            /* SendSubmissionEmail::dispatch([
                 'to'      => $user->email,
                 'subject' => "Payment Required - " . $conference->nama_conf,
                 'text'    => "Halo {$peserta->nama}, please complete your payment.",
                 'html'    => $html
-            ])->onQueue('conference');
+            ])->onQueue('conference'); */
+
+
+
+            $text = "Halo {$peserta->nama}, please complete your payment for {$conference->nama_conf}. Link: {$urlPembayaran}";
+            EmailApiService::send($user->email, $subject, $text, $html);
 
             DB::commit();
-
-            //$text = "Halo {$peserta->nama}, please complete your payment for {$conference->nama_conf}. Link: {$urlPembayaran}";
-            //EmailApiService::send($user->email, $subject, $text, $html);
             Log::info('Email tagihan berhasil dikirim ke: ' . $user->email);
 
             return redirect()->route('payment', ['snapToken' => $snapToken]);

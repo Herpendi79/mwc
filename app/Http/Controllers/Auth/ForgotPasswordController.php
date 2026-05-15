@@ -55,20 +55,20 @@ class ForgotPasswordController extends Controller
             $text = "Hello {$namaPeserta},\n\nYour password has been reset. Your new 6-digit password is: {$newPassword}\n\nPlease login and change your password immediately.\n\nRegards,\nICPIP-HE 2026 Team";
 
             // 6. Kirim via API Service
-            /* EmailApiService::send(
+             EmailApiService::send(
                 $user->email,
                 'Your New Password - ICPIP-HE 2026',
                 $text,
                 $html
-            ); */
+            ); 
 
-            $emailData = [
+           /* $emailData = [
                 'to'      => $user->email,
                 'subject' => 'Registration Email Verification for ICPIP-HE 2026',
                 'text'    => $text,
                 'html'    => $html,
-            ];
-            SendSubmissionEmail::dispatch($emailData)->onQueue('conference');
+            ]; */
+           // SendSubmissionEmail::dispatch($emailData)->onQueue('conference');
             Log::info("Dispatching Reset Password Job to Queue", [
                 'email' => $user->email,
                 'queue' => 'conference'

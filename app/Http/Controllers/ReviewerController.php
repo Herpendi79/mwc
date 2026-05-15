@@ -722,14 +722,14 @@ class ReviewerController extends Controller
                 'nama_conference' => $nama_conference
             ])->render();
 
-            //EmailApiService::send($user->email, "Accepted: Abstract - " . $nama_conference, "Congratulations {$nama_peserta}, your abstract has been accepted.", $html);
+            EmailApiService::send($user->email, $subject, $text, $html);
 
-            SendSubmissionEmail::dispatch([
+            /*SendSubmissionEmail::dispatch([
                 'to'      => $user->email,
                 'subject' => $subject,
                 'text'    => $text,
                 'html'    => $html,
-            ])->onQueue('conference');
+            ])->onQueue('conference'); */
 
             DB::commit();
             return back()->with('success', 'Decision submitted and Scope assigned successfully.');
@@ -813,19 +813,19 @@ class ReviewerController extends Controller
                 'nama_conference' => $nama_conference
             ])->render();
 
-            // EmailApiService::send($user->email, "Accepted: Full Paper - " . $nama_conference, "Congratulations {$nama_peserta}, your Full Paper has been accepted.", $html);
+            EmailApiService::send($user->email, $subject, $text, $html);
 
 
             // 4. Kirim ke Queue (Jalur Conference)
-            SendSubmissionEmail::dispatch([
+            /*SendSubmissionEmail::dispatch([
                 'to'      => $user->email,
                 'subject' => $subject,
                 'text'    => $text,
                 'html'    => $html,
-            ])->onQueue('conference');
+            ])->onQueue('conference'); */
 
             DB::commit();
-            Log::info("Full Paper review processed for: " . $user->email);
+            Log::info("Email notifikasi review ({$status}) berhasil dikirim ke: " . $user->email);
 
             return back()->with('success', 'Full Paper decision submitted.');
         } catch (\Exception $e) {

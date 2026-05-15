@@ -83,24 +83,24 @@ class RegisterController extends Controller
             //$text = "Hello {$peserta->nama}, please verify your email: {$url}";
             $text = "Hello {$peserta->nama}, Thank you for registering for ICPIP-HE 2026. Please verify your email by clicking the link below:\n\n{$url}";
 
-            $emailData = [
+            /* $emailData = [
                 'to'      => $user->email,
                 'subject' => 'Registration Email Verification for ICPIP-HE 2026',
                 'text'    => $text,
                 'html'    => $html,
-            ];
+            ]; */
 
             // DISPATCH KE QUEUE: Ini yang membuat proses jadi sangat cepat
-            SendSubmissionEmail::dispatch($emailData)->onQueue('conference');
+            // SendSubmissionEmail::dispatch($emailData)->onQueue('conference');
             // $html = view('emails.aktivasi-peserta', compact('peserta', 'url'))->render();
             //$text = "Hello {$peserta->nama}, Thank you for registering for ICPIP-HE 2026. Please verify your email by clicking the link below:\n\n{$url}";
 
-            /*  \App\Services\EmailApiService::send(
+            EmailApiService::send(
                 $user->email,
                 'Registration Email Verification for ICPIP-HE 2026',
                 $text,
                 $html
-            ); */
+            );
 
 
             DB::commit();
@@ -144,33 +144,33 @@ class RegisterController extends Controller
             $peserta = Peserta::where('user_id', $user->id)->first();
 
             // 4. Render konten email (Gunakan view aktivasi-peserta yang sudah kita buat)
-            $html = view('emails.aktivasi-peserta', compact('peserta', 'url'))->render();
+            // $html = view('emails.aktivasi-peserta', compact('peserta', 'url'))->render();
             //$text = "Hello {$peserta->nama}, please verify your email by clicking this link: {$url}";
-            $text = "Hello {$peserta->nama}, Thank you for registering for ICPIP-HE 2026. Please verify your email by clicking the link below:\n\n{$url}";
+            //$text = "Hello {$peserta->nama}, Thank you for registering for ICPIP-HE 2026. Please verify your email by clicking the link below:\n\n{$url}";
 
 
             // 6. Siapkan Data Email untuk Antrean
             // $html = view('emails.aktivasi-peserta', compact('peserta', 'url'))->render();
             // $text = "Hello {$peserta->nama}, please verify your email: {$url}";
 
-            $emailData = [
+            /*$emailData = [
                 'to'      => $user->email,
                 'subject' => 'Registration Email Verification for ICPIP-HE 2026',
                 'text'    => $text,
                 'html'    => $html,
-            ];
+            ]; */
 
             // DISPATCH KE QUEUE: Ini yang membuat proses jadi sangat cepat
-            SendSubmissionEmail::dispatch($emailData)->onQueue('conference');
-            // $html = view('emails.aktivasi-peserta', compact('peserta', 'url'))->render();
-            //$text = "Hello {$peserta->nama}, Thank you for registering for ICPIP-HE 2026. Please verify your email by clicking the link below:\n\n{$url}";
+            //SendSubmissionEmail::dispatch($emailData)->onQueue('conference');
+            $html = view('emails.aktivasi-peserta', compact('peserta', 'url'))->render();
+            $text = "Hello {$peserta->nama}, Thank you for registering for ICPIP-HE 2026. Please verify your email by clicking the link below:\n\n{$url}";
 
-            /*  \App\Services\EmailApiService::send(
+            EmailApiService::send(
                 $user->email,
                 'Registration Email Verification for ICPIP-HE 2026',
                 $text,
                 $html
-            ); */
+            );
 
             return back()->with('message', 'Verification link sent!');
         } catch (\Exception $e) {
