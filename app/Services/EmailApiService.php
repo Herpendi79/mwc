@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Log;
 
 class EmailApiService
 {
-    public static function sendkirimemail($to, $subject, $text, $html)
+    public static function send($to, $subject, $text, $html)
     {
         $curl = curl_init();
 
@@ -52,7 +52,7 @@ class EmailApiService
         return true;
     }
 
-    public static function send($to, $subject, $text, $html = null)
+    public static function sendwithkirimemail($to, $subject, $text, $html = null)
     {
         $apiToken   = env('KIRIM_MAILKETING_API_KEY');
         $fromName   = env('MAIL_FROM_NAME', 'ICPIP-HE 2026');
