@@ -39,5 +39,10 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => config('app.url') . '/auth-google-callback',
     ],
+    'kirim_email' => [
+        'domain' => env('KIRIM_EMAIL_DOMAIN'),
+        'key'    => env('KIRIM_EMAIL_API_KEY'),
+        'secret' => env('KIRIM_EMAIL_API_SECRET'),
+    ],
 
 ];

@@ -62,17 +62,7 @@ class ForgotPasswordController extends Controller
                 $html
             ); 
 
-           /* $emailData = [
-                'to'      => $user->email,
-                'subject' => 'Registration Email Verification for ICPIP-HE 2026',
-                'text'    => $text,
-                'html'    => $html,
-            ]; */
-           // SendSubmissionEmail::dispatch($emailData)->onQueue('conference');
-            Log::info("Dispatching Reset Password Job to Queue", [
-                'email' => $user->email,
-                'queue' => 'conference'
-            ]);
+            Log::info("Email Reset Password Terkirim ke: " . $user->email);
 
             return back()->with('success', 'A new 6-digit password has been sent to your email. Please check your Inbox or Spam folder.');
         } catch (\Exception $e) {

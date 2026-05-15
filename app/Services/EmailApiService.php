@@ -8,15 +8,26 @@ class EmailApiService
 {
     public static function send($to, $subject, $text, $html)
     {
+
+        // Mengambil data dari config/services.php
+        $domain = config('services.kirim_email.domain');
+        $apiKey = config('services.kirim_email.key');
+        $apiSecret = config('services.kirim_email.secret');
+
+        // Tambahkan validasi sederhana untuk memastikan data tidak kosong
+        if (!$domain || !$apiKey || !$apiSecret) {
+            throw new \Exception("Kirim.email configuration is missing in services.php or .env");
+        }
+
         $curl = curl_init();
 
         curl_setopt_array($curl, [
             CURLOPT_URL => 'https://smtp-app.kirim.email/api/v4/transactional/message',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST => true,
-            CURLOPT_USERPWD => env('KIRIM_EMAIL_API_KEY') . ':' . env('KIRIM_EMAIL_API_SECRET'),
+            CURLOPT_USERPWD => $apiKey . ':' . $apiSecret,
             CURLOPT_HTTPHEADER => [
-                'domain: ' . env('KIRIM_EMAIL_DOMAIN'),
+                'Domain: ' . $domain, // Menggunakan variabel dari config
             ],
             CURLOPT_POSTFIELDS => http_build_query([
                 'from'      => 'conference@adaksi.org',
