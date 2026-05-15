@@ -74,6 +74,16 @@
                                 </select>
                             </div>
 
+                            <div id="judul_artikel_field" class="hidden">
+                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Article
+                                    Title</label>
+                                <input type="text" name="judul" id="input_judul"
+                                    placeholder="Enter your article title here..."
+                                    class="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl px-5 py-3 dark:text-white focus:ring-2 focus:ring-[#c0f037] outline-none transition-all">
+                                <p class="text-[10px] text-gray-500 mt-2 italic">*Please ensure the title matches your
+                                    abstract/full paper.</p>
+                            </div>
+
                             <div id="international_field" class="hidden space-y-4">
                                 <div
                                     class="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl">
@@ -159,11 +169,13 @@
             const studentField = document.getElementById('student_card_field');
             const abstractField = document.getElementById('abstract_field');
             const pubField = document.getElementById('publication_field');
+            const judulField = document.getElementById('judul_artikel_field'); // Element Baru
 
             // Inputs
             const inputKp = document.getElementById('input_kp');
             const inputAbstract = document.getElementById('input_abstract');
             const inputPub = document.getElementById('id_pub');
+            const inputJudul = document.getElementById('input_judul'); // Input Baru
             const profileBtn = document.getElementById('profile-menu-button');
             const profileDropdown = document.getElementById('profile-dropdown');
 
@@ -203,12 +215,18 @@
                 if (namaKategori.includes('presenter')) {
                     pubField.classList.remove('hidden');
                     abstractField.classList.remove('hidden');
+                    judulField.classList.remove('hidden'); // Munculkan field judul
+
                     inputAbstract.setAttribute('required', 'required');
+                    inputJudul.setAttribute('required', 'required'); // Judul jadi wajib isi
                 } else if (namaKategori.includes('participant')) {
                     pubField.classList.add('hidden');
                     abstractField.classList.add('hidden');
+                    judulField.classList.add('hidden'); // Sembunyikan field judul
+
                     inputAbstract.removeAttribute('required');
                     inputPub.value = "";
+                    inputJudul.value = "";
                 } else {
                     // Jika belum pilih apa-apa, sembunyikan semua
                     pubField.classList.add('hidden');

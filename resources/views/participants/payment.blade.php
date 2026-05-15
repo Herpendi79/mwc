@@ -113,25 +113,45 @@
 
 @section('scripts')
     {{-- Script Midtrans Snap --}}
-    <script src="{{ config('midtrans.snap_url') }}" data-client-key="{{ config('midtrans.clientKey') }}">
-    </script>
+    <script src="{{ config('midtrans.snap_url') }}" data-client-key="{{ config('midtrans.clientKey') }}"></script>
 
     <script type="text/javascript">
-        const payButton = document.getElementById('pay-button');
-        if (payButton) {
-            payButton.onclick = function() {
-                window.snap.pay('{{ $snapToken }}', {
-                    onSuccess: function(result) {
-                        window.location.href = "{{ route('participants.conferences') }}";
-                    },
-                    onPending: function(result) {
-                        window.location.href = "{{ route('participants.conferences') }}";
-                    },
-                    onError: function(result) {
-                        alert("Payment failed! Please try again.");
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Logika Dropdown Profile ---
+            const profileBtn = document.getElementById('profile-menu-button');
+            const profileDropdown = document.getElementById('profile-dropdown');
+
+            if (profileBtn && profileDropdown) {
+                profileBtn.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Mencegah event bubbling
+                    profileDropdown.classList.toggle('hidden');
+                });
+
+                // Menutup dropdown jika klik di luar area profile
+                window.addEventListener('click', function(e) {
+                    if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
+                        profileDropdown.classList.add('hidden');
                     }
                 });
-            };
-        }
+            }
+
+            // --- Logika Midtrans Snap ---
+            const payButton = document.getElementById('pay-button');
+            if (payButton) {
+                payButton.onclick = function() {
+                    window.snap.pay('{{ $snapToken }}', {
+                        onSuccess: function(result) {
+                            window.location.href = "{{ route('participants.conferences') }}";
+                        },
+                        onPending: function(result) {
+                            window.location.href = "{{ route('participants.conferences') }}";
+                        },
+                        onError: function(result) {
+                            alert("Payment failed! Please try again.");
+                        }
+                    });
+                };
+            }
+        });
     </script>
 @endsection

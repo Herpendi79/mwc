@@ -210,6 +210,7 @@
                                                 <th class="p-4 text-gray-500 font-semibold text-sm">No</th>
                                                 <th class="p-4 text-gray-500 font-semibold text-sm">Name</th>
                                                 <th class="p-4 text-gray-500 font-semibold text-sm">Category</th>
+                                                <th class="p-4 text-gray-500 font-semibold text-sm">Title</th>
                                                 <th class="p-4 text-gray-500 font-semibold text-sm">Scope</th>
                                                 <th class="p-4 text-gray-500 font-semibold text-sm">Abstract & Status</th>
                                                 <th class="p-4 text-gray-500 font-semibold text-sm">Review Abstract</th>
@@ -252,6 +253,12 @@
                                                         @else
                                                             <span class="text-gray-400 italic text-xs">Not Student</span>
                                                         @endif
+                                                    </td>
+                                                    <td class="p-4">
+                                                        <span class="text-sm dark:text-gray-300">
+                                                            {{ $p->judul ?? '-' }}
+                                                        </span>
+                                                    </td>
                                                     </td>
                                                     <td class="p-4">
                                                         <span class="text-sm dark:text-gray-300">

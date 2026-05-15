@@ -20,6 +20,7 @@ class PesertaConferences extends Model
         'id_pub',
         'no_sertifikat',
         'file_kp',
+        'judul',
         'file_abstract',
         'status_abstract',
         'file_artikel',

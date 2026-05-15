@@ -20,6 +20,7 @@ class PesertaConferencesAdaksi extends Model
         'id_user',
         'id_ktg',
         'no_sertifikat',
+        'judul',
         'file_abstract',
         'status_abstract',
         'id_pub',

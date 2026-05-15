@@ -126,6 +126,7 @@ class PesertaController extends Controller
         $kategori = Kategori::with('conference')->findOrFail($request->id_ktg);
         $conference = $kategori->conference;
         $isInternational = Str::contains(strtolower($kategori->nama_ktg), 'international');
+        $isPresenter = Str::contains(strtolower($kategori->nama_ktg), 'presenter');
 
         if (!$conference) {
             return redirect()->back()->with('error', 'Conference data not found for this category.');
@@ -138,12 +139,15 @@ class PesertaController extends Controller
 
         // LOGIKA TAMBAHAN: Jika kategori adalah Presenter, id_pub wajib diisi
         if (Str::contains($kategori->nama_ktg, 'Presenter')) {
+            $rules['judul'] = 'required|string|max:500'; // Tambahkan validasi judul
             $rules['id_pub'] = 'required|exists:publikasi,id_pub';
             $rules['file_abstract'] = 'required|file|mimes:pdf,doc,docx|max:2048';
         } else if (Str::contains($kategori->nama_ktg, 'Participant')) {
             $rules['file_abstract'] = 'nullable|file|mimes:pdf,doc,docx|max:2048';
+            $rules['judul'] = 'nullable|string|max:500'; // Participant boleh kosong
         } else {
             $rules['file_abstract'] = 'required|file|mimes:pdf,doc,docx|max:2048';
+            $rules['judul'] = 'nullable|string|max:500'; // Kategori lain tidak wajib judul, tapi bisa diisi jika ingin submit artikel tanpa jadi presenter
         }
 
         // Jika kategori mengandung kata 'Student', kartu pelajar wajib diisi
@@ -205,6 +209,7 @@ class PesertaController extends Controller
                 'user_id'       => $userId,
                 'id_ktg'        => $request->id_ktg,
                 'id_pub'        => $request->id_pub, // Nilai ini akan null jika bukan presenter (sesuai input hidden/select)
+                'judul'         => $request->judul, // <--- TAMBAHKAN INI
                 'file_abstract' => $fileAbstract,
                 'file_kp'       => $fileKP,
                 'file_bukti_tf'    => $fileBukti,
