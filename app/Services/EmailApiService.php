@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Log;
 
 class EmailApiService
 {
-    public static function send($to, $subject, $text, $html)
+    public static function send($to, $subject, $text, $html, $attachment = null)
     {
 
         // Mengambil data dari config/services.php
@@ -21,22 +21,28 @@ class EmailApiService
 
         $curl = curl_init();
 
+        $postFields = [
+            'from'      => 'conference@adaksi.org',
+            'from_name' => 'ICPIP-HE 2026',
+            'to'        => $to,
+            'subject'   => $subject,
+            'text'      => $text,
+            'html'      => $html,
+        ];
+
+        if (!empty($attachment) && file_exists($attachment)) {
+            $postFields['attachments[]'] = new \CURLFile($attachment);
+        }
+
         curl_setopt_array($curl, [
             CURLOPT_URL => 'https://smtp-app.kirim.email/api/v4/transactional/message',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST => true,
             CURLOPT_USERPWD => $apiKey . ':' . $apiSecret,
             CURLOPT_HTTPHEADER => [
-                'Domain: ' . $domain, // Menggunakan variabel dari config
+                'Domain: ' . $domain,
             ],
-            CURLOPT_POSTFIELDS => http_build_query([
-                'from'      => 'conference@adaksi.org',
-                'from_name' => 'ICPIP-HE 2026',
-                'to'        => $to,
-                'subject'   => $subject,
-                'text'      => $text,
-                'html'      => $html,
-            ]),
+            CURLOPT_POSTFIELDS => $postFields, // Kirim sebagai array untuk mendukung multipart/form-data
         ]);
 
         $response = curl_exec($curl);
@@ -49,6 +55,7 @@ class EmailApiService
             'to'        => $to,
             'subject'   => $subject,
             'http_code' => $httpCode,
+            'has_attachment' => $attachment ? 'Yes' : 'No',
             'response'  => $response,
         ]);
 
@@ -56,7 +63,7 @@ class EmailApiService
             throw new \Exception($error);
         }
 
-        if (!in_array($httpCode, [200, 202])) {
+        if (!in_array($httpCode, [200, 201, 202])) {
             throw new \Exception($response);
         }
 

@@ -98,8 +98,6 @@
                                             <th
                                                 class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 text-center">
                                                 Files</th>
-
-                                            {{-- Tambahan Header Baru: Abstract Status --}}
                                             <th
                                                 class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 text-center">
                                                 Abstract Status</th>
@@ -111,6 +109,8 @@
                                                 Payment Note</th>
                                             <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">
                                                 Certificate</th>
+                                            <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">
+                                                Attendance</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-100 dark:divide-zinc-800">
@@ -193,14 +193,27 @@
                                                         <button disabled
                                                             class="bg-gray-100 text-gray-400 font-bold py-2 px-4 rounded-xl text-xs cursor-not-allowed">Closed</button>
                                                     @elseif ($submission && in_array($submission->payment, ['success', 'settlement', 'pending']))
-                                                        <button disabled
-                                                            class="bg-gray-100 text-gray-400 font-bold py-2 px-4 rounded-xl text-xs cursor-not-allowed">
-                                                            @if ($submission->payment == 'pending')
-                                                                In Progress
-                                                            @else
-                                                                Registered
-                                                            @endif
-                                                        </button>
+                                                        <div
+                                                            class="flex flex-col items-center justify-center text-center gap-3">
+
+                                                            <a href="{{ rtrim(config('path.qrcode_url_local'), '/') . '/' . $submission->qr_code }}"
+                                                                target="_blank" class="block group relative mx-auto">
+
+                                                                <img src="{{ rtrim(config('path.qrcode_url_local'), '/') . '/' . $submission->qr_code }}"
+                                                                    alt="QR Code Pass"
+                                                                    class="w-20 h-20 rounded-xl border border-gray-200 p-1 shadow-sm transition-all group-hover:scale-105 group-hover:shadow-md">
+
+                                                            </a>
+
+                                                            <button disabled
+                                                                class="bg-gray-100 text-gray-400 font-bold py-2 px-4 rounded-xl text-xs cursor-not-allowed dynamic-btn">
+                                                                @if ($submission->payment == 'pending')
+                                                                    In Progress
+                                                                @else
+                                                                    Registered
+                                                                @endif
+                                                            </button>
+                                                        </div>
                                                     @endif
                                                 </td>
                                                 <td class="px-6 py-4">
@@ -250,7 +263,7 @@
                                                         <div class="text-[10px] text-blue-500 mt-1 uppercase">
                                                             {{ $submission->publikasi->index }}</div>
                                                     @else
-                                                        <span class="text-gray-400 text-xs">-</span>
+                                                        <span class="text-muted small">-</span>
                                                     @endif
                                                 </td>
 
@@ -264,7 +277,7 @@
                                                             <span class="text-[10px] font-bold uppercase">Template</span>
                                                         </a>
                                                     @else
-                                                        <span class="text-gray-400 text-xs">-</span>
+                                                        <span class="text-muted small">-</span>
                                                     @endif
                                                 </td>
 
@@ -344,7 +357,7 @@
                                                             @endif
                                                         </div>
                                                     @else
-                                                        <span class="text-gray-400">-</span>
+                                                        <span class="text-muted small">-</span>
                                                     @endif
                                                 </td>
 
@@ -365,7 +378,7 @@
                                                                 class="px-2 py-1 bg-green-500/10 text-green-500 text-[10px] font-bold rounded-full uppercase">Accepted</span>
                                                         @endif
                                                     @else
-                                                        <span class="text-gray-400 text-xs">-</span>
+                                                        <span class="text-muted small">-</span>
                                                     @endif
                                                 </td>
                                                 {{-- Kolom Artikel Status --}}
@@ -385,7 +398,7 @@
                                                                 class="px-2 py-1 bg-green-500/10 text-green-500 text-[10px] font-bold rounded-full uppercase">Accepted</span>
                                                         @endif
                                                     @else
-                                                        <span class="text-gray-400 text-xs">-</span>
+                                                        <span class="text-muted small">-</span>
                                                     @endif
                                                 </td>
 
@@ -457,11 +470,11 @@
 
                                                             {{-- 5. Kondisi Lain (Cancel/Deny) --}}
                                                         @else
-                                                            <span class="text-gray-400 text-xs">-</span>
+                                                            <span class="text-muted small">-</span>
                                                         @endif
                                                     @else
                                                         {{-- Jika tidak ada submission --}}
-                                                        <span class="text-gray-400 text-xs">-</span>
+                                                        <span class="text-muted small">-</span>
                                                     @endif
                                                 </td>
 
@@ -538,8 +551,21 @@
                                                         <span class="text-muted small">-</span>
                                                     @endif
                                                 </td>
-
-
+                                                {{-- Kolom Attendance --}}
+                                                <td class="text-center">
+                                                    @if ($submission && $submission->kehadiran)
+                                                        @php $status = strtolower($submission->kehadiran); @endphp
+                                                        @if ($status == null)
+                                                            <span
+                                                                class="px-2 py-1 bg-yellow-500/10 text-yellow-600 text-[10px] font-bold rounded-full uppercase">-</span>
+                                                        @elseif($status == 'hadir')
+                                                            <span
+                                                                class="px-2 py-1 bg-green-500/10 text-green-500 text-[10px] font-bold rounded-full uppercase">Present</span>
+                                                        @endif
+                                                    @else
+                                                        <span class="text-muted small">-</span>
+                                                    @endif
+                                                </td>
                                             </tr>
                                         @empty
                                             <tr>

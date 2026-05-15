@@ -28,6 +28,9 @@ class PesertaConferences extends Model
         'file_bukti_tf',
         'payment',
         'id_sc',
+        'qr_code',
+        'kehadiran',
+        'link_video',
         'snap',
         'order_id',
     ];

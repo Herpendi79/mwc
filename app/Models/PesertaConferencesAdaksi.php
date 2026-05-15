@@ -28,6 +28,9 @@ class PesertaConferencesAdaksi extends Model
         'status_artikel',
         'payment',
         'id_sc',
+        'qr_code',
+        'kehadiran',
+        'link_video',
         'snap',
         'order_id',
     ];

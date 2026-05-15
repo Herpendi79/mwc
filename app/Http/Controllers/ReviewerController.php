@@ -653,185 +653,488 @@ class ReviewerController extends Controller
     // Fungsi untuk update status abstract (revision atau accepted)
     public function updateStatus(Request $request, $id, $sumber)
     {
-        // Validasi Dasar
+        // VALIDASI
         $request->validate([
             'status' => 'required|in:accepted,revision',
-            'id_sc'  => 'required_if:status,accepted|exists:scope,id_sc',
-            'comment' => 'required_if:status,revision',
+
+            'id_sc' => 'nullable|required_if:status,accepted|exists:scope,id_sc',
+
+            'comment' => 'nullable|required_if:status,revision',
+        ], [
+            'id_sc.required_if' => 'Conference scope wajib dipilih.',
+            'id_sc.exists' => 'Conference scope tidak valid.',
+            'comment.required_if' => 'Revision comment wajib diisi.',
         ]);
 
-        if ($sumber === 'ADAKSI') {
-            $presenter = \App\Models\PesertaConferencesAdaksi::with(['user.anggota', 'kategori.conference'])
-                ->where('id_pca', $id)
-                ->firstOrFail();
-            $user = $presenter->user;
-            $nama_peserta = $user->anggota->nama_anggota ?? 'Participant';
-        } else {
-            $presenter = PesertaConferences::with(['user.peserta', 'kategori.conference'])
-                ->where('id_pc', $id)
-                ->firstOrFail();
-            $user = $presenter->user;
-            $nama_peserta = $user->peserta->nama ?? ($user->name ?? 'Participant');
-        }
-
-        if (!$user || !$user->email) {
-            return back()->with('error', 'User email not found.');
-        }
-
-        $status = $request->input('status');
-        $comment = $request->input('comment');
-        $id_sc = $request->input('id_sc'); // Ambil id_sc dari input
-        $nama_conference = $presenter->kategori->conference->nama_conf;
-
-        DB::beginTransaction();
         try {
+
+            // AMBIL DATA PRESENTER
+            if ($sumber === 'ADAKSI') {
+
+                $presenter = PesertaConferencesAdaksi::with([
+                    'user.anggota',
+                    'kategori.conference'
+                ])
+                    ->where('id_pca', $id)
+                    ->firstOrFail();
+
+                $user = $presenter->user;
+
+                $nama_peserta = $user->anggota->nama_anggota ?? 'Participant';
+            } else {
+
+                $presenter = PesertaConferences::with([
+                    'user.peserta',
+                    'kategori.conference'
+                ])
+                    ->where('id_pc', $id)
+                    ->firstOrFail();
+
+                $user = $presenter->user;
+
+                $nama_peserta = $user->peserta->nama
+                    ?? ($user->name ?? 'Participant');
+            }
+
+            // VALIDASI EMAIL
+            if (!$user || !$user->email) {
+                return back()->with('error', 'User email not found.');
+            }
+
+            $status = $request->status;
+            $comment = $request->comment;
+            $id_sc = $request->id_sc;
+
+            $nama_conference = $presenter->kategori->conference->nama_conf;
+            $judul_artikel = $presenter->judul;
+
+            DB::beginTransaction();
+
+            // =====================================================
+            // REVISION
+            // =====================================================
             if ($status === 'revision') {
-                // Logika Hapus File
+
+                // HAPUS FILE ABSTRACT LAMA
                 if ($presenter->file_abstract) {
-                    $path = rtrim(config('path.submissions'), '/') . '/' . $presenter->file_abstract;
-                    if (File::exists($path)) {
-                        File::delete($path);
+
+                    $path = storage_path(
+                        'app/public/' . $presenter->file_abstract
+                    );
+
+                    if (file_exists($path)) {
+                        unlink($path);
                     }
                 }
 
+                // UPDATE DATA
                 $presenter->update([
-                    'status_abstract' => 'revision required',
+                    'status_abstract' => null,
                     'file_abstract'   => null,
                     'keterangan'      => $comment,
-                    'id_sc'           => null, // Reset scope jika revisi
+                    'id_sc'           => null,
                 ]);
 
-                $subject = "Revision Required: Abstract - " . $nama_conference;
+                $attachmentPath = null;
+
+                $subject = "Revision Required: Abstract - {$nama_conference}";
+
                 $text = "Dear {$nama_peserta}, your abstract requires revision. Feedback: {$comment}";
-            } else {
-                // Logika Accepted + Simpan Scope
+            }
+
+            // =====================================================
+            // ACCEPTED
+            // =====================================================
+            else {
+
+                // Buat nama file: idcard_random6.png
+                $safeIdCard = preg_replace('/[^A-Za-z0-9]/', '', $presenter->peserta->nama_peserta ?? $presenter->user->name ?? 'presenter');
+                $randomString = Str::upper(Str::random(6));
+                $fileNameOnly = "{$safeIdCard}_{$randomString}";
+                $fileName = "{$fileNameOnly}.png";
+
+                // Isi QR adalah id_card + random
+                $qrContent = $fileName;
+
+                // Generate QR
+                generateGoQrAndSave($qrContent, $fileName);
+
+                // UPDATE STATUS
                 $presenter->update([
                     'status_abstract' => 'accepted',
-                    'id_sc'           => $id_sc, // Simpan ID Scope ke tabel (PC atau PCA)
+                    'id_sc'           => $id_sc,
+                    'qr_code'           => $fileName,
                 ]);
 
-                $subject = "Accepted: Abstract - " . $nama_conference;
+                // NOMOR SURAT
+                $filePath = storage_path('app/last_no_surat.txt');
+
+                $lastNo = file_exists($filePath)
+                    ? (int) file_get_contents($filePath)
+                    : 0;
+
+                $newNo = $lastNo + 1;
+
+                file_put_contents($filePath, $newNo);
+
+                // BULAN ROMAWI
+                $romawi = [
+                    1 => 'I',
+                    2 => 'II',
+                    3 => 'III',
+                    4 => 'IV',
+                    5 => 'V',
+                    6 => 'VI',
+                    7 => 'VII',
+                    8 => 'VIII',
+                    9 => 'IX',
+                    10 => 'X',
+                    11 => 'XI',
+                    12 => 'XII'
+                ];
+
+                $bulanRomawi = $romawi[date('n')];
+
+                // FORMAT NOMOR SURAT
+                $no_surat = sprintf(
+                    "%02d/ICPIP-HE-I/ADAKSI/%s/%d",
+                    $newNo,
+                    $bulanRomawi,
+                    date('Y')
+                );
+
+                // DATA PDF
+                $pdfData = [
+                    'nama' => $nama_peserta,
+                    'judul' => $judul_artikel,
+                    'no_surat' => $no_surat,
+                    'tanggal' => now()->format('F d, Y'),
+                ];
+
+                // GENERATE PDF
+                $pdf = Pdf::loadView(
+                    'emails.pdf_loa_abstract_template',
+                    $pdfData
+                );
+
+                // PATH TEMP PDF
+                $tempPath = storage_path('app/public/temp');
+
+                if (!File::isDirectory($tempPath)) {
+                    File::makeDirectory($tempPath, 0777, true, true);
+                }
+
+                $fileName = 'LoA_' . Str::slug($nama_peserta) . '.pdf';
+
+                $attachmentPath = $tempPath . '/' . $fileName;
+
+                $pdf->save($attachmentPath);
+
+                $subject = "Accepted: Abstract - {$nama_conference}";
+
                 $text = "Congratulations {$nama_peserta}, your abstract has been accepted.";
             }
 
-            // Kirim Email Queue
+            // =====================================================
+            // RENDER EMAIL HTML
+            // =====================================================
             $html = view('emails.review_abstract', [
-                'nama'    => $nama_peserta,
-                'status'  => $status,
+                'nama' => $nama_peserta,
+                'status' => $status,
                 'comment' => $comment,
                 'nama_conference' => $nama_conference
             ])->render();
 
-            EmailApiService::send($user->email, $subject, $text, $html);
-
-            /*SendSubmissionEmail::dispatch([
-                'to'      => $user->email,
-                'subject' => $subject,
-                'text'    => $text,
-                'html'    => $html,
-            ])->onQueue('conference'); */
-
+            // COMMIT DATABASE
             DB::commit();
-            return back()->with('success', 'Decision submitted and Scope assigned successfully.');
+
+            // =====================================================
+            // SEND EMAIL
+            // =====================================================
+            try {
+
+                EmailApiService::send(
+                    $user->email,
+                    $subject,
+                    $text,
+                    $html,
+                    $attachmentPath
+                );
+            } catch (\Exception $mailError) {
+
+                Log::error('EMAIL ERROR', [
+                    'message' => $mailError->getMessage(),
+                    'email' => $user->email,
+                ]);
+            }
+
+            return back()->with(
+                'success',
+                'Decision submitted successfully.'
+            );
         } catch (\Exception $e) {
+
             DB::rollback();
-            Log::error("Gagal update status review: " . $e->getMessage());
-            return back()->with('error', 'Something went wrong.');
+
+            Log::error('UPDATE STATUS ERROR', [
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return back()->with(
+                'error',
+                $e->getMessage()
+            );
         }
     }
 
     //update status artikel (accepted atau revision)
     public function updateStatusArtikel(Request $request, $id, $sumber)
     {
-        // 1. Identifikasi Sumber Data (ADAKSI atau UMUM)
-        if ($sumber === 'ADAKSI') {
-            $presenter = \App\Models\PesertaConferencesAdaksi::with(['user.anggota', 'kategori.conference'])
-                ->where('id_pca', $id)
-                ->firstOrFail();
+        // VALIDASI
+        $request->validate([
+            'status' => 'required|in:accepted,revision',
 
-            $user = $presenter->user;
-            $nama_peserta = $user->anggota->nama_anggota ?? 'Participant';
-        } else {
-            // PERBAIKAN: Gunakan relasi 'user.peserta' karena PC langsung punya user_id
-            $presenter = \App\Models\PesertaConferences::with(['user.peserta', 'kategori.conference'])
-                ->where('id_pc', $id)
-                ->firstOrFail();
+            'comment' => 'nullable|required_if:status,revision',
+        ], [
+            'comment.required_if' => 'Revision comment wajib diisi.',
+        ]);
 
-            // Langsung ambil dari relasi user
-            $user = $presenter->user;
-
-            // Ambil nama dari profil peserta, jika tidak ada gunakan nama di tabel user
-            $nama_peserta = $user->peserta->nama ?? ($user->name ?? 'Participant');
-        }
-
-        if (!$user || !$user->email) {
-            Log::error("User/Email tidak ditemukan untuk ID: {$id} ({$sumber})");
-            return back()->with('error', 'User email not found. Notification failed.');
-        }
-
-        $status = $request->input('status');
-        $comment = $request->input('comment');
-        $nama_conference = $presenter->kategori->conference->nama_conf;
-
-        // 2. Mulai Transaksi Database
-        DB::beginTransaction();
         try {
+
+            // =====================================================
+            // AMBIL DATA PRESENTER
+            // =====================================================
+            if ($sumber === 'ADAKSI') {
+
+                $presenter = \App\Models\PesertaConferencesAdaksi::with([
+                    'user.anggota',
+                    'kategori.conference',
+                    'publikasi'
+                ])
+                    ->where('id_pca', $id)
+                    ->firstOrFail();
+
+                $user = $presenter->user;
+
+                $nama_peserta = $user->anggota->nama_anggota ?? 'Participant';
+            } else {
+
+                $presenter = \App\Models\PesertaConferences::with([
+                    'user.peserta',
+                    'kategori.conference',
+                    'publikasi'
+                ])
+                    ->where('id_pc', $id)
+                    ->firstOrFail();
+
+                $user = $presenter->user;
+
+                $nama_peserta = $user->peserta->nama
+                    ?? ($user->name ?? 'Participant');
+            }
+
+            // =====================================================
+            // VALIDASI EMAIL
+            // =====================================================
+            if (!$user || !$user->email) {
+
+                Log::error("User/Email tidak ditemukan", [
+                    'id' => $id,
+                    'sumber' => $sumber
+                ]);
+
+                return back()->with(
+                    'error',
+                    'User email not found.'
+                );
+            }
+
+            $status = $request->status;
+            $comment = $request->comment;
+
+            $nama_conference = $presenter->kategori->conference->nama_conf;
+            $judul_artikel = $presenter->judul;
+
+            DB::beginTransaction();
+
+            // =====================================================
+            // REVISION
+            // =====================================================
             if ($status === 'revision') {
-                // Hapus file artikel lama jika ada revisi
+
+                // HAPUS FILE ARTIKEL LAMA
                 if ($presenter->file_artikel) {
-                    // Gunakan separator path yang aman
-                    $path = rtrim(config('path.submissions'), '/') . '/' . $presenter->file_artikel;
-                    if (\Illuminate\Support\Facades\File::exists($path)) {
-                        \Illuminate\Support\Facades\File::delete($path);
+
+                    $path = storage_path(
+                        'app/public/' . $presenter->file_artikel
+                    );
+
+                    if (file_exists($path)) {
+                        unlink($path);
                     }
                 }
 
-                // Update Database (Set ke 'revision required' agar sinkron dengan logika tombol di Blade)
+                // UPDATE DATABASE
                 $presenter->update([
-                    'status_artikel' => 'revision required',
+                    'status_artikel' => null,
                     'file_artikel'   => null,
-                    'keterangan'      => $comment,
+                    'keterangan'     => $comment,
                 ]);
 
-                $subject = "Revision Required: Full Paper Submission - " . $nama_conference;
+                $attachmentPath = null;
+
+                $subject = "Revision Required: Full Paper Submission - {$nama_conference}";
+
                 $text = "Dear {$nama_peserta}, your full paper requires revision. Feedback: {$comment}";
-            } else {
-                // Update Database ke Accepted
+            }
+
+            // =====================================================
+            // ACCEPTED
+            // =====================================================
+            else {
+
+                // UPDATE DATABASE
                 $presenter->update([
                     'status_artikel' => 'accepted',
                 ]);
 
-                $subject = "Accepted: Full Paper Submission Notification - " . $nama_conference;
+                // NOMOR SURAT
+                $filePath = storage_path('app/last_no_surat.txt');
+
+                $lastNo = file_exists($filePath)
+                    ? (int) file_get_contents($filePath)
+                    : 0;
+
+                $newNo = $lastNo + 1;
+
+                file_put_contents($filePath, $newNo);
+
+                // BULAN ROMAWI
+                $romawi = [
+                    1 => 'I',
+                    2 => 'II',
+                    3 => 'III',
+                    4 => 'IV',
+                    5 => 'V',
+                    6 => 'VI',
+                    7 => 'VII',
+                    8 => 'VIII',
+                    9 => 'IX',
+                    10 => 'X',
+                    11 => 'XI',
+                    12 => 'XII'
+                ];
+
+                $bulanRomawi = $romawi[date('n')];
+
+                // FORMAT NOMOR SURAT
+                $no_surat = sprintf(
+                    "%02d/ICPIP-HE-I/ADAKSI/%s/%d",
+                    $newNo,
+                    $bulanRomawi,
+                    date('Y')
+                );
+
+                // DATA PDF
+                $pdfData = [
+                    'nama' => $nama_peserta,
+                    'judul' => $judul_artikel,
+                    'no_surat' => $no_surat,
+                    'tanggal' => now()->format('F d, Y'),
+                    'nama_jurnal' => $presenter->publikasi->nama_pub ?? '(Journal Name)',
+                ];
+
+                // GENERATE PDF
+                $pdf = Pdf::loadView(
+                    'emails.pdf_loa_full_paper_template',
+                    $pdfData
+                );
+
+                // DIRECTORY TEMP
+                $tempPath = storage_path('app/public/temp');
+
+                if (!File::isDirectory($tempPath)) {
+                    File::makeDirectory($tempPath, 0777, true, true);
+                }
+
+                // FILE PDF
+                $fileName = 'LoA_FullPaper_' .
+                    time() .
+                    '_' .
+                    Str::slug($nama_peserta) .
+                    '.pdf';
+
+                $attachmentPath = $tempPath . '/' . $fileName;
+
+                $pdf->save($attachmentPath);
+
+                $subject = "Accepted: Full Paper Submission Notification - {$nama_conference}";
+
                 $text = "Congratulations {$nama_peserta}, your Full Paper has been accepted.";
             }
 
-            // 3. Render HTML untuk Email
+            // =====================================================
+            // RENDER EMAIL HTML
+            // =====================================================
             $html = view('emails.review_artikel', [
-                'nama'    => $nama_peserta,
-                'status'  => $status,
+                'nama' => $nama_peserta,
+                'status' => $status,
                 'comment' => $comment,
                 'nama_conference' => $nama_conference
             ])->render();
 
-            EmailApiService::send($user->email, $subject, $text, $html);
-
-
-            // 4. Kirim ke Queue (Jalur Conference)
-            /*SendSubmissionEmail::dispatch([
-                'to'      => $user->email,
-                'subject' => $subject,
-                'text'    => $text,
-                'html'    => $html,
-            ])->onQueue('conference'); */
-
+            // =====================================================
+            // COMMIT DATABASE
+            // =====================================================
             DB::commit();
-            Log::info("Email notifikasi review ({$status}) berhasil dikirim ke: " . $user->email);
 
-            return back()->with('success', 'Full Paper decision submitted.');
+            // =====================================================
+            // SEND EMAIL
+            // =====================================================
+            try {
+
+                EmailApiService::send(
+                    $user->email,
+                    $subject,
+                    $text,
+                    $html,
+                    $attachmentPath
+                );
+
+                Log::info("Email review berhasil dikirim", [
+                    'email' => $user->email,
+                    'status' => $status
+                ]);
+            } catch (\Exception $mailError) {
+
+                Log::error('EMAIL ERROR', [
+                    'message' => $mailError->getMessage(),
+                    'email' => $user->email,
+                ]);
+            }
+
+            return back()->with(
+                'success',
+                'Full Paper decision submitted successfully.'
+            );
         } catch (\Exception $e) {
+
             DB::rollback();
-            Log::error("Gagal update status artikel: " . $e->getMessage());
-            return back()->with('error', 'An error occurred while processing the decision.');
+
+            Log::error('UPDATE STATUS ARTIKEL ERROR', [
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return back()->with(
+                'error',
+                $e->getMessage()
+            );
         }
     }
 
