@@ -196,10 +196,10 @@
                                                         <div
                                                             class="flex flex-col items-center justify-center text-center gap-3">
 
-                                                            <a href="{{ rtrim(config('path.qrcode_url'), '/') . '/' . $submission->qr_code }}"
+                                                            <a href="{{ config('path.qrcode_url') . $submission->qr_code }}"
                                                                 target="_blank" class="block group relative mx-auto">
 
-                                                                <img src="{{ rtrim(config('path.qrcode_url'), '/') . '/' . $submission->qr_code }}"
+                                                                <img src="{{ config('path.qrcode_url') . $submission->qr_code }}"
                                                                     alt="QR Code Pass"
                                                                     class="w-20 h-20 rounded-xl border border-gray-200 p-1 shadow-sm transition-all group-hover:scale-105 group-hover:shadow-md">
 
