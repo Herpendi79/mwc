@@ -13,6 +13,8 @@ return new class extends Migration {
             SELECT 
                 pc.id_pc AS id_global,
                 pc.id_ktg,
+                pc.qr_code COLLATE utf8mb4_unicode_ci AS qr_code,
+                pc.kehadiran COLLATE utf8mb4_unicode_ci AS kehadiran,
                 ktg1.id_conf,
                 CAST('Non ADAKSI' AS CHAR) COLLATE utf8mb4_unicode_ci AS sumber,
                 u.name COLLATE utf8mb4_unicode_ci AS nama_user,
@@ -32,6 +34,8 @@ return new class extends Migration {
             SELECT 
                 pca.id_pca AS id_global,
                 pca.id_ktg,
+                pca.qr_code COLLATE utf8mb4_unicode_ci AS qr_code,
+                pca.kehadiran COLLATE utf8mb4_unicode_ci AS kehadiran,
                 ktg2.id_conf,
                 CAST('ADAKSI' AS CHAR) COLLATE utf8mb4_unicode_ci AS sumber,
                 ang.nama_anggota COLLATE utf8mb4_unicode_ci AS nama_user,
