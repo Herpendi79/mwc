@@ -196,14 +196,15 @@
                                                         <div
                                                             class="flex flex-col items-center justify-center text-center gap-3">
 
-                                                            <a href="{{ config('path.qrcode_url') . $submission->qr_code }}"
-                                                                target="_blank" class="block group relative mx-auto">
+                                                            @if (!empty($submission->qr_code))
+                                                                <a href="{{ config('path.qrcode_url') . $submission->qr_code }}"
+                                                                    target="_blank" class="block group relative mx-auto">
 
-                                                                <img src="{{ config('path.qrcode_url') . $submission->qr_code }}"
-                                                                    alt="QR Code Pass"
-                                                                    class="w-20 h-20 rounded-xl border border-gray-200 p-1 shadow-sm transition-all group-hover:scale-105 group-hover:shadow-md">
-
-                                                            </a>
+                                                                    <img src="{{ config('path.qrcode_url') . $submission->qr_code }}"
+                                                                        alt="QR Code Pass"
+                                                                        class="w-20 h-20 rounded-xl border border-gray-200 p-1 shadow-sm transition-all group-hover:scale-105 group-hover:shadow-md">
+                                                                </a>
+                                                            @endif
 
                                                             <button disabled
                                                                 class="bg-gray-100 text-gray-400 font-bold py-2 px-4 rounded-xl text-xs cursor-not-allowed dynamic-btn">
