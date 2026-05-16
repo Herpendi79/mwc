@@ -16,5 +16,5 @@ return [
     'submissions_url'  => 'https://adaksi.org/uploads/file/submissions/',
      //'qrcode_url_local'  => 'https://adaksi.org/uploads/file/qrcode/',
     // 'qrcode_url_local'  => env('APP_URL', 'http://localhost') . '/assets/file/qrcode/',
-     'qrcode_url'  => env('APP_URL', 'https://adaksi.org') . '/uploads/file/qrcode/',
+     'qrcode_url'  => 'https://adaksi.org/uploads/file/qrcode/',
 ];
