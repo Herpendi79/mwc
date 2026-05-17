@@ -99,7 +99,7 @@
                 Certificate Number Generated</div>
             <div class="certificate-text">{{ $no_sertifikat }}</div>
             <p style="font-size: 13px; color: #666; margin: 0;">This number will be printed on your official conference
-                certificate.</p>
+                certificate on your dashboard.</p>
         </div>
 
         <p>You can now access your submission details, download your certificate, and check for further updates regarding

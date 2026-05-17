@@ -570,6 +570,19 @@ class PesertaController extends Controller
         $pendaftar = PesertaConferences::where('order_id', $order_id)->first();
 
         if ($transaction_status === 'settlement') {
+
+            $safeIdCard = preg_replace('/[^A-Za-z0-9]/', '', $pendaftar->peserta->nama_peserta ?? $pendaftar->user->name ?? 'presenter');
+            $randomString = Str::upper(Str::random(6));
+            $fileNameOnly = "{$safeIdCard}_{$randomString}";
+            $fileName = "{$fileNameOnly}.png";
+
+            // Isi QR adalah id_card + random
+            $qrContent = $fileName;
+
+            // Generate QR
+            generateGoQrAndSave($qrContent, $fileName);
+            $pendaftar->qr_code = $fileName;
+
             // 1. Tentukan pola string tetap (suffix)
             $suffix = "/ICPIP-HE-I/CERTIF/VI/2026";
             $lastRecord = PesertaConferences::where('no_sertifikat', 'like', '%' . $suffix)

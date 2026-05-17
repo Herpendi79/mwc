@@ -748,7 +748,7 @@ class ReviewerController extends Controller
             else {
 
                 // Buat nama file: idcard_random6.png
-                $safeIdCard = preg_replace('/[^A-Za-z0-9]/', '', $presenter->peserta->nama_peserta ?? $presenter->user->name ?? 'presenter');
+             /*   $safeIdCard = preg_replace('/[^A-Za-z0-9]/', '', $presenter->peserta->nama_peserta ?? $presenter->user->name ?? 'presenter');
                 $randomString = Str::upper(Str::random(6));
                 $fileNameOnly = "{$safeIdCard}_{$randomString}";
                 $fileName = "{$fileNameOnly}.png";
@@ -757,13 +757,13 @@ class ReviewerController extends Controller
                 $qrContent = $fileName;
 
                 // Generate QR
-                generateGoQrAndSave($qrContent, $fileName);
+                generateGoQrAndSave($qrContent, $fileName); */
 
                 // UPDATE STATUS
                 $presenter->update([
                     'status_abstract' => 'accepted',
                     'id_sc'           => $id_sc,
-                    'qr_code'           => $fileName,
+                   // 'qr_code'           => $fileName,
                 ]);
 
                 // NOMOR SURAT
