@@ -613,6 +613,40 @@ class PesertaController extends Controller
 
             Log::info("Sertifikat berhasil digenerate: " . $no_sertifikat . " untuk User ID: " . $pendaftar->id);
 
+            $attachmentPath = null;
+            try {
+                $namaPeserta = $pendaftar->user->peserta->nama ?? ($pendaftar->user->name ?? 'Participant');
+
+                // Format Nomor Invoice modifikasi dari format nomor surat sistem Bapak
+                $no_invoice = sprintf("INV/%s/%02d/ICPIP-HE/%d", $formattedNumber, date('n'), date('Y'));
+
+                $invoiceData = [
+                    'no_invoice' => $no_invoice,
+                    'nama'       => $namaPeserta,
+                    'email'      => $pendaftar->user->email ?? '-',
+                    'negara'     => $pendaftar->user->peserta->negara ?? 'Indonesia',
+                    'kategori'   => $namaKategori,
+                    'judul'      => $pendaftar->judul,
+                    'nominal'    => ((int)($gross_amount ?? $pendaftar->nominal ?? 0)) - 5000,
+                    'tanggal'    => now()->format('F d, Y'),
+                ];
+
+                // Render berkas PDF menggunakan view invoice baru
+                $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('emails.pdf_invoice_template', $invoiceData);
+
+                $tempDir = storage_path('app/public/temp');
+                if (!\Illuminate\Support\Facades\File::isDirectory($tempDir)) {
+                    \Illuminate\Support\Facades\File::makeDirectory($tempDir, 0777, true, true);
+                }
+
+                $invoiceFileName = 'Invoice_' . \Illuminate\Support\Str::slug($namaPeserta) . '_' . time() . '.pdf';
+                $attachmentPath = $tempDir . '/' . $invoiceFileName;
+                $pdf->save($attachmentPath);
+                Log::info("PDF Invoice Berhasil dibuat di path: " . $attachmentPath);
+            } catch (\Exception $ePdf) {
+                Log::error("Gagal membuat PDF Invoice: " . $ePdf->getMessage());
+            }
+
             // Kirim email notif via EmailApiService
             try {
                 // 1. Ambil user langsung dari pendaftar (karena sudah relasi langsung)
@@ -637,11 +671,12 @@ class PesertaController extends Controller
                 if ($user && $user->email) {
                     EmailApiService::send(
                         $user->email,
-                        'Payment Successful - Certificate Generated',
+                        'Payment Successful - Invoice & Certificate Generated',
                         $text,
-                        $html
+                        $html,
+                        $attachmentPath // Lampirkan PDF invoice jika berhasil dibuat
                     );
-                    Log::info("Email notifikasi sukses dikirim ke: " . $user->email);
+                    Log::info("Email notifikasi + invoice sukses dikirim ke: " . $user->email);
                 } else {
                     Log::warning("Gagal mengirim email: Data user atau email tidak ditemukan untuk ID Pendaftar: " . $pendaftar->id_pc);
                 }

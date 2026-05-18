@@ -102,8 +102,10 @@
                 certificate on your dashboard.</p>
         </div>
 
-        <p>You can now access your submission details, download your certificate, and check for further updates regarding
+        <p>You can now access your submission details (if you as presenter), QR Code for attendance, download your certificate, and check for further updates regarding
             the conference informations through your participant dashboard.</p>
+
+        <p>Here we also attach the invoice for your payment as a reference</p>
 
         <div style="text-align: center;">
             <a href="{{ $url }}" class="btn">GO TO DASHBOARD</a>
