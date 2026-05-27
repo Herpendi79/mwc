@@ -94,7 +94,7 @@
             <div class="container">
                 <div class="grid grid-cols-12 gap-6 items-center">
                     <div class="col-span-12 xl:col-span-5" data-sal="slide-up" data-sal-duration="700" data-sal-delay="100">
-                        <div class="relative z-10 inline-block xl:w-full xl:h-160 md:w-160 md:h-130 w-full h-full">
+                        <div class="relative z-10 inline-block xl:w-full xl:h-200 md:w-160 md:h-130 w-full h-full">
                             <img src="{{ asset('assets/images/about/business-about-person2.JPG') }}" alt=""
                                 class="w-full object-cover rounded-lg h-full relative">
                             <div
@@ -108,59 +108,114 @@
                     </div>
                     <div class="col-span-12 xl:col-span-6 xl:col-end-13" data-sal="slide-up" data-sal-duration="700"
                         data-sal-delay="100">
-                        <p class="mb-3 text-[#c0f037]">[ About ICPIP-HE 2026]</p>
-
-                        <h2 class="md:text-5xl mb-5 font-chivo font-medium leading-[1.2]">Transforming Higher Education
-                            through Policy Reform, Innovative Practices, and Global Collaboration</h2>
-
-                        <p class="text-gray-400 md:text-[20px] mb-3">
-                            The International Conference on Transforming Higher Education through Policy Reform, Innovative
-                            Practices, and Global Collaboration brings together academics, policymakers, and practitioners
-                            to explore strategies for advancing higher education. It focuses on key areas such as policy
-                            reform, innovative teaching and learning, global collaboration, research and knowledge transfer,
-                            sustainability and social impact, digital transformation, and the development of academic
-                            leadership to build future-ready institutions
+                        <p class="mb-2 text-[#c0f037] text-xs font-semibold uppercase tracking-wider">[ About ICPIP-HE 2026]
                         </p>
 
-                        <p class="text-gray-400 md:text-[20px] mb-7">
-                            Our goal is To foster collaboration and innovation in transforming higher education through
-                            policy reform, digital advancement, and global partnerships.
-                        </p>
+                        <h4 class="text-2xl font-medium leading-tight mb-4">
+                            "Transforming Higher Education through Policy Reform, Innovative Practices, and Global
+                            Collaboration"
+                        </h4>
 
-                        <div class="mb-12 flex md:gap-6 gap-3 items-center flex-wrap xl:flex-nowrap">
-
-                            <div class="inline-flex items-center gap-3 xl:gap-5 rounded-lg bg-[#0B2C36] px-3 p-3">
-                                <div
-                                    class="bg-white/10 backdrop-blur-sm rounded-full size-12 flex items-center justify-center shrink-0">
-                                    <i class="ri-lightbulb-line text-xl"></i>
-                                </div>
-                                <h5>Creative Solutions</h5>
-                            </div>
-
-                            <div class="inline-flex items-center gap-3 xl:gap-5 rounded-lg bg-[#0B2C36] px-3 p-3">
-                                <div
-                                    class="bg-white/10 backdrop-blur-sm rounded-full size-12 flex items-center justify-center shrink-0">
-                                    <i class="ri-bar-chart-line text-xl"></i>
-                                </div>
-                                <h5>Mindset Growth</h5>
-                            </div>
-
-                            <div class="inline-flex items-center gap-3 xl:gap-5 rounded-lg bg-[#0B2C36] px-3 p-3">
-                                <div
-                                    class="bg-white/10 backdrop-blur-sm rounded-full size-12 flex items-center justify-center shrink-0">
-                                    <i class="ri-team-line text-xl"></i>
-                                </div>
-                                <h5>Expert Speakers</h5>
-                            </div>
-
+                        <!-- Scope 1 -->
+                        <div class="mb-3">
+                            <p class="text-white font-bold text-sm mb-0.5">Scope 1 – Policy Reform in Higher Education</p>
+                            <p class="text-gray-400 text-xs leading-relaxed">
+                                • Higher education policy and governance reform • Quality assurance and accreditation
+                                systems • Inclusive and equitable access to higher education • Higher education financing
+                                and sustainability • University autonomy and institutional accountability • Policy responses
+                                to globalization and digital disruption • Leadership and strategic management in higher
+                                education • Comparative higher education policies across countries
+                            </p>
                         </div>
 
-                        <a href="register"
-                            class="btn rounded-none group text-lg border border-[#c0f037] text-[#c0f037] tracking-[1px] uppercase font-medium relative transition-all duration-300 hover:bg-[#c0f037] hover:text-black inline-block hover:rotate-2">
-                            Join Conference
-                            <span
-                                class="bg-[#c0f037] size-3 rotate-45 block absolute ltr:-left-1 rtl:-right-1 -top-1 transition-all duration-300 group-hover:scale-125 group-hover:bg-white"></span>
-                        </a>
+                        <!-- Scope 2 -->
+                        <div class="mb-3">
+                            <p class="text-white font-bold text-sm mb-0.5">Scope 2 – Innovative Teaching and Learning
+                                Practices</p>
+                            <p class="text-gray-400 text-xs leading-relaxed">
+                                • Innovative pedagogical approaches in higher education • Artificial Intelligence (AI) in
+                                teaching and learning • Blended learning and online education • Outcome-Based Education
+                                (OBE) implementation • Project-based and experiential learning • Gamification and
+                                interactive learning technologies • Student-centered learning environments • Assessment and
+                                evaluation innovations • 21st-century skills and future-ready graduates
+                            </p>
+                        </div>
+
+                        <!-- Scope 3 -->
+                        <div class="mb-3">
+                            <p class="text-white font-bold text-sm mb-0.5">Scope 3 – Global Collaboration and
+                                Internationalization</p>
+                            <p class="text-gray-400 text-xs leading-relaxed">
+                                • International academic partnerships and networking • Student and faculty mobility programs
+                                • Collaborative international research initiatives • Internationalization of curriculum and
+                                instruction • Cross-cultural communication in higher education • Global citizenship
+                                education • Double degree and joint degree programs • Challenges and opportunities in higher
+                                education internationalization
+                            </p>
+                        </div>
+
+                        <!-- Scope 4 -->
+                        <div class="mb-3">
+                            <p class="text-white font-bold text-sm mb-0.5">Scope 4 – Research, Innovation, and Knowledge
+                                Transfer</p>
+                            <p class="text-gray-400 text-xs leading-relaxed">
+                                • Research culture and productivity in universities • Interdisciplinary and
+                                multidisciplinary research collaboration • Innovation ecosystems in higher education •
+                                Knowledge transfer and commercialization of research • Research publication and academic
+                                visibility • Open science and research ethics • University-industry collaboration • Emerging
+                                technologies and innovation research
+                            </p>
+                        </div>
+
+                        <!-- Scope 5 -->
+                        <div class="mb-3">
+                            <p class="text-white font-bold text-sm mb-0.5">Scope 5 – Sustainability and Social Impact</p>
+                            <p class="text-gray-400 text-xs leading-relaxed">
+                                • Higher education and Sustainable Development Goals (SDGs) • Green campus initiatives and
+                                environmental sustainability • Community engagement and service learning • Inclusive
+                                education and social justice • Education for sustainable development (ESD) • Universities’
+                                role in addressing social challenges • Cultural sustainability and local wisdom in education
+                                • Ethical leadership and social responsibility
+                            </p>
+                        </div>
+
+                        <!-- Scope 6 -->
+                        <div class="mb-3">
+                            <p class="text-white font-bold text-sm mb-0.5">Scope 6 – Digital Transformation in Higher
+                                Education</p>
+                            <p class="text-gray-400 text-xs leading-relaxed">
+                                • Digital transformation strategies in universities • Learning management systems and
+                                educational platforms • Big data and learning analytics • Artificial Intelligence and
+                                adaptive learning systems • Cybersecurity and digital ethics in education • Smart campus and
+                                digital administration • Virtual reality (VR) and augmented reality (AR) in education •
+                                Digital literacy for educators and students
+                            </p>
+                        </div>
+
+                        <!-- Scope 7 -->
+                        <div class="mb-3">
+                            <p class="text-white font-bold text-sm mb-0.5">Scope 7 – Professional Development and Academic
+                                Leadership</p>
+                            <p class="text-gray-400 text-xs leading-relaxed">
+                                • Faculty professional development and training • Academic leadership in the digital era •
+                                Teacher identity and academic professionalism • Well-being and resilience among educators •
+                                Leadership innovation in higher education institutions • Human resource development in
+                                universities • Mentoring and coaching for academic staff • Change management and
+                                institutional transformation
+                            </p>
+                        </div>
+
+                        <!-- Scope 8 -->
+                        <div class="mb-3">
+                            <p class="text-white font-bold text-sm mb-0.5">Scope 8 – Multidisciplinary Perspectives in
+                                Higher Education</p>
+                            <p class="text-gray-400 text-xs leading-relaxed">
+                                • Interdisciplinary curriculum development • Arts, humanities, science, and technology
+                                integration • Multidisciplinary approaches to global issues • Innovation through
+                                cross-disciplinary collaboration • Multilingual education and global communication
+                            </p>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -305,7 +360,8 @@
                         </div>
                         <div class="mt-6">
                             <h3 class="font-semibold text-lg hover:text-[#c0f037] transition-colors">
-                                <a href="https://www.linkedin.com/in/mohamed-alkhuzamy-aziz/" target="_blank">Prof. Dr. Mohamed Alkhuzamy Aziz, B.A., M.Sc., PhD.Sc</a>
+                                <a href="https://www.linkedin.com/in/mohamed-alkhuzamy-aziz/" target="_blank">Prof. Dr.
+                                    Mohamed Alkhuzamy Aziz, B.A., M.Sc., PhD.Sc</a>
                             </h3>
                             <p class="text-gray-400 mt-1">Fayoum University, Egypt</p>
                         </div>
@@ -324,7 +380,8 @@
                         </div>
                         <div class="mt-6">
                             <h3 class="font-semibold text-lg hover:text-[#c0f037] transition-colors">
-                                <a href="https://www.linkedin.com/in/amy-kuo-somchanhmavong-8a662797/" target="_blank">Amy Somchanhmavong</a>
+                                <a href="https://www.linkedin.com/in/amy-kuo-somchanhmavong-8a662797/" target="_blank">Amy
+                                    Somchanhmavong</a>
                             </h3>
                             <p class="text-gray-400 mt-1">Cornell University, United States</p>
                         </div>
