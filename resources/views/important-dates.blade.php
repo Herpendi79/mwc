@@ -162,7 +162,7 @@
                                     <a href="https://maps.app.goo.gl/fiCiqSzmwxSK58rF7" target="_blank" rel="noopener noreferrer"
                                         class="bg-[#FFFAD6] rounded-full px-4 py-2 text-black flex items-center gap-2 hover:bg-[#82CAFF] transition-all duration-300 w-fit">
                                         <i class="ri-map-pin-line"></i>
-                                        Science Techno Park UI
+                                       Best Western Senayan City Hotel, Jakarta, Indonesia
                                     </a>
                                 </div>
                             </div>
