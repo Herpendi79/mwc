@@ -71,7 +71,7 @@
                                         <div class="flex lg:gap-10 flex-wrap md:flex-nowrap gap-3">
                                             <p><i class="ri-calendar-check-fill me-1"></i> 26 June 2026</p>
                                             <div class="border border-white/50"></div>
-                                            <p><i class="ri-map-pin-line me-1"></i> Universitas Indonesia, Jakarta,
+                                            <p><i class="ri-map-pin-line me-1"></i> Best Western Senayan City Hotel, Jakarta,
                                                 Indonesia</p>
                                         </div>
                                     </div>
@@ -449,7 +449,7 @@
                             <div class="grid grid-cols-12 gap-6 items-center relative">
                                 <div class="col-span-12 lg:col-span-5">
                                     <div class="clip-shape-left md:h-90 overflow-hidden">
-                                        <img src="{{ asset('assets/images/venue/stp.jpeg') }}" alt=""
+                                        <img src="{{ asset('assets/images/venue/stc.avif') }}" alt=""
                                             class="w-full h-full object-cover  transition-all duration-500 ease-out hover:scale-110 hover:rotate-2">
                                     </div>
                                 </div>
@@ -461,9 +461,9 @@
                                                 <i class="ri-timer-fill me-1 text-[#c0f037]"></i> 7:30 AM - 17:00 PM
                                             </p>
                                             <h2>
-                                                <a href="https://maps.app.goo.gl/RKyBUgjQNdUCCXYX6" target="_blank"
+                                                <a href="https://maps.app.goo.gl/fiCiqSzmwxSK58rF7" target="_blank"
                                                     class="font-semibold leading-snug hover:text-[#c0f037] transition duration-300">
-                                                    Science Techno Park Building, Universitas Indonesia
+                                                    Best Western Senayan City Hotel, Jakarta, Indonesia
                                                 </a>
                                             </h2>
                                             <p class="text-gray-400 mt-5 md:text-[20px]">
@@ -509,7 +509,7 @@
                             <div class="grid grid-cols-12 gap-6 items-center relative">
                                 <div class="col-span-12 lg:col-span-5">
                                     <div class="clip-shape-left md:h-90 overflow-hidden">
-                                        <img src="{{ asset('assets/images/venue/stp.jpeg') }}" alt=""
+                                        <img src="{{ asset('assets/images/venue/stc.avif') }}" alt=""
                                             class="w-full h-full object-cover  transition-all duration-500 ease-out hover:scale-110 hover:rotate-2">
                                     </div>
                                 </div>
@@ -521,9 +521,9 @@
                                                 <i class="ri-timer-fill me-1 text-[#c0f037]"></i> 7:30 AM - 17:00 PM
                                             </p>
                                             <h2>
-                                                <a href="https://maps.app.goo.gl/RKyBUgjQNdUCCXYX6" target="_blank"
+                                                <a href="https://maps.app.goo.gl/fiCiqSzmwxSK58rF7" target="_blank"
                                                     class="font-semibold leading-snug hover:text-[#c0f037] transition duration-300">
-                                                    Science Techno Park Building, Universitas Indonesia
+                                                    Best Western Senayan City Hotel, Jakarta, Indonesia
                                                 </a>
                                             </h2>
                                             <p class="text-gray-400 mt-5 md:text-[20px]">
@@ -569,7 +569,7 @@
                             <div class="grid grid-cols-12 gap-6 items-center relative">
                                 <div class="col-span-12 lg:col-span-5">
                                     <div class="clip-shape-left md:h-90 overflow-hidden">
-                                        <img src="{{ asset('assets/images/venue/stp.jpeg') }}" alt=""
+                                        <img src="{{ asset('assets/images/venue/stc.avif') }}" alt=""
                                             class="w-full h-full object-cover  transition-all duration-500 ease-out hover:scale-110 hover:rotate-2">
                                     </div>
                                 </div>
@@ -581,9 +581,9 @@
                                                 <i class="ri-timer-fill me-1 text-[#c0f037]"></i> 7:30 AM - 17:00 PM
                                             </p>
                                             <h2>
-                                                <a href="https://maps.app.goo.gl/RKyBUgjQNdUCCXYX6" target="_blank"
+                                                <a href="https://maps.app.goo.gl/fiCiqSzmwxSK58rF7" target="_blank"
                                                     class="font-semibold leading-snug hover:text-[#c0f037] transition duration-300">
-                                                    Science Techno Park Building, Universitas Indonesia
+                                                    Best Western Senayan City Hotel, Jakarta, Indonesia
                                                 </a>
                                             </h2>
                                             <p class="text-gray-400 mt-5 md:text-[20px]">
@@ -629,7 +629,7 @@
                             <div class="grid grid-cols-12 gap-6 items-center relative">
                                 <div class="col-span-12 lg:col-span-5">
                                     <div class="clip-shape-left md:h-90 overflow-hidden">
-                                        <img src="{{ asset('assets/images/venue/stp.jpeg') }}" alt=""
+                                        <img src="{{ asset('assets/images/venue/stc.avif') }}" alt=""
                                             class="w-full h-full object-cover  transition-all duration-500 ease-out hover:scale-110 hover:rotate-2">
                                     </div>
                                 </div>
@@ -641,9 +641,9 @@
                                                 <i class="ri-timer-fill me-1 text-[#c0f037]"></i> 7:30 AM - 17:00 PM
                                             </p>
                                             <h2>
-                                                <a href="https://maps.app.goo.gl/RKyBUgjQNdUCCXYX6" target="_blank"
+                                                <a href="https://maps.app.goo.gl/fiCiqSzmwxSK58rF7" target="_blank"
                                                     class="font-semibold leading-snug hover:text-[#c0f037] transition duration-300">
-                                                    Science Techno Park Building, Universitas Indonesia
+                                                    Best Western Senayan City Hotel, Jakarta, Indonesia
                                                 </a>
                                             </h2>
                                             <p class="text-gray-400 mt-5 md:text-[20px]">

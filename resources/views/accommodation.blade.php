@@ -136,23 +136,23 @@
                                     <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">1</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039]">
-                                        The Margo Hotel</td>
+                                        Hotel Mulia Senayan</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
-                                        ★★★★</td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
-                                        Margonda Raya St. No.358, Depok.<br>
-                                        <a href="https://www.google.com/maps/search/?api=1&query=The+Margo+Hotel+Depok"
+                                        ★★★★★</td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">Jl.
+                                        Asia Afrika, Senayan.<br>
+                                        <a href="https://www.google.com/maps/search/?api=1&query=Hotel+Mulia+Senayan"
                                             target="_blank" class="text-blue-600 hover:underline italic font-semibold">View
                                             on Maps</a>
                                     </td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">1.2 KM
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">0.5 KM
                                     </td>
                                     <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">+62 21
-                                        29515888</td>
+                                        5747777</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600">
-                                        IDR 950.000++</td>
+                                        IDR 2.500.000++</td>
                                 </tr>
 
                                 <!-- ROW 2 -->
@@ -160,23 +160,23 @@
                                     <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">2</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039]">
-                                        Hotel Santika Depok</td>
+                                        Fairmont Jakarta</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
-                                        ★★★</td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
-                                        Margonda Raya St. Kav.88, Depok.<br>
-                                        <a href="https://www.google.com/maps/search/?api=1&query=Hotel+Santika+Depok"
+                                        ★★★★★</td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">Jl.
+                                        Asia Afrika No.8, Senayan.<br>
+                                        <a href="https://www.google.com/maps/search/?api=1&query=Fairmont+Jakarta"
                                             target="_blank" class="text-blue-600 hover:underline italic font-semibold">View
                                             on Maps</a>
                                     </td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">3.0 KM
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">0.6 KM
                                     </td>
                                     <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">+62 21
-                                        77219291</td>
+                                        29703333</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600">
-                                        IDR 750.000++</td>
+                                        IDR 3.200.000++</td>
                                 </tr>
 
                                 <!-- ROW 3 -->
@@ -184,23 +184,23 @@
                                     <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">3</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039]">
-                                        Savero Hotel Depok</td>
+                                        The Ritz-Carlton Pacific Place</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
-                                        ★★★</td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
-                                        Margonda Raya St. No.230A, Depok.<br>
-                                        <a href="https://www.google.com/maps/search/?api=1&query=Savero+Hotel+Depok"
+                                        ★★★★★</td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">SCBD,
+                                        Jl. Jend. Sudirman.<br>
+                                        <a href="https://www.google.com/maps/search/?api=1&query=Ritz+Carlton+Pacific+Place"
                                             target="_blank" class="text-blue-600 hover:underline italic font-semibold">View
                                             on Maps</a>
                                     </td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">1.6 KM
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">1.5 KM
                                     </td>
                                     <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">+62 21
-                                        77802300</td>
+                                        25501888</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600">
-                                        IDR 650.000++</td>
+                                        IDR 3.500.000++</td>
                                 </tr>
 
                                 <!-- ROW 4 -->
@@ -208,23 +208,23 @@
                                     <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">4</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039]">
-                                        Hotel Bumi Wiyata</td>
+                                        Alila SCBD Jakarta</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
-                                        ★★★</td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
-                                        Margonda Raya St. No.281, Depok.<br>
-                                        <a href="https://www.google.com/maps/search/?api=1&query=Hotel+Bumi+Wiyata+Depok"
+                                        ★★★★★</td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">SCBD
+                                        Lot 11, Jl. Jend. Sudirman.<br>
+                                        <a href="https://www.google.com/maps/search/?api=1&query=Alila+SCBD+Jakarta"
                                             target="_blank"
                                             class="text-blue-600 hover:underline italic font-semibold">View on Maps</a>
                                     </td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">2.1 KM
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">1.2 KM
                                     </td>
                                     <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">+62 21
-                                        7778040</td>
+                                        50808777</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600">
-                                        IDR 675.000++</td>
+                                        IDR 2.800.000++</td>
                                 </tr>
 
                                 <!-- ROW 5 -->
@@ -232,23 +232,23 @@
                                     <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">5</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039]">
-                                        Wisma Makara UI</td>
+                                        Century Park Hotel</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
-                                        ★★★</td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
-                                        UI Campus Area, Depok.<br>
-                                        <a href="https://www.google.com/maps/search/?api=1&query=Wisma+Makara+UI+Depok"
+                                        ★★★★</td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">Jl.
+                                        Pintu Satu Senayan.<br>
+                                        <a href="https://www.google.com/maps/search/?api=1&query=Century+Park+Hotel+Senayan"
                                             target="_blank"
                                             class="text-blue-600 hover:underline italic font-semibold">View on Maps</a>
                                     </td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">0 KM
-                                        (Inside)</td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">0.2 KM
+                                    </td>
                                     <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">+62 21
-                                        78883670</td>
+                                        5712041</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600">
-                                        IDR 450.000++</td>
+                                        IDR 1.200.000++</td>
                                 </tr>
 
                                 <!-- ROW 6 -->
@@ -256,23 +256,23 @@
                                     <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">6</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039]">
-                                        favehotel Margonda</td>
+                                        Harris Suites fX Sudirman</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
-                                        ★★</td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
-                                        Margonda Raya St. No.166, Depok.<br>
-                                        <a href="https://www.google.com/maps/search/?api=1&query=favehotel+Margonda+Depok"
+                                        ★★★★</td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">fX
+                                        Sudirman, Jl. Jend. Sudirman.<br>
+                                        <a href="https://www.google.com/maps/search/?api=1&query=Harris+Suites+fX+Sudirman"
                                             target="_blank"
                                             class="text-blue-600 hover:underline italic font-semibold">View on Maps</a>
                                     </td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">2.5 KM
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">0.8 KM
                                     </td>
                                     <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">+62 21
-                                        29503999</td>
+                                        25554333</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600">
-                                        IDR 480.000++</td>
+                                        IDR 1.100.000++</td>
                                 </tr>
 
                                 <!-- ROW 7 -->
@@ -280,23 +280,23 @@
                                     <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">7</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039]">
-                                        Zest Hotel Margonda</td>
+                                        The Sultan Hotel & Residence</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
-                                        ★★</td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
-                                        Margonda Raya St. No.225, Depok.<br>
-                                        <a href="https://www.google.com/maps/search/?api=1&query=Zest+Hotel+Margonda"
+                                        ★★★★★</td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">Jl.
+                                        Gatot Subroto, Senayan.<br>
+                                        <a href="https://www.google.com/maps/search/?api=1&query=The+Sultan+Hotel+Jakarta"
                                             target="_blank"
                                             class="text-blue-600 hover:underline italic font-semibold">View on Maps</a>
                                     </td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">1.8 KM
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">1.0 KM
                                     </td>
                                     <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">+62 21
-                                        29311133</td>
+                                        5703600</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600">
-                                        IDR 400.000++</td>
+                                        IDR 1.400.000++</td>
                                 </tr>
 
                                 <!-- ROW 8 -->
@@ -304,109 +304,13 @@
                                     <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">8</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039]">
-                                        Margonda Residence II</td>
+                                        Hotel Atlet Century Park</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
-                                        Apt</td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
-                                        Margonda Raya St. No.417, Depok.<br>
-                                        <a href="https://www.google.com/maps/search/?api=1&query=Margonda+Residence+2"
-                                            target="_blank"
-                                            class="text-blue-600 hover:underline italic font-semibold">View on Maps</a>
-                                    </td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">0.8 KM
-                                    </td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">+62 21
-                                        78890456</td>
-                                    <td
-                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600">
-                                        IDR 300.000++</td>
-                                </tr>
-
-                                <!-- ROW 9 -->
-                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">9</td>
-                                    <td
-                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039]">
-                                        RedDoorz @ Margonda</td>
-                                    <td
-                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
-                                        GH</td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
-                                        Margonda Raya St. No.500, Depok.<br>
-                                        <a href="https://www.google.com/maps/search/?api=1&query=RedDoorz+Margonda+St+No.500"
-                                            target="_blank"
-                                            class="text-blue-600 hover:underline italic font-semibold">View on Maps</a>
-                                    </td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">0.5 KM
-                                    </td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">+62 21
-                                        80629666</td>
-                                    <td
-                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600">
-                                        IDR 250.000++</td>
-                                </tr>
-
-                                <!-- ROW 10 -->
-                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">10</td>
-                                    <td
-                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039]">
-                                        Wisma Hijau</td>
-                                    <td
-                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
-                                        GH</td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
-                                        Mekarsari St. No.15, Depok.<br>
-                                        <a href="https://www.google.com/maps/search/?api=1&query=Wisma+Hijau+Depok"
-                                            target="_blank"
-                                            class="text-blue-600 hover:underline italic font-semibold">View on Maps</a>
-                                    </td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">4.2 KM
-                                    </td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">+62 21
-                                        8729060</td>
-                                    <td
-                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600">
-                                        IDR 350.000++</td>
-                                </tr>
-
-                                <!-- ROW 11 -->
-                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">11</td>
-                                    <td
-                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039]">
-                                        OYO 1520 Green Lake</td>
-                                    <td
-                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
-                                        GH</td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
-                                        Situ Indah St. No.116, Depok.<br>
-                                        <a href="https://www.google.com/maps/search/?api=1&query=OYO+1520+Green+Lake+Depok"
-                                            target="_blank"
-                                            class="text-blue-600 hover:underline italic font-semibold">View on Maps</a>
-                                    </td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">2.1 KM
-                                    </td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">+62 21
-                                        29707601</td>
-                                    <td
-                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600">
-                                        IDR 220.000++</td>
-                                </tr>
-
-                                <!-- ROW 12 -->
-                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">12</td>
-                                    <td
-                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039]">
-                                        Evenciio Apartment</td>
-                                    <td
-                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
-                                        Apt</td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
-                                        Margonda Raya St. No.492, Depok.<br>
-                                        <a href="https://www.google.com/maps/search/?api=1&query=Evenciio+Apartment+Depok"
+                                        ★★★★</td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">Jl.
+                                        Pintu Satu Senayan.<br>
+                                        <a href="https://www.google.com/maps/search/?api=1&query=Hotel+Atlet+Century+Park"
                                             target="_blank"
                                             class="text-blue-600 hover:underline italic font-semibold">View on Maps</a>
                                     </td>
@@ -415,7 +319,102 @@
                                     <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">-</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600">
-                                        IDR 350.000++</td>
+                                        IDR 1.050.000++</td>
+                                </tr>
+
+                                <!-- ROW 9 -->
+                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">9</td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039]">
+                                        AYANA Midplaza Jakarta</td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
+                                        ★★★★★</td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">Jl.
+                                        Jend. Sudirman Kav 10-11.<br>
+                                        <a href="https://www.google.com/maps/search/?api=1&query=AYANA+Midplaza+Jakarta"
+                                            target="_blank"
+                                            class="text-blue-600 hover:underline italic font-semibold">View on Maps</a>
+                                    </td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">2.0 KM
+                                    </td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">+62 21
+                                        2510888</td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600">
+                                        IDR 2.100.000++</td>
+                                </tr>
+
+                                <!-- ROW 10 -->
+                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">10</td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039]">
+                                        The Langham, Jakarta</td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
+                                        ★★★★★</td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
+                                        District 8, SCBD.<br>
+                                        <a href="https://www.google.com/maps/search/?api=1&query=The+Langham+Jakarta"
+                                            target="_blank"
+                                            class="text-blue-600 hover:underline italic font-semibold">View on Maps</a>
+                                    </td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">1.7 KM
+                                    </td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">+62 21
+                                        27087888</td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600">
+                                        IDR 4.000.000++</td>
+                                </tr>
+
+                                <!-- ROW 11 -->
+                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">11</td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039]">
+                                        Hotel Senayan (eLo)</td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
+                                        ★★★</td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">Jl.
+                                        Tentara Pelajar, Senayan.<br>
+                                        <a href="https://www.google.com/maps/search/?api=1&query=Hotel+Senayan+Jakarta"
+                                            target="_blank"
+                                            class="text-blue-600 hover:underline italic font-semibold">View on Maps</a>
+                                    </td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">1.5 KM
+                                    </td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">-</td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600">
+                                        IDR 700.000++</td>
+                                </tr>
+
+                                <!-- ROW 12 -->
+                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">12</td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039]">
+                                        favehotel Gatot Subroto</td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
+                                        ★★★</td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">Jl.
+                                        Gatot Subroto.<br>
+                                        <a href="https://www.google.com/maps/search/?api=1&query=favehotel+Gatot+Subroto"
+                                            target="_blank"
+                                            class="text-blue-600 hover:underline italic font-semibold">View on Maps</a>
+                                    </td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">2.5 KM
+                                    </td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">+62 21
+                                        29419444</td>
+                                    <td
+                                        class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600">
+                                        IDR 550.000++</td>
                                 </tr>
 
                                 <!-- ROW 13 -->
@@ -423,22 +422,22 @@
                                     <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">13</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039]">
-                                        Atlanta Residence</td>
+                                        Hotel 88 Grogol (Senayan Area)</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
-                                        Apt</td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
-                                        Margonda Raya St. No.28, Depok.<br>
-                                        <a href="https://www.google.com/maps/search/?api=1&query=Atlanta+Residence+Depok"
+                                        ★★</td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">Area
+                                        Slipi/Senayan.<br>
+                                        <a href="https://www.google.com/maps/search/?api=1&query=Hotel+88+Senayan"
                                             target="_blank"
                                             class="text-blue-600 hover:underline italic font-semibold">View on Maps</a>
                                     </td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">2.2 KM
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">2.8 KM
                                     </td>
                                     <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">-</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600">
-                                        IDR 320.000++</td>
+                                        IDR 450.000++</td>
                                 </tr>
 
                                 <!-- ROW 14 -->
@@ -446,22 +445,22 @@
                                     <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">14</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039]">
-                                        Wisma Ristekdikti</td>
+                                        Artotel Gelora Senayan</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
-                                        GH</td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
-                                        Kukusan St., Depok.<br>
-                                        <a href="https://www.google.com/maps/search/?api=1&query=Wisma+Ristekdikti+Depok"
+                                        ★★★</td>
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">Jl.
+                                        Gelora, Senayan.<br>
+                                        <a href="https://www.google.com/maps/search/?api=1&query=Artotel+Gelora+Senayan"
                                             target="_blank"
                                             class="text-blue-600 hover:underline italic font-semibold">View on Maps</a>
                                     </td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">1.0 KM
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">0.4 KM
                                     </td>
                                     <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">-</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600">
-                                        IDR 250.000++</td>
+                                        IDR 900.000++</td>
                                 </tr>
 
                                 <!-- ROW 15 -->
@@ -469,22 +468,22 @@
                                     <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">15</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 font-bold text-[#065039]">
-                                        RedDoorz near UI</td>
+                                        RedDoorz near Senayan City</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center text-yellow-500">
                                         GH</td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">
-                                        Palakali St. No.22, Depok.<br>
-                                        <a href="https://www.google.com/maps/search/?api=1&query=RedDoorz+near+UI+Depok"
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 min-w-[280px]">Area
+                                        Permata Hijau/Senayan.<br>
+                                        <a href="https://www.google.com/maps/search/?api=1&query=RedDoorz+near+Senayan+City"
                                             target="_blank"
                                             class="text-blue-600 hover:underline italic font-semibold">View on Maps</a>
                                     </td>
-                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">1.1 KM
+                                    <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">1.9 KM
                                     </td>
                                     <td class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center">-</td>
                                     <td
                                         class="p-2 md:p-3 border border-gray-200 dark:border-white/10 text-center font-bold text-green-600">
-                                        IDR 200.000++</td>
+                                        IDR 300.000++</td>
                                 </tr>
                             </tbody>
 

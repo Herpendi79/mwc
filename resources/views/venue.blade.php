@@ -63,15 +63,13 @@
         <!-- Schedule section -->
         <section class="lg:py-30 py-20 overflow-hidden">
             <div class="container">
-                <div class="grid grid-cols-12 gap-6 items-center">
-                    <div class="col-span-12 lg:col-span-12">
-                        <p class="mb-2 font-medium uppercase tracking-[1px]" data-sal="slide-right" data-sal-duration="800"
-                            data-sal-delay="200">// Venue</p>
-                        <h2 class="font-bold md:text-5xl leading-snug " data-sal="slide-right" data-sal-duration="800"
-                            data-sal-delay="200">
-                            Saience Techno Park Building, Universitas Indonesia
-                        </h2>
-                    </div>
+                <div class="max-w-3xl mx-auto text-center mb-15">
+                    <p class="mb-2 font-medium uppercase tracking-[1px]" data-sal="zoom-in" data-sal-duration="800"
+                        data-sal-delay="100">// Venue</p>
+                    <h2 class="font-bold md:text-5xl leading-snug " data-sal="slide-right" data-sal-duration="800"
+                        data-sal-delay="200">
+                        Best Western Senayan City Hotel, Jakarta, Indonesia
+                    </h2>
 
                 </div>
                 <!-- Tab Contents Container -->
@@ -84,23 +82,23 @@
                             <div class="col-span-12 lg:col-span-7 p-7">
                                 <h3 class="md:text-4xl mb-4">Main Event: ICPIP-HE 2026</h3>
                                 <p class="md:text-[22px] text-gray-700 mb-6 dark:text-gray-400">
-                                    Join the grand conference at Science Techno Park Building, Universitas Indonesia. A
+                                    Join the grand conference at Best Western Senayan City Hotel, Jakarta, Indonesia. A
                                     memorable experience wrapping up global insights.
                                 </p>
                                 <div class="flex flex-wrap gap-3">
                                     <p class="bg-[#F8EBFF] rounded-full px-4 py-2 text-black"><i class="ri-time-line"></i>
                                         June 26, 2026</p>
-                                    <a href="https://maps.app.goo.gl/RKyBUgjQNdUCCXYX6" target="_blank"
+                                    <a href="https://maps.app.goo.gl/fiCiqSzmwxSK58rF7" target="_blank"
                                         rel="noopener noreferrer"
                                         class="bg-[#FFFAD6] rounded-full px-4 py-2 text-black flex items-center gap-2 hover:bg-[#82CAFF] transition-all duration-300 w-fit">
                                         <i class="ri-map-pin-line"></i>
-                                        Science Techno Park UI
+                                        Best Western Senayan City Hotel, Jakarta, Indonesia
                                     </a>
                                 </div>
                             </div>
                             <div class="col-span-12 lg:col-span-5 h-80 lg:h-auto">
                                 <!-- Menggunakan image yang serupa dengan style panel 1 -->
-                                <img src="{{ asset('assets/images/important-dates/stp.jpeg') }}"
+                                <img src="{{ asset('assets/images/important-dates/stc.avif') }}"
                                     class="w-full h-full object-cover">
                             </div>
                         </div>
@@ -114,7 +112,7 @@
                             <!-- Bagian Maps (Kiri) -->
                             <div class="col-span-12 lg:col-span-5 h-80 lg:h-auto min-h-[350px]">
                                 <iframe
-                                    src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d13816.564393816527!2d106.8140739!3d-6.3562327!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69ed91b97cd87d%3A0xaeac75a54bf9effa!2sGedung%20Science%20Techno%20Park%20UI!5e1!3m2!1sid!2sid!4v1777619838881!5m2!1sid!2sid"
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.273332256889!2d106.7990038!3d-6.227648800000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f1461f58fc7b%3A0xf8df1390afdea625!2sBest%20Western%20Senayan!5e0!3m2!1sid!2sid!4v1779929796659!5m2!1sid!2sid"
                                     width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
                                     referrerpolicy="no-referrer-when-downgrade"></iframe>
                             </div>
@@ -123,20 +121,20 @@
                             <div class="col-span-12 lg:col-span-7 p-7">
                                 <p class="text-4xl font-bold mb-6 text-[#065039]">Location</p>
                                 <h3 class="md:text-4xl mb-4 font-bold text-black dark:text-white">
-                                    Science Techno Park Building, Universitas Indonesia
+                                    Best Western Senayan City Hotel, Jakarta, Indonesia
                                 </h3>
                                 <p class="md:text-[22px] text-gray-700 mb-6 dark:text-gray-400">
                                     We have prepared the best venue for you to ensure a meaningful experience throughout the
-                                    event. Located within the prestigious Universitas Indonesia area with premium research
+                                    event. Located within the prestigious Best Western area with premium research
                                     and
                                     innovation facilities.
                                 </p>
                                 <div class="flex flex-wrap gap-3">
                                     <p class="bg-[#F8EBFF] rounded-full px-4 py-2 text-black flex items-center gap-2">
                                         <i class="ri-map-pin-2-line"></i>
-                                        Kawasan Science Techno Park (STP), UI Depok
+                                        Senayan City, Jakarta, Indonesia
                                     </p>
-                                    <a href="https://maps.app.goo.gl/RKyBUgjQNdUCCXYX6" target="_blank"
+                                    <a href="https://maps.app.goo.gl/fiCiqSzmwxSK58rF7" target="_blank"
                                         rel="noopener noreferrer"
                                         class="bg-[#ADDBFF] rounded-full px-4 py-2 text-black flex items-center gap-2 hover:bg-[#065039] hover:text-white transition-all duration-300">
                                         <i class="ri-navigation-line"></i>
