@@ -64,7 +64,6 @@
         <!-- Schedule section -->
         <section class="lg:py-30 py-20 overflow-hidden">
             <div class="container">
-                <div class="grid grid-cols-12 gap-6 items-center">
                     <div class="max-w-3xl mx-auto text-center mb-15">
                         <p class="mb-2 font-medium uppercase tracking-[1px]" data-sal="slide-right" data-sal-duration="800"
                             data-sal-delay="200">// Important Dates Highlights</p>
@@ -73,8 +72,6 @@
                             Key dates in the Conference Journey
                         </h2>
                     </div>
-
-                </div>
                 <!-- Tab Contents Container -->
                 <div class="lg:mt-20 mt-5 space-y-10">
 
