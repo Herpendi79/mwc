@@ -71,7 +71,8 @@
                                         <div class="flex lg:gap-10 flex-wrap md:flex-nowrap gap-3">
                                             <p><i class="ri-calendar-check-fill me-1"></i> 26 June 2026</p>
                                             <div class="border border-white/50"></div>
-                                            <p><i class="ri-map-pin-line me-1"></i> Best Western Senayan City Hotel, Jakarta,
+                                            <p><i class="ri-map-pin-line me-1"></i> Best Western Senayan City Hotel,
+                                                Jakarta,
                                                 Indonesia</p>
                                         </div>
                                     </div>
@@ -215,7 +216,7 @@
                                 cross-disciplinary collaboration • Multilingual education and global communication
                             </p>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -772,7 +773,7 @@
                         Experience</h2>
                 </div>
                 <div class="grid grid-cols-12 gap-6">
-                    @foreach ([['name' => 'Offline Presenter', 'price' => '750K', 'desc' => 'Certificate, meetup, networking, indexed publication, food'], ['name' => 'Online Presenter', 'price' => '450K', 'desc' => 'Certificate + indexed publication + premium networking'], ['name' => 'Offline Participant', 'price' => '200K', 'desc' => 'Certificate, meetup, networking, food'], ['name' => 'Online Participant', 'price' => '100K', 'desc' => 'Certificate + premium networking'], ['name' => 'ADAKSI Member', 'price' => '20% OFF', 'desc' => 'Join on your ADAKSI account (www.adaksi.org) and get special offer'], ['name' => 'Student', 'price' => '20% OFF', 'desc' => 'Include Certificate, meetup, networking, food and get special offer']] as $plan)
+                    @foreach ([['name' => 'Offline Presenter', 'price' => '750K', 'desc' => 'Certificate, meetup, networking, indexed publication, food'], ['name' => 'Online Presenter', 'price' => '450K', 'desc' => 'Certificate + indexed publication + premium networking'], ['name' => 'Offline Participant', 'price' => '200K', 'desc' => 'Certificate, meetup, networking, food'], ['name' => 'Online Participant', 'price' => '100K', 'desc' => 'Certificate + premium networking'], ['name' => 'ADAKSI Member', 'price' => '20% OFF', 'desc' => 'Join on your ADAKSI account (www.adaksi.org) and get special offer'], ['name' => 'Student', 'price' => '20% OFF', 'desc' => 'Include Certificate, meetup, networking, food and get special offer (Get discount up to 20% as Presenter)']] as $plan)
                         <div class="col-span-12 xl:col-span-4 md:col-span-6">
                             <div
                                 class="bg-white/10 backdrop-blur-sm p-9 rounded-4xl relative h-100 flex flex-col justify-between">

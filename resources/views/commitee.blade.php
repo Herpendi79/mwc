@@ -89,6 +89,37 @@
                             </thead>
 
                             <tbody class="bg-white dark:bg-[#1F1F1F] text-gray-800 dark:text-gray-200">
+
+                                {{-- Row 2 --}}
+                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <td class="p-4 border border-gray-200 dark:border-white/10 font-bold">
+                                        Professor M. Anshari
+                                    </td>
+                                    <td class="p-4 border border-gray-200 dark:border-white/10 text-sm italic">
+                                        Universiti Brunei Darussalam, Brunei
+                                    </td>
+                                </tr>
+
+                                {{-- Row 3 --}}
+                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <td class="p-4 border border-gray-200 dark:border-white/10 font-bold">
+                                        Professor Dr. Tien-Chin Wang
+                                    </td>
+                                    <td class="p-4 border border-gray-200 dark:border-white/10 text-sm italic">
+                                        Professor in the Department of International Business, National Kaohsiung University
+                                        of Science and Technology, Taiwan.
+                                    </td>
+                                </tr>
+
+                                {{-- Row 4 --}}
+                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <td class="p-4 border border-gray-200 dark:border-white/10 font-bold">
+                                        Professor Lee-Anne C Johennesse
+                                    </td>
+                                    <td class="p-4 border border-gray-200 dark:border-white/10 text-sm italic">
+                                        Southern Taiwan University of Science and Technology, Taiwan
+                                    </td>
+                                </tr>
                                 {{-- Row 1 --}}
                                 <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
                                     <td class="p-4 border border-gray-200 dark:border-white/10 font-bold">
@@ -107,36 +138,7 @@
                                     </td>
                                 </tr>
 
-                                {{-- Row 2 --}}
-                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                                    <td class="p-4 border border-gray-200 dark:border-white/10 font-bold">
-                                        Prof. M. Anshari
-                                    </td>
-                                    <td class="p-4 border border-gray-200 dark:border-white/10 text-sm italic">
-                                        Universiti Brunei Darussalam, Brunei
-                                    </td>
-                                </tr>
 
-                                {{-- Row 3 --}}
-                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                                    <td class="p-4 border border-gray-200 dark:border-white/10 font-bold">
-                                        Prof. Dr. Tien-Chin Wang
-                                    </td>
-                                    <td class="p-4 border border-gray-200 dark:border-white/10 text-sm italic">
-                                        Professor in the Department of International Business, National Kaohsiung University
-                                        of Science and Technology, Taiwan.
-                                    </td>
-                                </tr>
-
-                                {{-- Row 4 --}}
-                                <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                                    <td class="p-4 border border-gray-200 dark:border-white/10 font-bold">
-                                        Lee-Anne Cassandra Johennesse, Ph.D
-                                    </td>
-                                    <td class="p-4 border border-gray-200 dark:border-white/10 text-sm italic">
-                                        Southern Taiwan University of Science and Technology, Taiwan
-                                    </td>
-                                </tr>
 
                                 {{-- Row 5 --}}
                                 <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
