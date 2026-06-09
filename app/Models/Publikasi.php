@@ -27,4 +27,8 @@ class Publikasi extends Model
     {
         return $this->hasMany(PesertaConferences::class, 'id_pub', 'id_pub');
     }
+    public function pesertaConferencesAdaksi()
+    {
+        return $this->hasMany(PesertaConferencesAdaksi::class, 'id_pub', 'id_pub');
+    }
 }

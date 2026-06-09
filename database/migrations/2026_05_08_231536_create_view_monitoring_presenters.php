@@ -19,6 +19,7 @@ return new class extends Migration {
         pc.qr_code COLLATE utf8mb4_unicode_ci AS qr_code,
         pc.kehadiran COLLATE utf8mb4_unicode_ci AS kehadiran,
         ktg1.id_conf,
+        p1.nama_pub COLLATE utf8mb4_unicode_ci AS nama_publikasi,
         CAST('Non ADAKSI' AS CHAR) COLLATE utf8mb4_unicode_ci AS sumber,
         u.name COLLATE utf8mb4_unicode_ci AS nama_user,
         u.email COLLATE utf8mb4_unicode_ci AS email_user,
@@ -33,6 +34,7 @@ return new class extends Migration {
     FROM peserta_conferences pc
     JOIN users_iciphe u ON pc.user_id = u.id 
     JOIN kategori ktg1 ON pc.id_ktg = ktg1.id_ktg
+    JOIN publikasi p1 ON pc.id_pub = p1.id_pub
 
     UNION ALL
 
@@ -43,6 +45,7 @@ return new class extends Migration {
         pca.qr_code COLLATE utf8mb4_unicode_ci AS qr_code,
         pca.kehadiran COLLATE utf8mb4_unicode_ci AS kehadiran, 
         ktg2.id_conf,
+        p2.nama_pub COLLATE utf8mb4_unicode_ci AS nama_publikasi,
         CAST('ADAKSI' AS CHAR) COLLATE utf8mb4_unicode_ci AS sumber,
         ang.nama_anggota COLLATE utf8mb4_unicode_ci AS nama_user,
         ua.email COLLATE utf8mb4_unicode_ci AS email_user,
@@ -58,6 +61,7 @@ return new class extends Migration {
     JOIN users ua ON pca.id_user = ua.id_user
     JOIN anggota ang ON ua.id_user = ang.id_user
     JOIN kategori ktg2 ON pca.id_ktg = ktg2.id_ktg
+    JOIN publikasi p2 ON pca.id_pub = p2.id_pub
 ");
     }
 

@@ -125,81 +125,104 @@
                             <div
                                 class="bg-white dark:bg-zinc-900 rounded-3xl border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
                                 <div class="p-6 border-b border-gray-100 dark:border-zinc-800" style="background: #fdfdfd;">
-                                    {{-- Menggunakan Grid System yang lebih kaku agar tidak meluap --}}
+                                    {{-- Grid 6 kolom yang dipaksa sejajar --}}
                                     <div
-                                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; align-items: end;">
+                                        style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; align-items: end;">
 
-
-                                        {{-- Card Search --}}
+                                        {{-- Search --}}
                                         <div
                                             style="background: white; padding: 10px; border-radius: 12px; border: 1px solid #eee;">
                                             <label
-                                                style="display: block; font-size: 10px; font-weight: bold; color: #999; text-transform: uppercase; margin-bottom: 5px;">Search
-                                                Participant</label>
+                                                style="display: block; font-size: 10px; font-weight: bold; color: #999; text-transform: uppercase; margin-bottom: 5px;">Search</label>
                                             <div style="position: relative;">
-                                                <input type="text" id="searchInput" placeholder="Name or email..."
+                                                <input type="text" id="searchInput" placeholder="Name/Email..."
+                                                    value="{{ request('search') }}"
+                                                    onkeypress="if(event.key==='Enter') applyFilters()"
                                                     style="width: 100%; padding: 8px; padding-left: 30px; font-size: 12px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa;">
                                                 <i class="ri-search-line"
                                                     style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #aaa;"></i>
                                             </div>
                                         </div>
-                                        {{-- Card Filter Status --}}
+
+                                        {{-- Status --}}
                                         <div
                                             style="background: white; padding: 10px; border-radius: 12px; border: 1px solid #eee;">
                                             <label
                                                 style="display: block; font-size: 10px; font-weight: bold; color: #999; text-transform: uppercase; margin-bottom: 5px;">Status</label>
-                                            <select id="filterStatus"
+                                            <select id="filterStatus" onchange="applyFilters()"
                                                 style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa;">
                                                 <option value="">All Status</option>
-                                                <option value="abs_waiting">Abstract Status: Waiting</option>
-                                                <option value="abs_accepted">Abstract Status: Accepted</option>
-                                                <option value="art_waiting">Article Status: Waiting</option>
-                                                <option value="art_accepted">Article Status: Accepted</option>
+                                                <option value="abs_waiting"
+                                                    {{ request('status') == 'abs_waiting' ? 'selected' : '' }}>Abstract: Waiting
+                                                </option>
+                                                <option value="abs_accepted"
+                                                    {{ request('status') == 'abs_accepted' ? 'selected' : '' }}>Abstract:
+                                                    Accepted</option>
+                                                <option value="art_waiting"
+                                                    {{ request('status') == 'art_waiting' ? 'selected' : '' }}>Article: Waiting
+                                                </option>
+                                                <option value="art_accepted"
+                                                    {{ request('status') == 'art_accepted' ? 'selected' : '' }}>Article:
+                                                    Accepted</option>
                                             </select>
                                         </div>
 
-                                        {{-- Card Filter Category --}}
+                                        {{-- Publikasi --}}
+                                        <div
+                                            style="background: white; padding: 10px; border-radius: 12px; border: 1px solid #eee;">
+                                            <label
+                                                style="display: block; font-size: 10px; font-weight: bold; color: #999; text-transform: uppercase; margin-bottom: 5px;">Publication</label>
+                                            <select id="filterPublication" onchange="applyFilters()"
+                                                style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa;">
+                                                <option value="">All Publication</option>
+                                                @foreach ($publikasi as $pub)
+                                                    <option value="{{ $pub->nama_pub }}"
+                                                        {{ request('pub') == $pub->nama_pub ? 'selected' : '' }}>
+                                                        {{ $pub->nama_pub }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        {{-- Category --}}
                                         <div
                                             style="background: white; padding: 10px; border-radius: 12px; border: 1px solid #eee;">
                                             <label
                                                 style="display: block; font-size: 10px; font-weight: bold; color: #999; text-transform: uppercase; margin-bottom: 5px;">Category</label>
-                                            <select id="filterCategory"
+                                            <select id="filterCategory" onchange="applyFilters()"
                                                 style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa;">
                                                 <option value="">All Categories</option>
                                                 @foreach ($stats as $catName => $group)
-                                                    <option value="{{ $catName }}">{{ $catName }}</option>
+                                                    <option value="{{ $catName }}"
+                                                        {{ request('category') == $catName ? 'selected' : '' }}>
+                                                        {{ $catName }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
 
-                                        {{-- Card Filter Scope --}}
+                                        {{-- Scope --}}
                                         <div
                                             style="background: white; padding: 10px; border-radius: 12px; border: 1px solid #eee;">
                                             <label
                                                 style="display: block; font-size: 10px; font-weight: bold; color: #999; text-transform: uppercase; margin-bottom: 5px;">Scope</label>
-                                            <select id="filterScope"
+                                            <select id="filterScope" onchange="applyFilters()"
                                                 style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa;">
                                                 <option value="">All Scopes</option>
                                                 @foreach ($scopes as $sc)
-                                                    <option value="{{ $sc->nama_sc }}">{{ $sc->nama_sc }}</option>
+                                                    <option value="{{ $sc->nama_sc }}"
+                                                        {{ request('scope') == $sc->nama_sc ? 'selected' : '' }}>
+                                                        {{ $sc->nama_sc }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
 
-                                        {{-- Action Buttons --}}
+                                        {{-- Actions --}}
                                         <div
-                                            style="background: white; padding: 10px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; gap: 8px; justify-content: center;">
-                                            {{-- Tombol Excel --}}
+                                            style="background: white; padding: 10px; border-radius: 12px; border: 1px solid #e2e8f0; display: flex; gap: 5px; justify-content: center; align-items: end; padding-bottom: 8px;">
                                             <button onclick="exportExcel()" class="bg-emerald-600"
-                                                style="padding: 10px 20px; color: white; border-radius: 10px; font-weight: bold; font-size: 12px; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px;">
-                                                <i class="ri-file-excel-line"></i> Excel
-                                            </button>
+                                                style="padding: 8px 12px; color: white; border-radius: 8px; font-weight: bold; font-size: 11px; border: none; cursor: pointer;">Excel</button>
                                             <button onclick="exportPdf()" class="bg-blue-600"
-                                                style="padding: 10px 20px; color: white; border-radius: 10px; font-weight: bold; font-size: 12px; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px;">
-                                                <i class="ri-file-pdf-line"></i> PDF
-                                            </button>
+                                                style="padding: 8px 12px; color: white; border-radius: 8px; font-weight: bold; font-size: 11px; border: none; cursor: pointer;">PDF</button>
                                         </div>
-
                                     </div>
                                 </div>
 
@@ -210,6 +233,7 @@
                                                 <th class="p-4 text-gray-500 font-semibold text-sm">No</th>
                                                 <th class="p-4 text-gray-500 font-semibold text-sm">Name</th>
                                                 <th class="p-4 text-gray-500 font-semibold text-sm">Category</th>
+                                                <th class="p-4 text-gray-500 font-semibold text-sm">Publication</th>
                                                 <th class="p-4 text-gray-500 font-semibold text-sm">Title</th>
                                                 <th class="p-4 text-gray-500 font-semibold text-sm">Scope</th>
                                                 <th class="p-4 text-gray-500 font-semibold text-sm">Abstract & Status</th>
@@ -223,6 +247,7 @@
                                             @forelse($presenters as $p)
                                                 <tr class="searchable-row hover:bg-gray-50/50 dark:hover:bg-zinc-800/30 transition-colors"
                                                     data-name="{{ strtolower($p->nama_user) }}"
+                                                    data-pub="{{ $p->nama_publikasi ?? '' }}"
                                                     data-category="{{ $p->kategori->nama_ktg }}"
                                                     data-scope="{{ $p->scope->nama_sc ?? '' }}"
                                                     data-abs-status="{{ strtolower($p->status_abstract) }}"
@@ -253,6 +278,11 @@
                                                         @else
                                                             <span class="text-gray-400 italic text-xs">Not Student</span>
                                                         @endif
+                                                    </td>
+                                                    <td class="p-4">
+                                                        <span class="text-sm dark:text-gray-300">
+                                                            {{ $p->nama_publikasi ?? '-' }}
+                                                        </span>
                                                     </td>
                                                     <td class="p-4">
                                                         <span class="text-sm dark:text-gray-300">
@@ -593,123 +623,57 @@
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="{{ asset('assets/js/dark-mode.js') }}" defer></script>
     <script>
-        function exportPdf() {
-            const id_conf = "{{ $conference->id_conf }}";
-            const status = document.getElementById('filterStatus').value;
-            const category = document.getElementById('filterCategory').value;
-            const scope = document.getElementById('filterScope').value;
-            const search = document.getElementById('searchInput').value;
-
-            // Gunakan encodeURIComponent untuk keamanan karakter di URL
+        // Fungsi utama untuk menerapkan filter dan reload halaman
+        function applyFilters() {
             const params = new URLSearchParams({
-                id_conf: id_conf,
-                status: status,
-                category: category,
-                scope: scope,
-                search: search
-            }).toString();
+                search: document.getElementById('searchInput').value,
+                status: document.getElementById('filterStatus').value,
+                pub: document.getElementById('filterPublication').value,
+                category: document.getElementById('filterCategory').value,
+                scope: document.getElementById('filterScope').value
+            });
 
-            // Arahkan ke route export dengan query string
-            const url =
-                `{{ route('reviewer.exportPresentersPdf') }}?id_conf=${id_conf}&status=${status}&category=${category}&scope=${scope}&search=${search}`;
+            // Redirect ke URL dengan parameter query baru
+            window.location.href = "{{ url()->current() }}?" + params.toString();
+        }
+
+        // Fungsi Export (menggunakan parameter yang sama)
+        function exportPdf() {
+            const url = "{{ route('reviewer.exportPresentersPdf') }}?" + new URLSearchParams({
+                id_conf: "{{ $conference->id_conf }}",
+                status: document.getElementById('filterStatus').value,
+                category: document.getElementById('filterCategory').value,
+                scope: document.getElementById('filterScope').value,
+                search: document.getElementById('searchInput').value,
+                pub: document.getElementById('filterPublication').value
+            }).toString();
             window.location.href = url;
         }
 
         function exportExcel() {
-            const id_conf = "{{ $conference->id_conf }}";
-            const status = document.getElementById('filterStatus').value;
-            const category = document.getElementById('filterCategory').value;
-            const scope = document.getElementById('filterScope').value;
-            const search = document.getElementById('searchInput').value;
-
-            const params = new URLSearchParams({
-                id_conf: id_conf,
-                status: status,
-                category: category,
-                scope: scope,
-                search: search
+            const url = "{{ route('reviewer.exportPresentersExcel') }}?" + new URLSearchParams({
+                id_conf: "{{ $conference->id_conf }}",
+                status: document.getElementById('filterStatus').value,
+                category: document.getElementById('filterCategory').value,
+                scope: document.getElementById('filterScope').value,
+                search: document.getElementById('searchInput').value,
+                pub: document.getElementById('filterPublication').value
             }).toString();
-
-            // Arahkan ke route excel
-            const url = `{{ route('reviewer.exportPresentersExcel') }}?${params}`;
             window.location.href = url;
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // UI Elements
-            const sidebar = document.getElementById('main-sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            const btnOpen = document.getElementById('sidebar-open');
-            const btnClose = document.getElementById('sidebar-close');
+            // Event Listeners untuk dropdown (Trigger reload)
+            document.querySelectorAll('select').forEach(el => el.addEventListener('change', applyFilters));
+
+            // Trigger Search saat menekan Enter
+            document.getElementById('searchInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') applyFilters();
+            });
+
+            // Sidebar & Profile Logic tetap sama...
             const profileBtn = document.getElementById('profile-menu-button');
             const profileDropdown = document.getElementById('profile-dropdown');
-
-            // Filter Elements
-            const searchInput = document.getElementById('searchInput');
-            const filterStatus = document.getElementById('filterStatus');
-            const filterCategory = document.getElementById('filterCategory');
-            const filterScope = document.getElementById('filterScope');
-            const rows = document.querySelectorAll('.searchable-row'); // Pastikan class sesuai
-            const presenterTableBody = document.getElementById('presenterTableBody');
-
-            function filterTable() {
-                const searchTerm = searchInput.value.toLowerCase().trim();
-                const statusTerm = filterStatus.value;
-                const categoryTerm = filterCategory.value;
-                const scopeTerm = filterScope.value;
-
-                let hasVisibleRow = false;
-
-                rows.forEach(row => {
-                    const name = row.getAttribute('data-name') || '';
-                    const cat = row.getAttribute('data-category') || '';
-                    const scope = row.getAttribute('data-scope') || '';
-                    const absStatus = (row.getAttribute('data-abs-status') || '').toLowerCase();
-                    const artStatus = (row.getAttribute('data-art-status') || '').toLowerCase();
-
-                    // 1. Logika Pencarian Nama/Email
-                    const matchSearch = name.includes(searchTerm);
-
-                    // 2. Logika Filter Kategori & Scope
-                    const matchCategory = categoryTerm === "" || cat === categoryTerm;
-                    const matchScope = scopeTerm === "" || scope === scopeTerm;
-
-                    // 3. Logika Filter Status Kompleks
-                    let matchStatus = true;
-                    if (statusTerm === 'abs_waiting') matchStatus = (absStatus.includes('waiting'));
-                    else if (statusTerm === 'abs_accepted') matchStatus = (absStatus === 'accepted');
-                    else if (statusTerm === 'art_waiting') matchStatus = (artStatus.includes('waiting'));
-                    else if (statusTerm === 'art_accepted') matchStatus = (artStatus === 'accepted');
-
-                    // Eksekusi Tampilkan/Sembunyikan
-                    if (matchSearch && matchCategory && matchScope && matchStatus) {
-                        row.style.display = "";
-                        hasVisibleRow = true;
-                    } else {
-                        row.style.display = "none";
-                    }
-                });
-
-                // Logika "No Results Found"
-                const oldNoResults = document.getElementById('noResults');
-                if (oldNoResults) oldNoResults.remove();
-
-                if (!hasVisibleRow && presenterTableBody) {
-                    const noResultsTr = document.createElement('tr');
-                    noResultsTr.id = 'noResults';
-                    noResultsTr.innerHTML =
-                        `<td colspan="8" class="p-12 text-center text-gray-400 italic">No matches found for your filter criteria.</td>`;
-                    presenterTableBody.appendChild(noResultsTr);
-                }
-            }
-
-            // Event Listeners (Hanya satu set saja)
-            if (searchInput) searchInput.addEventListener('input', filterTable);
-            if (filterStatus) filterStatus.addEventListener('change', filterTable);
-            if (filterCategory) filterCategory.addEventListener('change', filterTable);
-            if (filterScope) filterScope.addEventListener('change', filterTable);
-
-            // Sidebar & Profile Logic (Tetap sama)
             if (profileBtn && profileDropdown) {
                 profileBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -719,17 +683,6 @@
                     if (!profileBtn.contains(e.target)) profileDropdown.classList.add('hidden');
                 });
             }
-
-            function toggleSidebar() {
-                if (sidebar) sidebar.classList.toggle('-translate-x-full');
-                if (overlay) overlay.classList.toggle('hidden');
-                document.body.classList.toggle('overflow-hidden');
-            }
-            if (btnOpen) btnOpen.addEventListener('click', toggleSidebar);
-            if (btnClose) btnClose.addEventListener('click', toggleSidebar);
-            if (overlay) overlay.addEventListener('click', toggleSidebar);
-
-
         });
     </script>
 @endsection

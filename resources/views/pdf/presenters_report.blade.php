@@ -27,6 +27,7 @@
                 <th>Email</th>
                 <th>Country</th>
                 <th>Category</th>
+                <th>Publication</th>
                 <th>Scope</th>
                 <th>Abstract</th>
                 <th>Article</th>
@@ -43,6 +44,7 @@
                     <td>{{ $p->email_user }}</td>
                     <td>{{ $p->negara_final }}</td>
                     <td>{{ $p->kategori->nama_ktg ?? '-' }}</td>
+                    <td>{{ $p->nama_publikasi ?? '-' }}</td>
                     <td>{{ $p->scope->nama_sc ?? '-' }}</td>
                     <td>{{ $p->status_abstract ?? 'Pending' }}</td>
                     <td>{{ $p->status_artikel ?? 'Pending' }}</td>

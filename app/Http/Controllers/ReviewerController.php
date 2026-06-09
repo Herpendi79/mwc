@@ -131,46 +131,50 @@ class ReviewerController extends Controller
         return view('reviewer.participants_list', compact('conference', 'participants', 'stats', 'totalCount'));
     }
 
-    public function presentersList($id_conf)
+    public function presentersList(Request $request, $id_conf)
     {
         $conference = Conferences::findOrFail($id_conf);
 
-        // 1. Definisikan Base Query (Filter Utama)
+        // 1. Definisikan Base Query
         $baseQuery = MonitoringPresenter::with(['kategori', 'scope'])
             ->where('id_conf', $id_conf)
+            ->where('payment', 'success')
             ->whereHas('kategori', function ($query) {
                 $query->where('nama_ktg', 'like', '%presenter%');
             });
 
-        // 2. Ambil statistik dari klon baseQuery agar tidak mengganggu query utama
+        // 2. Terapkan Filter Server-Side dari Request URL
+        if ($request->filled('search')) {
+            $baseQuery->where('nama_user', 'like', '%' . $request->search . '%');
+        }
+        if ($request->filled('status')) {
+            $status = $request->status;
+            if ($status == 'abs_waiting') $baseQuery->where('status_abstract', 'waiting review');
+            elseif ($status == 'abs_accepted') $baseQuery->where('status_abstract', 'accepted');
+            elseif ($status == 'art_waiting') $baseQuery->where('status_artikel', 'waiting review');
+            elseif ($status == 'art_accepted') $baseQuery->where('status_artikel', 'accepted');
+        }
+        if ($request->filled('pub')) $baseQuery->where('nama_publikasi', $request->pub);
+        if ($request->filled('category')) $baseQuery->whereHas('kategori', fn($q) => $q->where('nama_ktg', $request->category));
+        if ($request->filled('scope')) $baseQuery->whereHas('scope', fn($q) => $q->where('nama_sc', $request->scope));
+
+        // 3. Statistik (Tetap menggunakan hasil filter agar akurat)
         $allPresenters = (clone $baseQuery)->get();
         $stats = $allPresenters->groupBy('kategori.nama_ktg');
-        $statsSC = $allPresenters->groupBy(function ($item) {
-            // Ambil nama_sc dari relasi scope, jika null beri label 'No Scope'
-            return $item->scope->nama_sc ?? 'No Scope';
-        });
+        $statsSC = $allPresenters->groupBy(fn($item) => $item->scope->nama_sc ?? 'No Scope');
         $totalCount = $allPresenters->count();
 
-        // 3. Gunakan baseQuery yang sama untuk Paginasi & Sorting
+        // 4. Pagination
         $presenters = $baseQuery
-            ->orderByRaw("
-            CASE 
-                WHEN LOWER(status_abstract) = 'waiting review' THEN 1
-                WHEN LOWER(status_artikel) = 'waiting review' THEN 2
-                WHEN LOWER(status_abstract) = 'accepted' AND LOWER(status_artikel) = 'accepted' THEN 5
-                WHEN LOWER(status_abstract) = 'accepted' OR LOWER(status_artikel) = 'accepted' THEN 4
-                ELSE 3
-            END ASC
-        ")
+            ->orderByRaw("CASE WHEN LOWER(status_abstract) = 'waiting review' THEN 1 WHEN LOWER(status_artikel) = 'waiting review' THEN 2 ELSE 3 END ASC")
             ->orderBy('created_at', 'desc')
             ->paginate(10)
-            ->withQueryString();
+            ->withQueryString(); // Wajib agar filter tetap ada saat pindah halaman
 
-        $scopes = Scope::where('id_conf', $id_conf)
-            ->orderBy('nama_sc', 'asc')
-            ->get();
+        $scopes = Scope::where('id_conf', $id_conf)->orderBy('nama_sc', 'asc')->get();
+        $publikasi = Publikasi::all();
 
-        return view('reviewer.presenters_list', compact('conference', 'presenters', 'stats', 'totalCount', 'scopes', 'statsSC'));
+        return view('reviewer.presenters_list', compact('conference', 'presenters', 'stats', 'totalCount', 'scopes', 'statsSC', 'publikasi'));
     }
 
     public function exportPresentersPdf(Request $request)
@@ -180,11 +184,16 @@ class ReviewerController extends Controller
         // 1. Jalankan Query Dasar
         $query = MonitoringPresenter::with(['kategori', 'scope', 'user.peserta'])
             ->where('id_conf', $id_conf)
+            ->where('payment', 'success') // Filter Pembayaran Sukses
             ->whereHas('kategori', function ($q) {
                 $q->where('nama_ktg', 'like', '%presenter%');
             });
 
         // 2. Filter Dinamis
+        if ($request->filled('pub')) {
+            $query->where('nama_publikasi', $request->pub);
+        }
+        
         if ($request->filled('category')) {
             $query->whereHas('kategori', function ($q) use ($request) {
                 $q->where('nama_ktg', $request->category);
@@ -283,11 +292,16 @@ class ReviewerController extends Controller
         // 1. Jalankan Query dengan Filter yang sama persis dengan PDF
         $query = MonitoringPresenter::with(['kategori', 'scope', 'user.peserta'])
             ->where('id_conf', $id_conf)
+            ->where('payment', 'success')
             ->whereHas('kategori', function ($q) {
                 $q->where('nama_ktg', 'like', '%presenter%');
             });
 
         // Terapkan Filter Dinamis
+        if ($request->filled('pub')) {
+            $query->where('nama_publikasi', $request->pub);
+        }
+
         if ($request->filled('category')) {
             $query->whereHas('kategori', function ($q) use ($request) {
                 $q->where('nama_ktg', $request->category);
@@ -343,6 +357,7 @@ class ReviewerController extends Controller
                 'Email' => $item->email_user,
                 'Country' => $negara,
                 'Category' => $item->kategori->nama_ktg ?? '-',
+                'Publication' => $item->nama_publikasi ?? '-',
                 'Scope' => $item->scope->nama_sc ?? '-',
                 'Abstract Status' => $item->status_abstract ?? 'Pending',
                 'Article Status' => $item->status_artikel ?? 'Pending',
@@ -374,7 +389,7 @@ class ReviewerController extends Controller
                     ['List of Registered Presenters'], // Baris 2: Sub-judul
                     ['Export Date: ' . now()->format('d M Y H:i')], // Baris 3: Tanggal
                     [], // Baris 4: Kosong
-                    ["No", "Name", "WhatsApp", "Email", "Country", "Category", "Scope", "Abstract Status", "Article Status", "Source", "Registered At"] // Baris 5: Header Tabel
+                    ["No", "Name", "WhatsApp", "Email", "Country", "Category","Publication", "Scope", "Abstract Status", "Article Status", "Source", "Registered At"] // Baris 5: Header Tabel
                 ];
             }
 
