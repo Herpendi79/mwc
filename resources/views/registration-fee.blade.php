@@ -111,7 +111,7 @@
                             </thead>
 
                             <tbody class="bg-white dark:bg-[#1F1F1F] text-gray-800 dark:text-gray-200">
-                               
+
                                 <tr class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
                                     <td
                                         class="p-4 border border-gray-200 dark:border-white/10 font-bold bg-gray-50/50 dark:bg-white/5">
@@ -127,8 +127,12 @@
                                         class="p-4 border border-gray-200 dark:border-white/10 text-center text-orange-600 font-medium">
                                         $30</td>
                                     <td rowspan="4"
-                                        class="p-4 border border-gray-200 dark:border-white/10 text-center font-bold text-red-600">
-                                        June, 15</td>
+                                        class="p-4 border border-gray-200 dark:border-white/10 text-center font-bold">
+                                        <div class="flex flex-col items-center justify-center gap-1">
+                                            <span class="text-gray-400 line-through text-sm">June 15</span>
+                                            <span class="text-red-600">June 20</span>
+                                        </div>
+                                    </td>
                                     <td rowspan="3"
                                         class="p-4 border border-gray-200 dark:border-white/10 text-center align-middle bg-gray-50/30 dark:bg-white/5">
                                         <a href="https://www.conference.adaksi.org"

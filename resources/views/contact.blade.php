@@ -71,8 +71,8 @@
                             </div>
                             <h3 class="text-3xl mb-3">Event Venue</h3>
                             <p class="text-gray-600 text-xl dark:text-gray-400">
-                                Science Techno Park Building,<br>
-                                Universitas Indonesia
+                                Best Western Senayan City Hotel,<br>
+                                Jakarta, Indonesia
                             </p>
                         </div>
                     </div>

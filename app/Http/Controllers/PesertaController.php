@@ -794,15 +794,26 @@ class PesertaController extends Controller
 
     public function downloadCertificate($id_pc)
     {
-        // 1. Load data dengan relasi baru: user (dan peserta jika ada) serta kategori
+        // 1. Load data
         $sub = PesertaConferences::with(['user.peserta', 'kategori.conference'])->findOrFail($id_pc);
 
-        // SECURITY CHECK: Pastikan sertifikat ini milik user yang sedang login
         if ($sub->user_id != Auth::id()) {
             return redirect()->back()->with('error', 'Unauthorized action.');
         }
 
-        $confName = $sub->kategori->conference->nama_conf;
+        // --- BAGIAN YANG DIUBAH ---
+
+        // Ambil tahun dari kolom deadline_subm (format database biasanya YYYY-MM-DD)
+        $deadline = $sub->kategori->conference->deadline_subm;
+        $tahun = \Carbon\Carbon::parse($deadline)->format('Y');
+
+        $isPresenter = \Illuminate\Support\Str::contains($sub->kategori->nama_ktg, 'Presenter');
+        $roleSuffix = $isPresenter ? 'Presenter' : 'Participant';
+
+        // Format nama file: NamaConference_Presenter_2026 atau NamaConference_Participant_2026
+        $baseFileName = $sub->kategori->conference->nama_conf . '_' . $roleSuffix . '_' . $tahun;
+
+        // --------------------------
 
         // 2. Cari File Background
         $path = config('path.sertifikat');
@@ -810,8 +821,7 @@ class PesertaController extends Controller
         $extension = null;
 
         foreach (['png', 'jpg', 'jpeg'] as $ext) {
-            // Gunakan DIRECTORY_SEPARATOR agar kompatibel dengan MacBook/Linux/Hosting
-            $fullPath = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $confName . '.' . $ext;
+            $fullPath = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $baseFileName . '.' . $ext;
             if (file_exists($fullPath)) {
                 $bgFile = $fullPath;
                 $extension = $ext;
@@ -820,7 +830,7 @@ class PesertaController extends Controller
         }
 
         if (!$bgFile) {
-            return redirect()->back()->with('error', 'Certificate template for "' . $confName . '" not found.');
+            return redirect()->back()->with('error', 'Certificate template for "' . $baseFileName . '" not found.');
         }
 
         // 3. Buat Objek Gambar
@@ -830,21 +840,13 @@ class PesertaController extends Controller
 
         // 4. Konfigurasi Teks
         $color = imagecolorallocate($image, 0, 0, 0);
-        $fontPath = public_path('assets/fonts/ARIAL.TTF');
+        $fontPath = public_path('assets/fonts/ARIALBD.TTF');
 
-        if (!file_exists($fontPath)) {
-            return redirect()->back()->with('error', 'Font file not found.');
-        }
-
-        // PERBAIKAN PENGAMBILAN NAMA:
-        // Prioritas: 1. Tabel Peserta, 2. Tabel User (name), 3. Default
-        $namaRaw = $sub->user->peserta->nama ?? ($sub->user->name ?? 'PARTICIPANT');
-        $nama = strtoupper($namaRaw);
-
+        $nama = $sub->user->peserta->nama ?? ($sub->user->name ?? 'PARTICIPANT');
+       // $nama = strtoupper($namaRaw);
         $noSertif = "No: " . ($sub->no_sertifikat ?? '---');
-        $role = \Illuminate\Support\Str::contains($sub->kategori->nama_ktg, 'Presenter') ? "As Presenter" : "As Participant";
 
-        // 5. Fungsi Centering
+        // 5. Fungsi Centering & Render
         $imageWidth = imagesx($image);
         $drawCenteredText = function ($img, $size, $y, $color, $font, $text) use ($imageWidth) {
             $type_space = imagettfbbox($size, 0, $font, $text);
@@ -853,10 +855,8 @@ class PesertaController extends Controller
             imagettftext($img, $size, 0, $x, $y, $color, $font, $text);
         };
 
-        // Render Teks
-        $drawCenteredText($image, 20, 450, $color, $fontPath, $noSertif);
-        $drawCenteredText($image, 45, 600, $color, $fontPath, $nama);
-        $drawCenteredText($image, 30, 750, $color, $fontPath, $role);
+        $drawCenteredText($image, 50, 1600, $color, $fontPath, $noSertif);
+        $drawCenteredText($image, 180, 2060, $color, $fontPath, $nama);
 
         // 6. Output
         $safeName = \Illuminate\Support\Str::slug($nama, '_');

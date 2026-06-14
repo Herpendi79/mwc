@@ -410,7 +410,10 @@
                         <li role="presentation">
                             <button role="tab" aria-selected="true" id="tab-1"
                                 class="tab-btn px-16 py-5 bg-white/10 backdrop-blur-sm text-white rounded-lg font-medium transition-all">
-                                <p class="mb-2 text-[#c0f037]">June 15, 2026</p>
+                                <div class="flex items-center gap-4">
+                                    <p class="mb-0 text-gray-500 line-through">June 15, 2026</p>
+                                    <p class="mb-0 text-[#c0f037]">June 20, 2026</p>
+                                </div>
                                 <h4 class="text-3xl">Abstract deadline</h4>
                             </button>
                         </li>

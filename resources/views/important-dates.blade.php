@@ -64,14 +64,14 @@
         <!-- Schedule section -->
         <section class="lg:py-30 py-20 overflow-hidden">
             <div class="container">
-                    <div class="max-w-3xl mx-auto text-center mb-15">
-                        <p class="mb-2 font-medium uppercase tracking-[1px]" data-sal="slide-right" data-sal-duration="800"
-                            data-sal-delay="200">// Important Dates Highlights</p>
-                        <h2 class="font-bold md:text-5xl leading-snug " data-sal="slide-right" data-sal-duration="800"
-                            data-sal-delay="200">
-                            Key dates in the Conference Journey
-                        </h2>
-                    </div>
+                <div class="max-w-3xl mx-auto text-center mb-15">
+                    <p class="mb-2 font-medium uppercase tracking-[1px]" data-sal="slide-right" data-sal-duration="800"
+                        data-sal-delay="200">// Important Dates Highlights</p>
+                    <h2 class="font-bold md:text-5xl leading-snug " data-sal="slide-right" data-sal-duration="800"
+                        data-sal-delay="200">
+                        Key dates in the Conference Journey
+                    </h2>
+                </div>
                 <!-- Tab Contents Container -->
                 <div class="lg:mt-20 mt-5 space-y-10">
 
@@ -87,8 +87,15 @@
                                     to phenomenal breakthroughs.
                                 </p>
                                 <div class="flex flex-wrap gap-3">
-                                    <p class="bg-[#F8EBFF] rounded-full px-4 py-2 text-black"><i class="ri-time-line"></i>
-                                        June 15, 2026</p>
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <p class="bg-gray-200 rounded-full px-4 py-2 text-gray-500 line-through m-0">
+                                            <i class="ri-time-line"></i> June 15, 2026
+                                        </p>
+
+                                        <p class="bg-[#F8EBFF] rounded-full px-4 py-2 text-black m-0">
+                                            <i class="ri-time-line"></i> June 20, 2026
+                                        </p>
+                                    </div>
                                     <a href="https://drive.google.com/drive/folders/1LkQVSGcNTwWkOzgzBM46hxfB0R11uCVs?usp=sharing"
                                         target="_blank" rel="noopener noreferrer"
                                         class="bg-[#FFFAD6] rounded-full px-4 py-2 text-black flex items-center gap-2 hover:bg-[#fce99a] transition-all duration-300">
@@ -156,10 +163,11 @@
                                 <div class="flex flex-wrap gap-3">
                                     <p class="bg-[#F8EBFF] rounded-full px-4 py-2 text-black"><i class="ri-time-line"></i>
                                         June 26, 2026</p>
-                                    <a href="https://maps.app.goo.gl/fiCiqSzmwxSK58rF7" target="_blank" rel="noopener noreferrer"
+                                    <a href="https://maps.app.goo.gl/fiCiqSzmwxSK58rF7" target="_blank"
+                                        rel="noopener noreferrer"
                                         class="bg-[#FFFAD6] rounded-full px-4 py-2 text-black flex items-center gap-2 hover:bg-[#82CAFF] transition-all duration-300 w-fit">
                                         <i class="ri-map-pin-line"></i>
-                                       Best Western Senayan City Hotel, Jakarta, Indonesia
+                                        Best Western Senayan City Hotel, Jakarta, Indonesia
                                     </a>
                                 </div>
                             </div>

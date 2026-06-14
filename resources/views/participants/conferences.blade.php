@@ -496,31 +496,46 @@
                                                                 'capture',
                                                             ]);
 
+                                                            // Cek Kehadiran
+                                                            $isHadir = !is_null($submission->kehadiran);
+
                                                             // Syarat Download:
-                                                            // 1. Jika Presenter: Harus Accepted Artikelnya
-                                                            // 2. Jika Participant: Cukup Payment Success & No Sertifikat sudah terisi
                                                             $canDownload = false;
-                                                            if (
-                                                                $isPresenter &&
-                                                                strtolower($submission->status_artikel) == 'accepted'
-                                                            ) {
-                                                                $canDownload = true;
-                                                            } elseif (
-                                                                $isParticipant &&
-                                                                $paymentSuccess &&
-                                                                $submission->no_sertifikat != null
-                                                            ) {
-                                                                $canDownload = true;
+                                                            if ($isHadir) {
+                                                                if (
+                                                                    $isPresenter &&
+                                                                    strtolower($submission->status_artikel) ==
+                                                                        'accepted'
+                                                                ) {
+                                                                    $canDownload = true;
+                                                                } elseif (
+                                                                    $isParticipant &&
+                                                                    $paymentSuccess &&
+                                                                    $submission->no_sertifikat != null
+                                                                ) {
+                                                                    $canDownload = true;
+                                                                }
                                                             }
 
                                                             // Cek fisik file template sertifikat
                                                             $confName = $conf->nama_conf;
                                                             $templatePath = config('path.sertifikat');
+                                                            $tahun = \Carbon\Carbon::parse(
+                                                                $conf->deadline_subm,
+                                                            )->format('Y');
+                                                            $roleSuffix = $isPresenter ? 'Presenter' : 'Participant';
+                                                            $fileNameBase =
+                                                                $confName . '_' . $roleSuffix . '_' . $tahun;
+
                                                             $fileExist = false;
                                                             foreach (['png', 'jpg', 'jpeg'] as $ext) {
-                                                                if (
-                                                                    file_exists($templatePath . $confName . '.' . $ext)
-                                                                ) {
+                                                                $fullPath =
+                                                                    rtrim($templatePath, DIRECTORY_SEPARATOR) .
+                                                                    DIRECTORY_SEPARATOR .
+                                                                    $fileNameBase .
+                                                                    '.' .
+                                                                    $ext;
+                                                                if (file_exists($fullPath)) {
                                                                     $fileExist = true;
                                                                     break;
                                                                 }
@@ -532,7 +547,7 @@
                                                                 <a href="{{ route('participants.download', $submission->id_pc) }}"
                                                                     class="btn btn-sm btn-primary rounded-pill px-3 fw-bold text-white shadow-sm"
                                                                     style="font-size: 10px; background-color: #0d6efd; border: none; display: inline-flex; align-items: center; gap: 4px;">
-                                                                    <i class="ri-download-2-line"></i> Download Certificate
+                                                                    <i class="ri-download-2-line"></i> Download
                                                                 </a>
                                                             @else
                                                                 <span
@@ -541,9 +556,12 @@
                                                             @endif
                                                         @else
                                                             {{-- Pesan bantuan jika belum memenuhi syarat --}}
-                                                            @if ($isParticipant && $paymentSuccess && $submission->no_sertifikat == null)
-                                                                <span class="text-blue-500 text-[10px] italic">Generating
-                                                                    Certificate...</span>
+                                                            @if (!$isHadir)
+                                                                <span class="text-red-500 text-[10px] italic">Attendance
+                                                                    Required</span>
+                                                            @elseif ($isParticipant && $paymentSuccess && $submission->no_sertifikat == null)
+                                                                <span
+                                                                    class="text-blue-500 text-[10px] italic">Generating...</span>
                                                             @else
                                                                 <span class="text-muted small">-</span>
                                                             @endif
@@ -555,16 +573,22 @@
                                                 {{-- Kolom Attendance --}}
                                                 <td class="text-center">
                                                     @if ($submission && $submission->kehadiran)
-                                                        @php $status = strtolower($submission->kehadiran); @endphp
-                                                        @if ($status == null)
-                                                            <span
-                                                                class="px-2 py-1 bg-yellow-500/10 text-yellow-600 text-[10px] font-bold rounded-full uppercase">-</span>
-                                                        @elseif($status == 'hadir')
-                                                            <span
-                                                                class="px-2 py-1 bg-green-500/10 text-green-500 text-[10px] font-bold rounded-full uppercase">Present</span>
-                                                        @endif
+                                                        @php
+                                                            // Mengambil string kehadiran (misal: "Hadir (11-06-2026 20:22:58)")
+                                                            $kehadiranRaw = $submission->kehadiran;
+
+                                                            // Mengambil teks di dalam kurung menggunakan Regex
+                                                            preg_match('/\((.*?)\)/', $kehadiranRaw, $matches);
+                                                            $waktu = isset($matches[1]) ? $matches[1] : '';
+                                                        @endphp
+
+                                                        <span
+                                                            class="px-2 py-1 bg-green-500/10 text-green-500 text-[10px] font-bold rounded-full">
+                                                            Present {{ $waktu ? '(' . $waktu . ')' : '' }}
+                                                        </span>
                                                     @else
-                                                        <span class="text-muted small">-</span>
+                                                        <span
+                                                            class="px-2 py-1 bg-yellow-500/10 text-yellow-600 text-[10px] font-bold rounded-full uppercase">-</span>
                                                     @endif
                                                 </td>
                                             </tr>

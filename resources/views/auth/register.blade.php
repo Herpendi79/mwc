@@ -85,19 +85,15 @@
                         <!-- Country Dropdown -->
                         <div class="col-span-1">
                             <label class="block text-sm font-medium mb-2 ml-1 text-gray-200">Country</label>
-                            <div class="relative">
-                                <select id="countrySelect" name="country" required
-                                    class="w-full bg-white/10 border border-white/30 rounded-xl px-5 py-3 md:py-3.5 outline-none focus:border-[#c0f037] transition-all text-white appearance-none cursor-pointer">
-                                    <option value="" class="text-black" disabled selected>Select Country</option>
-                                </select>
-                                <div
-                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-white">
-                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 20 20">
-                                        <path
-                                            d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                    </svg>
-                                </div>
+                            <!-- Gunakan flex agar elemen berdampingan secara otomatis -->
+                            <div
+                                class="flex items-center bg-white/10 border border-white/30 rounded-xl overflow-hidden focus-within:border-[#c0f037] transition-all">
+                                <!-- Bagian Kode Negara -->
+                                
+
+                                <!-- Bagian Input Angka (Hapus padding-left raksasa) -->
+                                <input type="text"  name="country" placeholder="Enter your country" required
+                                    class="w-full bg-transparent border-none px-4 py-3 md:py-3.5 outline-none focus:ring-0 text-white placeholder-gray-400 text-sm md:text-base">
                             </div>
                         </div>
 
@@ -108,13 +104,10 @@
                             <div
                                 class="flex items-center bg-white/10 border border-white/30 rounded-xl overflow-hidden focus-within:border-[#c0f037] transition-all">
                                 <!-- Bagian Kode Negara -->
-                                <div class="pl-4 pr-2 border-r border-white/20 flex items-center justify-center">
-                                    <span id="phoneCode"
-                                        class="text-[#c0f037] font-bold text-sm md:text-base whitespace-nowrap">+..</span>
-                                </div>
+                                
 
                                 <!-- Bagian Input Angka (Hapus padding-left raksasa) -->
-                                <input type="number" id="whatsappInput" name="whatsapp" placeholder="812xxxx" required
+                                <input type="number"  name="whatsapp" placeholder="Include your country code" required
                                     class="w-full bg-transparent border-none px-4 py-3 md:py-3.5 outline-none focus:ring-0 text-white placeholder-gray-400 text-sm md:text-base">
                             </div>
                         </div>

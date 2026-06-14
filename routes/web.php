@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\AttendanceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\ReviewerController;
@@ -89,6 +90,10 @@ Route::get('/register', function () {
     return view('auth.register');
 })->name('register');
 
+Route::get('/attendance', function () {
+    return view('attendance');
+})->name('attendance');
+
 Route::get('/login', function () {
     return view('auth.login');
 })->name('login'); // Ganti 'login' menjadi 'login' agar Laravel tidak bingung
@@ -100,6 +105,11 @@ Route::get('/forgot-password', function () {
 // Route Registrasi
 // Berikan nama pada route
 Route::post('/registerPeserta', [RegisterController::class, 'register'])->name('registerPeserta.post');
+
+Route::post('/attendance/search', [AttendanceController::class, 'search'])->name('attendance.search');
+
+// Untuk konfirmasi kehadiran (Update)
+Route::post('/attendance/confirm', [AttendanceController::class, 'confirm'])->name('attendance.confirm');
 
 // Halaman pemberitahuan setelah daftar
 Route::get('/email/verify', function () {

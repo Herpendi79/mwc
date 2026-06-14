@@ -6,7 +6,8 @@ return [
     //'submissions' => base_path('assets/file/submissions/'),
     'submissions' => base_path('../public_html/uploads/file/submissions/'),
     'articles'    => base_path('../public_html/uploads/file/articles/'),
-    'sertifikat'    => base_path('../public_html/uploads/file/sertifikat/'),
+    'sertifikat'    => base_path('../public_html/uploads/file/sertifikat/'), //hosting
+   // 'sertifikat'    => base_path('public/assets/file/sertifikat/'), // local
     'qrcode'    => base_path('../public_html/uploads/file/qrcode/'), //hosting
     //'qrcode' => base_path('public/assets/file/qrcode/'), // local
 
