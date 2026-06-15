@@ -43,21 +43,30 @@ class PesertaController extends Controller
     public function conferences()
     {
         $conferences = Conferences::orderBy('tgl_mulai', 'desc')->get();
+
         $today = \Carbon\Carbon::today();
 
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        // TAMBAHKAN 'publikasi' di dalam array with()
+
         $userSubmissions = PesertaConferences::where('user_id', $user->id)
             ->whereHas('kategori')
-            ->with(['kategori', 'publikasi']) // Perbaikan di sini
+            ->with([
+                'kategori',
+                'publikasi'
+            ])
             ->get()
-            ->keyBy(function ($item) {
+            ->groupBy(function ($item) {
                 return $item->kategori?->id_conf;
             });
 
-        return view('participants.conferences', compact('conferences', 'today', 'userSubmissions'));
+
+        return view('participants.conferences', compact(
+            'conferences',
+            'today',
+            'userSubmissions'
+        ));
     }
 
     public function submitForm(int $id_conf)
