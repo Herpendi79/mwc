@@ -227,14 +227,22 @@
                                                                             </a>
                                                                         @endif
 
-                                                                        <button disabled
-                                                                            class="bg-gray-100 text-gray-400 font-bold py-2 px-4 rounded-xl text-xs cursor-not-allowed dynamic-btn">
-                                                                            @if ($submission->payment == 'pending')
+                                                                        {{-- Status Payment --}}
+                                                                        @if ($submission->payment == 'pending')
+                                                                            <button disabled
+                                                                                class="bg-gray-100 text-gray-400 font-bold py-2 px-4 rounded-xl text-xs cursor-not-allowed">
                                                                                 In Progress
-                                                                            @else
-                                                                                Registered
-                                                                            @endif
-                                                                        </button>
+                                                                            </button>
+                                                                        @else
+                                                                             <a href="{{ url('/participants/submit/' . $conf->id_conf) }}"
+                                                                                class="inline-flex items-center justify-center bg-[#c0f037] hover:bg-[#b2e032] text-black font-bold py-2 px-4 rounded-xl text-[10px] shadow-sm transition-all">
+
+                                                                                <i class="ri-send-plane-fill mr-1"></i>
+                                                                                Add Submission
+
+                                                                            </a>
+                                                                        @endif
+
                                                                     </div>
                                                                 @endif
                                                             </td>
