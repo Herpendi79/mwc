@@ -656,7 +656,7 @@
 
                                                             <a href="https://drive.google.com/drive/folders/1LkQVSGcNTwWkOzgzBM46hxfB0R11uCVs?usp=drive_link"
                                                                 target="_blank"
-                                                                class="inline-flex items-center justify-center bg-blue-500 text-white font-bold py-2 px-4 rounded-xl text-[10px]">
+                                                                class="inline-flex items-center justify-center bg-[#c0f037] text-black font-bold py-2 px-4 rounded-xl text-[10px]">
 
                                                                 <i class="ri-file-download-line mr-1"></i>
                                                                 TEMPLATE
