@@ -335,7 +335,7 @@
                                 class="absolute inset-0 w-full h-full object-contain scale-110 pointer-events-none transition-transform duration-500 group-hover:rotate-6">
                             <div
                                 class="relative w-full h-full rounded-full border border-[#E6E8E7] overflow-hidden transition-transform duration-500 group-hover:-translate-y-2">
-                                <img src="{{ asset('assets/images/speakers/fasli3.jpg') }}"
+                                <img src="{{ asset('assets/images/speakers/faslii.jpeg') }}"
                                     class="w-full h-full object-cover rounded-full">
                             </div>
                         </div>
@@ -375,16 +375,15 @@
                                 class="absolute inset-0 w-full h-full object-contain scale-110 pointer-events-none transition-transform duration-500 group-hover:rotate-6">
                             <div
                                 class="relative w-full h-full rounded-full border border-[#E6E8E7] overflow-hidden transition-transform duration-500 group-hover:-translate-y-2">
-                                <img src="{{ asset('assets/images/speakers/amy.jpg') }}"
+                                <img src="{{ asset('assets/images/speakers/faith.jpeg') }}"
                                     class="w-full h-full object-cover rounded-full">
                             </div>
                         </div>
                         <div class="mt-6">
                             <h3 class="font-semibold text-lg hover:text-[#c0f037] transition-colors">
-                                <a href="https://www.linkedin.com/in/amy-kuo-somchanhmavong-8a662797/" target="_blank">Amy
-                                    Somchanhmavong</a>
+                                <a href="https://www.linkedin.com/in/faithvalencia/" target="_blank">Dr. Faith Valencia-Forrester, Ph.D</a>
                             </h3>
-                            <p class="text-gray-400 mt-1">Cornell University, United States</p>
+                            <p class="text-gray-400 mt-1">Charles Sturt University, Australia</p>
                         </div>
                     </div>
 

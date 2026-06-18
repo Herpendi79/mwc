@@ -214,7 +214,7 @@
                         <div class="w-full max-w-[280px]">
                             <div class="overflow-hidden rounded-2xl relative bg-[#6AC3FF] group" data-sal="slide-up"
                                 data-sal-duration="800" data-sal-delay="200">
-                                <img src="{{ asset('assets/images/speakers/fasli4.jpg') }}" alt="Prof. Dr. H. Fasli Jalal"
+                                <img src="{{ asset('assets/images/speakers/Gemini_Generated_Image_d9k26qd9k26qd9k.jpeg') }}" alt="Prof. Dr. H. Fasli Jalal"
                                     class="w-full h-auto object-cover">
                                 <div
                                     class="bg-white dark:bg-black border rounded-xl p-4 overflow-hidden absolute bottom-4 left-1/2 transform -translate-x-1/2 w-[92%] h-24 group-hover:h-44 transition-all duration-500 shadow-lg">
@@ -300,14 +300,14 @@
                         <div class="w-full max-w-[280px]">
                             <div class="overflow-hidden rounded-2xl relative bg-[#6AC3FF] group" data-sal="slide-up"
                                 data-sal-duration="800" data-sal-delay="200">
-                                <img src="{{ asset('assets/images/speakers/amy2.jpg') }}"
+                                <img src="{{ asset('assets/images/speakers/ChatGPTImage19Jun202606.34.0.jpeg') }}"
                                     alt="Amy)"
                                     class="w-full h-auto object-cover">
                                 <div
                                     class="bg-white dark:bg-black border rounded-xl p-4 overflow-hidden absolute bottom-4 left-1/2 transform -translate-x-1/2 w-[92%] h-24 group-hover:h-44 transition-all duration-500 shadow-lg">
                                     <h3
                                         class="font-bold hover:text-[#6AC3FF] transition-all duration-300 text-sm leading-tight">
-                                        <a href="#!">Amy Somchanhmavong</a>
+                                        <a href="#!">Dr. Faith Valencia-Forrester, Ph.D</a>
                                     </h3>
                                     <div class="mt-4 text-left"> <!-- Menghapus flex agar list bisa turun ke bawah -->
                                         <p class="text-gray-700 dark:text-gray-400 text-[10px] font-bold">
@@ -316,23 +316,19 @@
                                         <ul class="list-disc ml-5 mt-1 space-y-1">
                                             <li
                                                 class="text-gray-700 dark:text-gray-400 text-[10px] font-medium leading-tight">
-                                                Global Community-Engaged Learning
+                                                Strategic Partnerships
                                             </li>
                                             <li
                                                 class="text-gray-700 dark:text-gray-400 text-[10px] font-medium leading-tight">
-                                                Strategic Partnership Development
+                                                Work-integrated Learning Specialist
                                             </li>
                                             <li
                                                 class="text-gray-700 dark:text-gray-400 text-[10px] font-medium leading-tight">
-                                                International Service-Learning
+                                                Social Impact Projects
                                             </li>
                                             <li
                                                 class="text-gray-700 dark:text-gray-400 text-[10px] font-medium leading-tight">
-                                                Civic Engagement and Leadership
-                                            </li>
-                                            <li
-                                                class="text-gray-700 dark:text-gray-400 text-[10px] font-medium leading-tight">
-                                                Cross-Cultural Program Management
+                                                Lawyer & Advocate
                                             </li>
 
                                         </ul>
