@@ -125,54 +125,53 @@
                             <div
                                 class="bg-white dark:bg-zinc-900 rounded-3xl border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
                                 <div class="p-6 border-b border-gray-100 dark:border-zinc-800" style="background: #fdfdfd;">
-                                    {{-- Grid 6 kolom yang dipaksa sejajar --}}
+                                    {{-- Grid 6 kolom --}}
                                     <div
                                         style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; align-items: end;">
 
-                                        {{-- Search --}}
+                                        {{-- Search (Tambahkan class filter-input agar ditangkap JS) --}}
                                         <div
                                             style="background: white; padding: 10px; border-radius: 12px; border: 1px solid #eee;">
                                             <label
                                                 style="display: block; font-size: 10px; font-weight: bold; color: #999; text-transform: uppercase; margin-bottom: 5px;">Search</label>
                                             <div style="position: relative;">
-                                                <input type="text" id="searchInput" placeholder="Name/Email..."
-                                                    value="{{ request('search') }}"
-                                                    onkeypress="if(event.key==='Enter') applyFilters()"
+                                                <input type="text" id="searchInput" class="filter-input"
+                                                    placeholder="Name/Email..." value="{{ request('search') }}"
                                                     style="width: 100%; padding: 8px; padding-left: 30px; font-size: 12px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa;">
                                                 <i class="ri-search-line"
                                                     style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #aaa;"></i>
                                             </div>
                                         </div>
 
-                                        {{-- Status --}}
+                                        {{-- Status (Gunakan class filter-input) --}}
                                         <div
                                             style="background: white; padding: 10px; border-radius: 12px; border: 1px solid #eee;">
                                             <label
                                                 style="display: block; font-size: 10px; font-weight: bold; color: #999; text-transform: uppercase; margin-bottom: 5px;">Status</label>
-                                            <select id="filterStatus" onchange="applyFilters()"
+                                            <select id="filterStatus" class="filter-input"
                                                 style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa;">
                                                 <option value="">All Status</option>
                                                 <option value="abs_waiting"
-                                                    {{ request('status') == 'abs_waiting' ? 'selected' : '' }}>Abstract: Waiting
-                                                </option>
+                                                    {{ request('status') == 'abs_waiting' ? 'selected' : '' }}>Abstract:
+                                                    Waiting</option>
                                                 <option value="abs_accepted"
                                                     {{ request('status') == 'abs_accepted' ? 'selected' : '' }}>Abstract:
                                                     Accepted</option>
                                                 <option value="art_waiting"
-                                                    {{ request('status') == 'art_waiting' ? 'selected' : '' }}>Article: Waiting
-                                                </option>
+                                                    {{ request('status') == 'art_waiting' ? 'selected' : '' }}>Article:
+                                                    Waiting</option>
                                                 <option value="art_accepted"
                                                     {{ request('status') == 'art_accepted' ? 'selected' : '' }}>Article:
                                                     Accepted</option>
                                             </select>
                                         </div>
 
-                                        {{-- Publikasi --}}
+                                        {{-- Publikasi (Gunakan class filter-input) --}}
                                         <div
                                             style="background: white; padding: 10px; border-radius: 12px; border: 1px solid #eee;">
                                             <label
                                                 style="display: block; font-size: 10px; font-weight: bold; color: #999; text-transform: uppercase; margin-bottom: 5px;">Publication</label>
-                                            <select id="filterPublication" onchange="applyFilters()"
+                                            <select id="filterPublication" class="filter-input"
                                                 style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa;">
                                                 <option value="">All Publication</option>
                                                 @foreach ($publikasi as $pub)
@@ -183,12 +182,12 @@
                                             </select>
                                         </div>
 
-                                        {{-- Category --}}
+                                        {{-- Category (Gunakan class filter-input) --}}
                                         <div
                                             style="background: white; padding: 10px; border-radius: 12px; border: 1px solid #eee;">
                                             <label
                                                 style="display: block; font-size: 10px; font-weight: bold; color: #999; text-transform: uppercase; margin-bottom: 5px;">Category</label>
-                                            <select id="filterCategory" onchange="applyFilters()"
+                                            <select id="filterCategory" class="filter-input"
                                                 style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa;">
                                                 <option value="">All Categories</option>
                                                 @foreach ($stats as $catName => $group)
@@ -199,12 +198,12 @@
                                             </select>
                                         </div>
 
-                                        {{-- Scope --}}
+                                        {{-- Scope (Gunakan class filter-input) --}}
                                         <div
                                             style="background: white; padding: 10px; border-radius: 12px; border: 1px solid #eee;">
                                             <label
                                                 style="display: block; font-size: 10px; font-weight: bold; color: #999; text-transform: uppercase; margin-bottom: 5px;">Scope</label>
-                                            <select id="filterScope" onchange="applyFilters()"
+                                            <select id="filterScope" class="filter-input"
                                                 style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa;">
                                                 <option value="">All Scopes</option>
                                                 @foreach ($scopes as $sc)
@@ -218,9 +217,9 @@
                                         {{-- Actions --}}
                                         <div
                                             style="background: white; padding: 10px; border-radius: 12px; border: 1px solid #e2e8f0; display: flex; gap: 5px; justify-content: center; align-items: end; padding-bottom: 8px;">
-                                            <button onclick="exportExcel()" class="bg-emerald-600"
+                                            <button type="button" onclick="exportExcel()" class="bg-emerald-600"
                                                 style="padding: 8px 12px; color: white; border-radius: 8px; font-weight: bold; font-size: 11px; border: none; cursor: pointer;">Excel</button>
-                                            <button onclick="exportPdf()" class="bg-blue-600"
+                                            <button type="button" onclick="exportPdf()" class="bg-blue-600"
                                                 style="padding: 8px 12px; color: white; border-radius: 8px; font-weight: bold; font-size: 11px; border: none; cursor: pointer;">PDF</button>
                                         </div>
                                     </div>
@@ -623,7 +622,7 @@
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="{{ asset('assets/js/dark-mode.js') }}" defer></script>
     <script>
-        // Fungsi utama untuk menerapkan filter dan reload halaman
+        // Fungsi utama untuk menerapkan filter
         function applyFilters() {
             const params = new URLSearchParams({
                 search: document.getElementById('searchInput').value,
@@ -637,7 +636,7 @@
             window.location.href = "{{ url()->current() }}?" + params.toString();
         }
 
-        // Fungsi Export (menggunakan parameter yang sama)
+        // Fungsi Export
         function exportPdf() {
             const url = "{{ route('reviewer.exportPresentersPdf') }}?" + new URLSearchParams({
                 id_conf: "{{ $conference->id_conf }}",
@@ -663,15 +662,24 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Event Listeners untuk dropdown (Trigger reload)
-            document.querySelectorAll('select').forEach(el => el.addEventListener('change', applyFilters));
+            // PERBAIKAN: Hanya menargetkan elemen dengan class 'filter-input'
+            // Modal Anda tidak akan terpicu lagi karena tidak menggunakan class ini
+            document.querySelectorAll('.filter-input').forEach(el =>
+                el.addEventListener('change', applyFilters)
+            );
 
             // Trigger Search saat menekan Enter
-            document.getElementById('searchInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') applyFilters();
+            const searchInput = document.getElementById('searchInput');
+            let debounceTimer;
+
+            searchInput.addEventListener('input', () => {
+                clearTimeout(debounceTimer); // Hapus timer sebelumnya
+                debounceTimer = setTimeout(() => {
+                    applyFilters(); // Panggil fungsi setelah 500ms diam
+                }, 500);
             });
 
-            // Sidebar & Profile Logic tetap sama...
+            // Sidebar & Profile Logic
             const profileBtn = document.getElementById('profile-menu-button');
             const profileDropdown = document.getElementById('profile-dropdown');
             if (profileBtn && profileDropdown) {
