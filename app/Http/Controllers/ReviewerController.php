@@ -744,7 +744,7 @@ class ReviewerController extends Controller
 
                 // UPDATE DATA
                 $presenter->update([
-                    'status_abstract' => null,
+                    'status_abstract' => 'revision required',
                     'file_abstract'   => null,
                     'keterangan'      => $comment,
                     'id_sc'           => null,
@@ -994,7 +994,7 @@ class ReviewerController extends Controller
 
                 // UPDATE DATABASE
                 $presenter->update([
-                    'status_artikel' => null,
+                    'status_artikel' => 'revision required',
                     'file_artikel'   => null,
                     'keterangan'     => $comment,
                 ]);

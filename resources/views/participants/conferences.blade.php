@@ -370,11 +370,11 @@
                                                                     {{-- LOGIKA TOMBOL --}}
                                                                     @if ($isPresenter)
                                                                         {{-- Jika status null ATAU string kosong ATAU 'waiting review' (opsional) ATAU 'revision required' --}}
-                                                                        @if (empty($absStatus))
+                                                                        @if (empty($absStatus) || $absStatus == 'revision required')
                                                                             <button
                                                                                 onclick="openRevisionModal('{{ $submission->id_pc }}')"
                                                                                 class="bg-orange-500 text-white text-[9px] px-2 py-1 rounded-md font-bold uppercase">
-                                                                                {{ empty($absStatus) ? 'Submit Abstract' : 'Revision Abstract' }}
+                                                                                {{ empty($absStatus) ? 'Resubmit Abstract' : 'Upload Revision Abstract' }}
                                                                             </button>
                                                                         @elseif ($absStatus == 'accepted')
                                                                             {{-- Logika Upload Artikel --}}
