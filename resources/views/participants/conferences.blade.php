@@ -810,8 +810,9 @@
                                                     <div>
                                                         <label
                                                             class="mb-2 block text-sm font-bold text-gray-700 dark:text-gray-300">Full
-                                                            Article File (PDF/DOCX Max 2MB)</label>
+                                                            Article File (DOC/DOCX Max 2MB)</label>
                                                         <input type="file" name="file_artikel" required
+                                                            accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                                                             class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none transition-all focus:ring-2 focus:ring-[#c0f037] dark:border-zinc-700 dark:bg-zinc-800 dark:text-white">
                                                     </div>
                                                 </div>
