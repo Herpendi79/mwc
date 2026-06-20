@@ -104,6 +104,41 @@ class PesertaController extends Controller
 
         return view('participants.submit', compact('conference', 'kategoris', 'publikasis'));
     }
+    public function submitAddForm(int $id_conf)
+    {
+        $conference = Conferences::findOrFail($id_conf);
+        $today = \Carbon\Carbon::today();
+
+        // Proteksi: Jika sudah melewati deadline, tidak bisa akses form
+        if ($today->greaterThan(\Carbon\Carbon::parse($conference->deadline_subm))) {
+            return redirect()->route('participants.conferences')->with('error', 'Submission deadline has passed.');
+        }
+        $user = Auth::user();
+        $negaraPeserta = 'Indonesia'; // Default
+        if ($user && $user->peserta) {
+            $negaraPeserta = $user->peserta->negara;
+        }
+
+        $queryKategori = Kategori::where('id_conf', $id_conf);
+        $queryKategori->where(function ($q) {
+            $q->where('keterangan', 'NOT LIKE', '%Adaksi%')
+                ->orWhereNull('keterangan');
+        });
+
+        if (strtolower($negaraPeserta) !== 'indonesia') {
+            // Jika bukan orang Indonesia, hanya tampilkan kategori International
+            $queryKategori->where('domisili', 'international');
+        } else {
+            // Jika orang Indonesia, tampilkan semua kategori (atau bisa difilter hanya domestic saja)
+            // Umumnya domestik tetap bisa melihat international, tapi jika ingin eksklusif:
+            $queryKategori->where('domisili', '!=', 'international');
+        }
+
+        $kategoris = $queryKategori->get();
+        $publikasis = Publikasi::all();
+
+        return view('participants.submitAdd', compact('conference', 'kategoris', 'publikasis'));
+    }
 
     public function resubmit($id_pc)
     {
@@ -350,6 +385,204 @@ class PesertaController extends Controller
         }
     }
 
+    public function storeAddSubmission(Request $request)
+    {
+        // 1. Ambil data kategori di awal untuk menentukan logika validasi
+        $kategori = Kategori::with('conference')->findOrFail($request->id_ktg);
+        $conference = $kategori->conference;
+        $isInternational = Str::contains(strtolower($kategori->nama_ktg), 'international');
+        $isPresenter = Str::contains(strtolower($kategori->nama_ktg), 'presenter');
+
+        if (!$conference) {
+            return redirect()->back()->with('error', 'Conference data not found for this category.');
+        }
+
+        // 2. Tentukan Aturan Validasi secara Dinamis
+        $rules = [
+            'id_ktg' => 'required|exists:kategori,id_ktg',
+        ];
+
+        // LOGIKA TAMBAHAN: Jika kategori adalah Presenter, id_pub wajib diisi
+        if (Str::contains($kategori->nama_ktg, 'Presenter')) {
+            $rules['judul'] = 'required|string|max:500'; // Tambahkan validasi judul
+            $rules['id_pub'] = 'required|exists:publikasi,id_pub';
+            $rules['file_abstract'] = 'required|file|mimes:pdf,doc,docx|max:2048';
+        } else if (Str::contains($kategori->nama_ktg, 'Participant')) {
+            $rules['file_abstract'] = 'nullable|file|mimes:pdf,doc,docx|max:2048';
+            $rules['judul'] = 'nullable|string|max:500'; // Participant boleh kosong
+        } else {
+            $rules['file_abstract'] = 'required|file|mimes:pdf,doc,docx|max:2048';
+            $rules['judul'] = 'nullable|string|max:500'; // Kategori lain tidak wajib judul, tapi bisa diisi jika ingin submit artikel tanpa jadi presenter
+        }
+
+        // Jika kategori mengandung kata 'Student', kartu pelajar wajib diisi
+        if (Str::contains($kategori->nama_ktg, 'Student')) {
+            $rules['file_kp'] = 'required|file|mimes:jpg,jpeg,png,pdf|max:2048';
+        }
+
+        if ($isInternational) {
+            $rules['file_bukti_tf'] = 'required|file|mimes:jpg,jpeg,png,pdf|max:2048';
+        }
+
+        $request->validate($rules);
+
+        Log::info('Memulai proses storeSubmission untuk User ID: ' . Auth::id());
+        DB::beginTransaction();
+        try {
+            $user = Auth::user();
+            $peserta = $user->peserta;
+            $userId = Auth::id();
+
+            $path = config('path.submissions');
+            if (!file_exists($path)) {
+                mkdir($path, 0777, true);
+            }
+
+            $fileAbstract = null;
+            if ($request->hasFile('file_abstract')) {
+                $fileAbstract = time() . '_abstract_' . $userId . '.' . $request->file_abstract->extension();
+                $request->file_abstract->move($path, $fileAbstract);
+            }
+
+            $fileKP = null;
+            if ($request->hasFile('file_kp')) {
+                $fileKP = time() . '_kp_' . $userId . '.' . $request->file_kp->extension();
+                $request->file_kp->move($path, $fileKP);
+            }
+
+            $fileBukti = null;
+            if ($request->hasFile('file_bukti_tf')) {
+                $fileBukti = time() . '_tf_' . $userId . '.' . $request->file_bukti_tf->extension();
+                $request->file_bukti_tf->move($path, $fileBukti);
+            }
+
+            // 4. Logika Simpan Data
+            $id_conf = $kategori->id_conf;
+            $userId = Auth::id(); // Gunakan ID User langsung
+
+
+            // TAMBAHKAN id_pub ke dalam array dataSave
+            $dataSave = [
+                'user_id'       => $userId,
+                'id_ktg'        => $request->id_ktg,
+                'id_pub'        => $request->id_pub, // Nilai ini akan null jika bukan presenter (sesuai input hidden/select)
+                'judul'         => $request->judul, // <--- TAMBAHKAN INI
+                'file_abstract' => $fileAbstract,
+                'file_kp'       => $fileKP,
+                'file_bukti_tf'    => $fileBukti,
+                'payment'       => 'pending',
+            ];
+
+            $submission = PesertaConferences::create($dataSave);
+
+
+            // 4. LOGIKA PERCABANGAN PEMBAYARAN
+            if ($isInternational) {
+                // KIRIM EMAIL WAITING VALIDATION
+                $isPresenter = Str::contains($kategori->nama_ktg, 'Presenter');
+                $viewEmail = $isPresenter ? 'emails.waiting_validation' : 'emails.waiting_validation_participant';
+
+                $html = view($viewEmail, [
+                    'nama' => $peserta->nama,
+                    'kategori' => $peserta->kategori,
+                    'nama_conference' => $conference->nama_conf
+                ])->render();
+
+                EmailApiService::send($user->email, "Payment Waiting Validation - " . $conference->nama_conf, "Please wait for admin validation.", $html);
+
+                DB::commit();
+                return redirect()->route('participants.conferences')->with('success', 'Registration successful. Please wait for admin to validate your payment.');
+            }
+
+            // 5. Konfigurasi Midtrans (Tetap sama)
+
+            $namaKtg = strtolower($kategori->nama_ktg);
+            $today = now()->format('Ymd');
+
+            // 1. Tentukan Prefix Awal (Offline/Online)
+            $mode = str_contains($namaKtg, 'online') ? 'ON' : 'OF';
+
+            // 2. Tentukan Kode Peran (Student Presenter, Presenter, atau Participant)
+            $role = '';
+            if (str_contains($namaKtg, 'student presenter')) {
+                $role = 'SP';
+            } elseif (str_contains($namaKtg, 'presenter')) {
+                $role = 'PR';
+            } elseif (str_contains($namaKtg, 'participant')) {
+                $role = 'PA';
+            }
+
+            // 3. Tentukan Region (Domestic/International)
+            $region = str_contains($namaKtg, 'international') ? 'I' : 'D';
+
+            // 4. Gabungkan menjadi Kode Invoice
+            // ICPIP adalah kode statis Anda, mode+role+region digabung
+            $typeCode = $mode . $role . $region;
+
+            $randomNumber = str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
+            $order_id = "INV-ICPIP-{$typeCode}-{$today}-{$randomNumber}";
+
+            $durationInMinutes = 180;
+
+            \Midtrans\Config::$serverKey = config('midtrans.serverKey');
+            \Midtrans\Config::$isProduction = config('midtrans.isProduction');
+            \Midtrans\Config::$isSanitized = config('midtrans.isSanitized');
+            \Midtrans\Config::$is3ds = config('midtrans.is3ds');
+
+            $params = [
+                'transaction_details' => [
+                    'order_id' => $order_id,
+                    'gross_amount' => $kategori->fee,
+                ],
+                'customer_details' => [
+                    'first_name' => $peserta->nama,
+                    'email' => $user->email,
+                ],
+                'expiry' => [
+                    'start_time' => date("Y-m-d H:i:s O"),
+                    'unit' => 'minute',
+                    'duration' => $durationInMinutes,
+                ]
+            ];
+
+            $snapToken = \Midtrans\Snap::getSnapToken($params);
+
+            $submission->update([
+                'snap' => $snapToken,
+                'order_id' => $order_id
+            ]);
+
+            $urlPembayaran = route('payment', ['snapToken' => $snapToken]);
+
+            // 6. Persiapan Email (Tetap sama)
+            $subject = "Payment Required - " . $conference->nama_conf;
+            $expiryDate = now()->addMinutes($durationInMinutes)->format('d M Y H:i');
+
+            $html = view('emails.submit_payment', [
+                'nama'            => $peserta->nama,
+                'nama_conference' => $conference->nama_conf,
+                'biaya'           => $kategori->fee,
+                'order_id'        => $order_id,
+                'expiry'          => $expiryDate,
+                'urlPembayaran'   => $urlPembayaran,
+            ])->render();
+
+
+
+            $text = "Halo {$peserta->nama}, please complete your payment for {$conference->nama_conf}. Link: {$urlPembayaran}";
+            EmailApiService::send($user->email, $subject, $text, $html);
+
+            DB::commit();
+            Log::info('Email tagihan berhasil dikirim ke: ' . $user->email);
+
+            return redirect()->route('payment', ['snapToken' => $snapToken]);
+        } catch (Exception $e) {
+            DB::rollback();
+            Log::error('Terjadi Error di storeSubmission: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Failed to process submission: ' . $e->getMessage());
+        }
+    }
+
     public function storeSubmission_email_api_services(Request $request)
     {
         // 1. Ambil data kategori di awal untuk menentukan logika validasi
@@ -552,152 +785,102 @@ class PesertaController extends Controller
     public function callback(Request $request)
     {
         $payload = $request->all();
-
-        $order_id      = $payload['order_id'] ?? null;
-        $status_code   = $payload['status_code'] ?? null;
-        $gross_amount  = $payload['gross_amount'] ?? null;
+        $order_id = $payload['order_id'] ?? null;
+        $status_code = $payload['status_code'] ?? null;
+        $gross_amount = $payload['gross_amount'] ?? null;
         $signature_key = $payload['signature_key'] ?? null;
         $transaction_status = $payload['transaction_status'] ?? null;
 
-        // Webinar NON ANGGOTA
-        Log::info('masuk notif Pembayaran', ['payload' => $payload]);
+        Log::info('Masuk notif Pembayaran', ['payload' => $payload]);
+
         $signature = hash(
             "sha512",
             $order_id . $status_code . $gross_amount . config('midtrans.serverKey')
         );
 
         if ($signature !== $signature_key) {
-            Log::warning('Invalid signature', [
-                'expected' => $signature,
-                'received' => $signature_key,
-                'concat'   => $order_id . $status_code . $gross_amount . config('midtrans.serverKey'),
-            ]);
+            Log::warning('Invalid signature', ['order_id' => $order_id]);
             return response()->json(['message' => 'Invalid signature'], 401);
         }
 
-        //01/ICPIP-HE-I/ADAKSI/V/2026
         $pendaftar = PesertaConferences::where('order_id', $order_id)->first();
+        if (!$pendaftar) return response()->json(['message' => 'Data not found'], 404);
 
         if ($transaction_status === 'settlement') {
 
-            $safeIdCard = preg_replace('/[^A-Za-z0-9]/', '', $pendaftar->peserta->nama_peserta ?? $pendaftar->user->name ?? 'presenter');
-            $randomString = Str::upper(Str::random(6));
-            $fileNameOnly = "{$safeIdCard}_{$randomString}";
-            $fileName = "{$fileNameOnly}.png";
-
-            // Isi QR adalah id_card + random
-            $qrContent = $fileName;
-
-            // Generate QR
-            generateGoQrAndSave($qrContent, $fileName);
-            $pendaftar->qr_code = $fileName;
-
-            // 1. Tentukan pola string tetap (suffix)
-            $suffix = "/ICPIP-HE-I/CERTIF/VI/2026";
-            $lastRecord = PesertaConferences::where('no_sertifikat', 'like', '%' . $suffix)
-                ->orderBy('no_sertifikat', 'desc')
+            // 1. Cek apakah user sudah punya data sertifikat/QR sebelumnya
+            $existing = PesertaConferences::where('user_id', $pendaftar->user_id)
+                ->where('id_ktg', $pendaftar->id_ktg)
+                ->whereNotNull('no_sertifikat')
+                ->where('id_pc', '!=', $pendaftar->id_pc)
                 ->first();
 
-            if ($lastRecord) {
-                $parts = explode('/', $lastRecord->no_sertifikat);
-                $lastNumber = (int)$parts[0];
-                $nextNumber = $lastNumber + 1;
+            if ($existing) {
+                // Gunakan data lama
+                $pendaftar->qr_code = $existing->qr_code;
+                $pendaftar->no_sertifikat = $existing->no_sertifikat;
             } else {
-                $nextNumber = 1;
-            }
-            $formattedNumber = str_pad($nextNumber, 2, '0', STR_PAD_LEFT);
-            $no_sertifikat = $formattedNumber . $suffix;
+                // Generate baru jika belum ada
+                $safeIdCard = preg_replace('/[^A-Za-z0-9]/', '', $pendaftar->peserta->nama_peserta ?? $pendaftar->user->name ?? 'presenter');
+                $fileName = "{$safeIdCard}_" . Str::upper(Str::random(6)) . ".png";
+                generateGoQrAndSave($fileName, $fileName);
+                $pendaftar->qr_code = $fileName;
 
-            $pendaftar->no_sertifikat = $no_sertifikat;
-            $pendaftar->payment = 'success'; // Pastikan status pembayaran juga diperbarui
-            $namaKategori = $pendaftar->kategori->nama_ktg;
-
-            if (\Illuminate\Support\Str::contains($namaKategori, 'Presenter')) {
-                $pendaftar->status_abstract = 'waiting review';
-            } else {
-                // Jika Participant, status_abstract bisa tetap null atau diisi 'not applicable'
-                $pendaftar->status_abstract = null;
+                $suffix = "/ICPIP-HE-I/CERTIF/VI/2026";
+                $lastRecord = PesertaConferences::where('no_sertifikat', 'like', '%' . $suffix)->orderBy('no_sertifikat', 'desc')->first();
+                $nextNumber = $lastRecord ? ((int)explode('/', $lastRecord->no_sertifikat)[0] + 1) : 1;
+                $pendaftar->no_sertifikat = str_pad($nextNumber, 2, '0', STR_PAD_LEFT) . $suffix;
             }
+
+            $pendaftar->payment = 'success';
+            $pendaftar->status_abstract = Str::contains($pendaftar->kategori->nama_ktg, 'Presenter') ? 'waiting review' : null;
             $pendaftar->save();
 
-            Log::info("Sertifikat berhasil digenerate: " . $no_sertifikat . " untuk User ID: " . $pendaftar->id);
-
+            // 2. Generate PDF & Kirim Email
             $attachmentPath = null;
             try {
-                $namaPeserta = $pendaftar->user->peserta->nama ?? ($pendaftar->user->name ?? 'Participant');
+                $namaPeserta = $pendaftar->user->peserta->nama ?? $pendaftar->user->name ?? 'Participant';
+                $no_invoice = sprintf("INV/%s/%02d/ICPIP-HE/%d", explode('/', $pendaftar->no_sertifikat)[0], date('n'), date('Y'));
 
-                // Format Nomor Invoice modifikasi dari format nomor surat sistem Bapak
-                $no_invoice = sprintf("INV/%s/%02d/ICPIP-HE/%d", $formattedNumber, date('n'), date('Y'));
-
-                $invoiceData = [
+                $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('emails.pdf_invoice_template', [
                     'no_invoice' => $no_invoice,
-                    'nama'       => $namaPeserta,
-                    'email'      => $pendaftar->user->email ?? '-',
-                    'negara'     => $pendaftar->user->peserta->negara ?? 'Indonesia',
-                    'kategori'   => $namaKategori,
-                    'judul'      => $pendaftar->judul,
-                    'nominal'    => ((int)($gross_amount ?? $pendaftar->nominal ?? 0)) - 5000,
-                    'tanggal'    => now()->format('F d, Y'),
-                ];
-
-                // Render berkas PDF menggunakan view invoice baru
-                $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('emails.pdf_invoice_template', $invoiceData);
+                    'nama' => $namaPeserta,
+                    'email' => $pendaftar->user->email ?? '-',
+                    'kategori' => $pendaftar->kategori->nama_ktg,
+                    'nominal' => ((int)($gross_amount ?? $pendaftar->nominal ?? 0)) - 5000,
+                    'tanggal' => now()->format('F d, Y'),
+                ]);
 
                 $tempDir = storage_path('app/public/temp');
-                if (!\Illuminate\Support\Facades\File::isDirectory($tempDir)) {
-                    \Illuminate\Support\Facades\File::makeDirectory($tempDir, 0777, true, true);
-                }
-
-                $invoiceFileName = 'Invoice_' . \Illuminate\Support\Str::slug($namaPeserta) . '_' . time() . '.pdf';
-                $attachmentPath = $tempDir . '/' . $invoiceFileName;
+                if (!File::isDirectory($tempDir)) File::makeDirectory($tempDir, 0777, true, true);
+                $attachmentPath = $tempDir . '/Invoice_' . Str::slug($namaPeserta) . '_' . time() . '.pdf';
                 $pdf->save($attachmentPath);
-                Log::info("PDF Invoice Berhasil dibuat di path: " . $attachmentPath);
-            } catch (\Exception $ePdf) {
-                Log::error("Gagal membuat PDF Invoice: " . $ePdf->getMessage());
+            } catch (\Exception $e) {
+                Log::error("Gagal buat PDF: " . $e->getMessage());
             }
 
-            // Kirim email notif via EmailApiService
             try {
-                // 1. Ambil user langsung dari pendaftar (karena sudah relasi langsung)
-                $user = $pendaftar->user;
-
-                // 2. Ambil nama: prioritaskan nama dari tabel peserta, jika null ambil dari tabel user
-                // (Gunakan null-safe operator ?-> untuk mencegah error jika data salah satu null)
-                $namaPeserta = $pendaftar->user->peserta->nama ?? $user->name;
-
-                $namaConference = $pendaftar->kategori->conference->nama_conf;
-
                 $html = view('emails.notif_payment', [
-                    'nama'            => $namaPeserta,
-                    'nama_conference' => $namaConference,
-                    'no_sertifikat'   => $no_sertifikat,
-                    'url'             => config('app.url'),
+                    'nama' => $pendaftar->user->peserta->nama ?? $pendaftar->user->name,
+                    'nama_conference' => $pendaftar->kategori->conference->nama_conf,
+                    'no_sertifikat' => $pendaftar->no_sertifikat,
+                    'url' => config('app.url'),
                 ])->render();
 
-                $text = "Halo {$namaPeserta}, pembayaran Anda untuk {$namaConference} telah berhasil. Nomor Sertifikat Anda: {$no_sertifikat}.";
-
-                // Pastikan $user tidak null sebelum kirim email
-                if ($user && $user->email) {
-                    EmailApiService::send(
-                        $user->email,
-                        'Payment Successful - Invoice & Certificate Generated',
-                        $text,
-                        $html,
-                        $attachmentPath // Lampirkan PDF invoice jika berhasil dibuat
-                    );
-                    Log::info("Email notifikasi + invoice sukses dikirim ke: " . $user->email);
-                } else {
-                    Log::warning("Gagal mengirim email: Data user atau email tidak ditemukan untuk ID Pendaftar: " . $pendaftar->id_pc);
-                }
+                EmailApiService::send(
+                    $pendaftar->user->email,
+                    'Payment Successful - Certificate Generated',
+                    "Pembayaran sukses. Sertifikat: {$pendaftar->no_sertifikat}",
+                    $html,
+                    $attachmentPath
+                );
             } catch (\Exception $e) {
-                Log::error("Gagal mengirim email notifikasi: " . $e->getMessage());
+                Log::error("Gagal kirim email: " . $e->getMessage());
             }
         } elseif (in_array(strtolower($transaction_status), ['expire', 'expired'])) {
-            $pendaftar = PesertaConferences::where('order_id', $order_id)->first();
-            $pendaftar->payment = 'expired'; // Pastikan status pembayaran juga diperbarui
+            $pendaftar->update(['payment' => 'expired']);
             $pendaftar->delete();
-
-            Log::info('Pendaftaran expired dan dihapus', ['order_id' => $order_id]);
+            Log::info('Pendaftaran expired', ['order_id' => $order_id]);
         }
 
         return response()->json(['message' => 'success']);
@@ -852,7 +1035,7 @@ class PesertaController extends Controller
         $fontPath = public_path('assets/fonts/ARIALBD.TTF');
 
         $nama = $sub->user->peserta->nama ?? ($sub->user->name ?? 'PARTICIPANT');
-       // $nama = strtoupper($namaRaw);
+        // $nama = strtoupper($namaRaw);
         $noSertif = "No: " . ($sub->no_sertifikat ?? '---');
 
         // 5. Fungsi Centering & Render

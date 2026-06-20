@@ -157,7 +157,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/participants/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/participants/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/participants/submit/{id_conf}', [PesertaController::class, 'submitForm'])->name('participants.submit');
+    Route::get('/participants/submitAdd/{id_conf}', [PesertaController::class, 'submitAddForm'])->name('participants.submitAdd');
     Route::post('/participants/submit/store', [PesertaController::class, 'storeSubmission'])->name('participants.submit.store');
+    Route::post('/participants/submit/storeAdd', [PesertaController::class, 'storeAddSubmission'])->name('participants.submitAdd.storeAdd');
     Route::delete('/participants/resubmit/{id_pc}', [PesertaController::class, 'resubmit'])
         ->name('participants.resubmit')
         ->middleware(['auth']);
