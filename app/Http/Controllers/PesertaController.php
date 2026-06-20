@@ -73,30 +73,38 @@ class PesertaController extends Controller
     {
         $conference = Conferences::findOrFail($id_conf);
         $today = \Carbon\Carbon::today();
+        $deadline = \Carbon\Carbon::parse($conference->deadline_subm);
+        $tglMulai = \Carbon\Carbon::parse($conference->tgl_mulai);
 
-        // Proteksi: Jika sudah melewati deadline, tidak bisa akses form
-        if ($today->greaterThan(\Carbon\Carbon::parse($conference->deadline_subm))) {
-            return redirect()->route('participants.conferences')->with('error', 'Submission deadline has passed.');
+        // Proteksi: Jika sudah melewati tgl mulai, akses ditutup sepenuhnya
+        if ($today->greaterThan($tglMulai)) {
+            return redirect()->route('participants.conferences')->with('error', 'Submission period has ended.');
         }
+
         $user = Auth::user();
-        $negaraPeserta = 'Indonesia'; // Default
-        if ($user && $user->peserta) {
-            $negaraPeserta = $user->peserta->negara;
-        }
+        $negaraPeserta = ($user && $user->peserta) ? $user->peserta->negara : 'Indonesia';
 
         $queryKategori = Kategori::where('id_conf', $id_conf);
-        $queryKategori->where(function ($q) {
-            $q->where('keterangan', 'NOT LIKE', '%Adaksi%')
-                ->orWhereNull('keterangan');
-        });
 
-        if (strtolower($negaraPeserta) !== 'indonesia') {
-            // Jika bukan orang Indonesia, hanya tampilkan kategori International
-            $queryKategori->where('domisili', 'international');
+        // Filter Khusus: Jika sudah lewat deadline, hanya boleh kategori dengan nama "Participant"
+        if ($today->greaterThan($deadline)) {
+            $queryKategori->where('nama_ktg', 'LIKE', '%Participant%')
+                ->where(function ($q) {
+                    $q->where('keterangan', 'NOT LIKE', '%Adaksi%')
+                        ->orWhereNull('keterangan');
+                });
         } else {
-            // Jika orang Indonesia, tampilkan semua kategori (atau bisa difilter hanya domestic saja)
-            // Umumnya domestik tetap bisa melihat international, tapi jika ingin eksklusif:
-            $queryKategori->where('domisili', '!=', 'international');
+            // Logika normal sebelum deadline
+            $queryKategori->where(function ($q) {
+                $q->where('keterangan', 'NOT LIKE', '%Adaksi%')
+                    ->orWhereNull('keterangan');
+            });
+
+            if (strtolower($negaraPeserta) !== 'indonesia') {
+                $queryKategori->where('domisili', 'international');
+            } else {
+                $queryKategori->where('domisili', '!=', 'international');
+            }
         }
 
         $kategoris = $queryKategori->get();
@@ -104,34 +112,43 @@ class PesertaController extends Controller
 
         return view('participants.submit', compact('conference', 'kategoris', 'publikasis'));
     }
+    
     public function submitAddForm(int $id_conf)
     {
         $conference = Conferences::findOrFail($id_conf);
         $today = \Carbon\Carbon::today();
+        $deadline = \Carbon\Carbon::parse($conference->deadline_subm);
+        $tglMulai = \Carbon\Carbon::parse($conference->tgl_mulai);
 
-        // Proteksi: Jika sudah melewati deadline, tidak bisa akses form
-        if ($today->greaterThan(\Carbon\Carbon::parse($conference->deadline_subm))) {
-            return redirect()->route('participants.conferences')->with('error', 'Submission deadline has passed.');
+        // Proteksi: Jika sudah melewati tgl mulai, akses ditutup sepenuhnya
+        if ($today->greaterThan($tglMulai)) {
+            return redirect()->route('participants.conferences')->with('error', 'Submission period has ended.');
         }
+
         $user = Auth::user();
-        $negaraPeserta = 'Indonesia'; // Default
-        if ($user && $user->peserta) {
-            $negaraPeserta = $user->peserta->negara;
-        }
+        $negaraPeserta = ($user && $user->peserta) ? $user->peserta->negara : 'Indonesia';
 
         $queryKategori = Kategori::where('id_conf', $id_conf);
-        $queryKategori->where(function ($q) {
-            $q->where('keterangan', 'NOT LIKE', '%Adaksi%')
-                ->orWhereNull('keterangan');
-        });
 
-        if (strtolower($negaraPeserta) !== 'indonesia') {
-            // Jika bukan orang Indonesia, hanya tampilkan kategori International
-            $queryKategori->where('domisili', 'international');
+        // Filter Khusus: Jika sudah lewat deadline, hanya boleh kategori dengan nama "Participant"
+        if ($today->greaterThan($deadline)) {
+            $queryKategori->where('nama_ktg', 'LIKE', '%Participant%')
+                ->where(function ($q) {
+                    $q->where('keterangan', 'NOT LIKE', '%Adaksi%')
+                        ->orWhereNull('keterangan');
+                });
         } else {
-            // Jika orang Indonesia, tampilkan semua kategori (atau bisa difilter hanya domestic saja)
-            // Umumnya domestik tetap bisa melihat international, tapi jika ingin eksklusif:
-            $queryKategori->where('domisili', '!=', 'international');
+            // Logika normal sebelum deadline
+            $queryKategori->where(function ($q) {
+                $q->where('keterangan', 'NOT LIKE', '%Adaksi%')
+                    ->orWhereNull('keterangan');
+            });
+
+            if (strtolower($negaraPeserta) !== 'indonesia') {
+                $queryKategori->where('domisili', 'international');
+            } else {
+                $queryKategori->where('domisili', '!=', 'international');
+            }
         }
 
         $kategoris = $queryKategori->get();

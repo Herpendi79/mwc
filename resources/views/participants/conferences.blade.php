@@ -209,9 +209,6 @@
                                                                             </a>
                                                                         </div>
                                                                     @endif
-                                                                @elseif ($isDeadlinePassed)
-                                                                    <button disabled
-                                                                        class="bg-gray-100 text-gray-400 font-bold py-2 px-4 rounded-xl text-xs cursor-not-allowed">Closed</button>
                                                                 @elseif ($submission && in_array($submission->payment, ['success', 'settlement', 'pending']))
                                                                     <div
                                                                         class="flex flex-col items-center justify-center text-center gap-3">
@@ -234,7 +231,7 @@
                                                                                 In Progress
                                                                             </button>
                                                                         @else
-                                                                             <a href="{{ url('/participants/submitAdd/' . $conf->id_conf) }}"
+                                                                            <a href="{{ url('/participants/submitAdd/' . $conf->id_conf) }}"
                                                                                 class="inline-flex items-center justify-center bg-[#c0f037] hover:bg-[#b2e032] text-black font-bold py-2 px-4 rounded-xl text-[10px] shadow-sm transition-all">
 
                                                                                 <i class="ri-send-plane-fill mr-1"></i>
