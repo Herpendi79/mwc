@@ -111,6 +111,8 @@ Route::post('/attendance/search', [AttendanceController::class, 'search'])->name
 // Untuk konfirmasi kehadiran (Update)
 Route::post('/attendance/confirm', [AttendanceController::class, 'confirm'])->name('attendance.confirm');
 
+Route::post('/attendance/autocomplete', [AttendanceController::class, 'autocomplete'])->name('attendance.autocomplete');
+
 // Halaman pemberitahuan setelah daftar
 Route::get('/email/verify', function () {
     return view('auth.verify-email');

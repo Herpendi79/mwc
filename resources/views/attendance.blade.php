@@ -71,16 +71,19 @@
                         <form action="{{ route('attendance.search') }}" method="POST"
                             class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6 text-left">
                             @csrf
-                            <!-- Full Name -->
-                            <div class="col-span-1 md:col-span-2">
-                                <label class="block text-sm font-medium mb-2 ml-1 text-gray-200">Enter your registered email
-
+                            <div class="col-span-1 md:col-span-2 relative">
+                                <label class="block text-sm font-medium mb-2 ml-1 text-gray-200">
+                                    Enter your registered email or WhatsApp number
                                 </label>
-                                <input type="email" name="email" placeholder="Enter your registered email in this system / ADAKSI system" required
+                                <input type="text" id="email_or_wa" name="email_or_wa"
+                                    placeholder="Enter email or WhatsApp number" required autocomplete="off"
                                     class="w-full bg-white/10 border border-white/30 rounded-xl px-5 py-3 md:py-3.5 outline-none focus:border-[#c0f037] transition-all text-white placeholder-gray-400">
+
+                                <ul id="results_list"
+                                    class="absolute z-[100] w-full bg-gray-900 border border-white/20 rounded-xl mt-1 hidden shadow-xl overflow-hidden text-left">
+                                </ul>
                             </div>
 
-                            <!-- Submit Button -->
                             <div class="col-span-1 md:col-span-2 w-full flex justify-center mt-6 md:mt-8">
                                 <button type="submit"
                                     class="w-full md:w-3/4 lg:w-1/2 bg-[#065039] hover:bg-[#086347] text-white text-lg md:text-xl font-bold py-3.5 md:py-4 rounded-xl shadow-2xl transition-all transform hover:scale-[1.02] active:scale-[0.98] border border-white/10">
@@ -88,6 +91,57 @@
                                 </button>
                             </div>
                         </form>
+
+                        <script>
+                            const input = document.getElementById('email_or_wa');
+                            const list = document.getElementById('results_list');
+                            let debounceTimer;
+
+                            input.addEventListener('input', () => {
+                                clearTimeout(debounceTimer);
+                                debounceTimer = setTimeout(async () => {
+                                    const val = input.value;
+                                    if (val.length < 3) {
+                                        list.classList.add('hidden');
+                                        return;
+                                    }
+
+                                    const response = await fetch("{{ route('attendance.autocomplete') }}", {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                        },
+                                        body: JSON.stringify({
+                                            q: val
+                                        })
+                                    });
+
+                                    const data = await response.json();
+                                    if (data.length > 0) {
+                                        list.innerHTML = data.map(item =>
+                                            `<li class="p-3 hover:bg-[#065039] cursor-pointer text-white border-b border-white/10">${item}</li>`
+                                        ).join('');
+                                        list.classList.remove('hidden');
+                                    } else {
+                                        list.classList.add('hidden');
+                                    }
+                                }, 300); // Debounce 300ms agar tidak membebani server
+                            });
+
+                            // Klik hasil untuk mengisi input
+                            list.addEventListener('click', (e) => {
+                                if (e.target.tagName === 'LI') {
+                                    input.value = e.target.textContent;
+                                    list.classList.add('hidden');
+                                }
+                            });
+
+                            // Tutup saat klik di luar
+                            document.addEventListener('click', (e) => {
+                                if (!input.contains(e.target)) list.classList.add('hidden');
+                            });
+                        </script>
                     @else
                         <div
                             class="bg-white/10 backdrop-blur-md text-white p-6 rounded-2xl text-left space-y-4 border border-white/20">
