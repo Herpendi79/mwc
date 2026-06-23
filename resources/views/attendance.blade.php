@@ -76,7 +76,7 @@
                                 <label class="block text-sm font-medium mb-2 ml-1 text-gray-200">Enter your registered email
 
                                 </label>
-                                <input type="email" name="email" placeholder="Enter your registered email in this system" required
+                                <input type="email" name="email" placeholder="Enter your registered email in this system / ADAKSI system" required
                                     class="w-full bg-white/10 border border-white/30 rounded-xl px-5 py-3 md:py-3.5 outline-none focus:border-[#c0f037] transition-all text-white placeholder-gray-400">
                             </div>
 
