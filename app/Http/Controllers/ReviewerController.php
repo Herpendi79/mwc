@@ -455,6 +455,8 @@ class ReviewerController extends Controller
             $query->where('nama_user', 'like', '%' . $request->search . '%');
         }
 
+        $query->where('created_at', '<', '2026-06-26 00:00:00');
+
         $data = $query->orderBy('nama_user', 'asc')->get();
 
         // 3. Mapping Data WA & Negara (Logika Fallback agar Anna & ADAKSI Tampil)
