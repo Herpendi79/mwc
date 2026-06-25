@@ -362,7 +362,7 @@ class ReviewerController extends Controller
                 'Abstract Status' => $item->status_abstract ?? 'Pending',
                 'Article Status' => $item->status_artikel ?? 'Pending',
                 'Source' => $item->sumber,
-                'Registered At' => date('d/m/Y H:i', strtotime($item->created_at)),
+                'Registered At' => \Carbon\Carbon::parse($item->created_at)->format('d/m/Y H:i'),
             ];
         }
 
@@ -396,8 +396,8 @@ class ReviewerController extends Controller
             public function styles(Worksheet $sheet)
             {
                 // Judul besar
-                $sheet->mergeCells('A1:K1');
-                $sheet->mergeCells('A2:K2');
+                $sheet->mergeCells('A1:L1');
+                $sheet->mergeCells('A2:L2');
                 return [
                     1 => ['font' => ['bold' => true, 'size' => 14]],
                     5 => ['font' => ['bold' => true]], // Header Tabel
@@ -409,7 +409,7 @@ class ReviewerController extends Controller
                 return [
                     AfterSheet::class => function (AfterSheet $event) {
                         $lastRow = count($this->data) + 5; // +5 karena ada baris judul
-                        $range = 'A5:K' . $lastRow;
+                        $range = 'A5:L' . $lastRow;
 
                         // Set Border Hitam Tipis
                         $event->sheet->getStyle($range)->applyFromArray([
@@ -422,7 +422,7 @@ class ReviewerController extends Controller
                         ]);
 
                         // Auto size kolom
-                        foreach (range('A', 'K') as $col) {
+                        foreach (range('A', 'L') as $col) {
                             $event->sheet->getDelegate()->getColumnDimension($col)->setAutoSize(true);
                         }
                     },
@@ -553,7 +553,7 @@ class ReviewerController extends Controller
                 'Country' => $negara,
                 'Category' => $item->kategori->nama_ktg ?? '-',
                 'Source' => $item->sumber,
-                'Registered At' => date('d/m/Y H:i', strtotime($item->created_at)),
+                'Registered At' => \Carbon\Carbon::parse($item->created_at)->format('d/m/Y H:i'),
             ];
         }
 

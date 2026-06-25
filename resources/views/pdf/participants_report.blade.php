@@ -1,18 +1,52 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>Participants Report</title>
     <style>
-        body { font-family: sans-serif; font-size: 9px; line-height: 1.4; color: #333; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #000; padding: 6px; text-align: left; }
-        th { background-color: #f2f2f2; font-weight: bold; text-transform: uppercase; }
-        .text-center { text-align: center; }
-        .header-info { margin-bottom: 20px; }
-        .footer { margin-top: 20px; font-style: italic; font-size: 8px; }
+        body {
+            font-family: sans-serif;
+            font-size: 9px;
+            line-height: 1.4;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 6px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .header-info {
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-style: italic;
+            font-size: 8px;
+        }
     </style>
 </head>
+
 <body>
     <div class="text-center header-info">
         <h2 style="margin: 0;">LIST OF REGISTERED PARTICIPANTS</h2>
@@ -44,7 +78,9 @@
                     <td>{{ $p->negara_final }}</td>
                     <td>{{ $p->kategori->nama_ktg ?? '-' }}</td>
                     <td class="text-center">{{ $p->sumber }}</td>
-                    <td>{{ date('d M Y, H:i', strtotime($p->created_at)) }}</td>
+                    <td>
+                        {{ \Carbon\Carbon::parse($p->created_at)->format('d M Y') }}
+                    </td>
                 </tr>
             @endforeach
         </tbody>
@@ -54,4 +90,5 @@
         <p>* This report is generated automatically for {{ $conference->nama_conf }}.</p>
     </div>
 </body>
+
 </html>

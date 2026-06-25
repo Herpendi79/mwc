@@ -1,16 +1,40 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>Report</title>
     <style>
-        body { font-family: sans-serif; font-size: 9px; line-height: 1.2; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #000; padding: 5px; text-align: left; }
-        th { background-color: #f2f2f2; font-weight: bold; }
-        .text-center { text-align: center; }
+        body {
+            font-family: sans-serif;
+            font-size: 9px;
+            line-height: 1.2;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 5px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .text-center {
+            text-align: center;
+        }
     </style>
 </head>
+
 <body>
     <div class="text-center">
         <h2>List of Registered Presenters</h2>
@@ -49,10 +73,13 @@
                     <td>{{ $p->status_abstract ?? 'Pending' }}</td>
                     <td>{{ $p->status_artikel ?? 'Pending' }}</td>
                     <td>{{ $p->sumber }}</td>
-                    <td>{{ date('d/m/Y', strtotime($p->created_at)) }}</td>
+                    <td>
+                        {{ \Carbon\Carbon::parse($p->created_at)->format('d M Y') }}
+                    </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 </body>
+
 </html>
