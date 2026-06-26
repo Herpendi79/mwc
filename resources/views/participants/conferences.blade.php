@@ -555,7 +555,7 @@
                                                                     if ($isHadir) {
                                                                         if (
                                                                             $isPresenter &&
-                                                                            strtolower($submission->status_artikel) ==
+                                                                            strtolower($submission->status_abstract) ==
                                                                                 'accepted'
                                                                         ) {
                                                                             $canDownload = true;
