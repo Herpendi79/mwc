@@ -190,12 +190,30 @@
                             </a>
                         </li>
                         <li>
+                            <a href="https://drive.google.com/drive/folders/1cZSaga5pQJmgptBw4kpGsGMuMvViqXbF?usp=sharing"
+                                
+                                class="relative flex items-center gap-3 px-5 py-2 font-medium text-[18px] transition-all duration-300 hover:text-[#c0f037] group/underline hover:translate-x-2">
+                                <span
+                                    class="before:content-[''] before:absolute before:left-3 before:top-1/2 before:h-0 before:w-0.75 before:bg-[#c0f037] before:-translate-y-1/2 before:rounded-full before:transition-all before:duration-300 group-hover/underline:before:h-5"></span>
+                                Best Abstract
+                            </a>
+                        </li>
+                        <li>
                             <a href="https://drive.google.com/drive/folders/1ziNHG5ZMc8rOAwbLmeoZWsRVK6z42X6Q?usp=sharing"
                                 
                                 class="relative flex items-center gap-3 px-5 py-2 font-medium text-[18px] transition-all duration-300 hover:text-[#c0f037] group/underline hover:translate-x-2">
                                 <span
                                     class="before:content-[''] before:absolute before:left-3 before:top-1/2 before:h-0 before:w-0.75 before:bg-[#c0f037] before:-translate-y-1/2 before:rounded-full before:transition-all before:duration-300 group-hover/underline:before:h-5"></span>
                                 Best Presenter
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://drive.google.com/drive/folders/1NvJPGWVGFZjbaajVm-bF2aZK3MyqsfZu?usp=sharing"
+                                
+                                class="relative flex items-center gap-3 px-5 py-2 font-medium text-[18px] transition-all duration-300 hover:text-[#c0f037] group/underline hover:translate-x-2">
+                                <span
+                                    class="before:content-[''] before:absolute before:left-3 before:top-1/2 before:h-0 before:w-0.75 before:bg-[#c0f037] before:-translate-y-1/2 before:rounded-full before:transition-all before:duration-300 group-hover/underline:before:h-5"></span>
+                                Best Questioner
                             </a>
                         </li>
                     </ul>
@@ -415,12 +433,28 @@
                                     Virtual Background
                                 </a>
                             </li>
+                             <li>
+                                <a href="https://drive.google.com/drive/folders/1cZSaga5pQJmgptBw4kpGsGMuMvViqXbF?usp=sharing"
+                                    class="block relative px-4 py-2 text-gray-600 font-medium text-[18px] transition-all duration-300 hover:text-[#c0f037] group/underline hover:translate-x-2">
+                                    <span
+                                        class="before:content-[''] before:absolute before:left-2 before:top-1/2 before:h-0 before:w-0.75 before:bg-[#c0f037] before:-translate-y-1/2 before:rounded-full before:transition-all before:duration-300 group-hover/underline:before:h-5"></span>
+                                    Best Abstract
+                                </a>
+                            </li>
                             <li>
                                 <a href="https://drive.google.com/drive/folders/1ziNHG5ZMc8rOAwbLmeoZWsRVK6z42X6Q?usp=sharing"
                                     class="block relative px-4 py-2 text-gray-600 font-medium text-[18px] transition-all duration-300 hover:text-[#c0f037] group/underline hover:translate-x-2">
                                     <span
                                         class="before:content-[''] before:absolute before:left-2 before:top-1/2 before:h-0 before:w-0.75 before:bg-[#c0f037] before:-translate-y-1/2 before:rounded-full before:transition-all before:duration-300 group-hover/underline:before:h-5"></span>
                                     Best Presenter
+                                </a>
+                            </li>
+                             <li>
+                                <a href="https://drive.google.com/drive/folders/1NvJPGWVGFZjbaajVm-bF2aZK3MyqsfZu?usp=sharing"
+                                    class="block relative px-4 py-2 text-gray-600 font-medium text-[18px] transition-all duration-300 hover:text-[#c0f037] group/underline hover:translate-x-2">
+                                    <span
+                                        class="before:content-[''] before:absolute before:left-2 before:top-1/2 before:h-0 before:w-0.75 before:bg-[#c0f037] before:-translate-y-1/2 before:rounded-full before:transition-all before:duration-300 group-hover/underline:before:h-5"></span>
+                                    Best Questioner
                                 </a>
                             </li>
                         </ul>
