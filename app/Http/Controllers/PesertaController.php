@@ -955,7 +955,12 @@ class PesertaController extends Controller
     public function uploadArticle(Request $request, $id_pc)
     {
         $request->validate([
-            'file_artikel' => 'required|file|mimes:doc,docx|max:10240', // Max 10MB
+            'file_artikel' => 'required|file|mimes:doc,docx|max:10240',
+        ], [
+            'file_artikel.required' => 'Please select an article file.',
+            'file_artikel.file' => 'Invalid file.',
+            'file_artikel.mimes' => 'Only DOC and DOCX files are allowed.',
+            'file_artikel.max' => 'Maximum file size is 10 MB.',
         ]);
 
         try {

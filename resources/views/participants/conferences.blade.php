@@ -63,6 +63,11 @@
                         </button>
                     </div>
                 @endif
+                @error('file_artikel')
+                    <div class="mt-2 text-sm text-red-600">
+                        {{ $message }}
+                    </div>
+                @enderror
                 <div class="container mx-auto min-h-full flex flex-col">
 
                     <div class="flex-grow">
