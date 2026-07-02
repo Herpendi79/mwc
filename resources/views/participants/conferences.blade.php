@@ -50,24 +50,25 @@
                     </div>
                 @endif
 
-                @if (session('error'))
+                @if (session('error') || $errors->has('file_artikel'))
                     <div id="alert-error"
                         class="mb-6 flex items-center p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-500 force-show"
                         data-sal="slide-down">
                         <i class="ri-error-warning-fill text-xl mr-3"></i>
+
                         <div class="text-sm font-bold">
-                            {{ session('error') }}
+                            @if (session('error'))
+                                {{ session('error') }}
+                            @else
+                                {{ $errors->first('file_artikel') }}
+                            @endif
                         </div>
+
                         <button type="button" class="ml-auto" onclick="document.getElementById('alert-error').remove()">
                             <i class="ri-close-line text-xl"></i>
                         </button>
                     </div>
                 @endif
-                @error('file_artikel')
-                    <div class="mt-2 text-sm text-red-600">
-                        {{ $message }}
-                    </div>
-                @enderror
                 <div class="container mx-auto min-h-full flex flex-col">
 
                     <div class="flex-grow">

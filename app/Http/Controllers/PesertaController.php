@@ -954,21 +954,51 @@ class PesertaController extends Controller
 
     public function uploadArticle(Request $request, $id_pc)
     {
+        // Tangani jika upload gagal sebelum validasi Laravel
+        if ($request->hasFile('file_artikel')) {
+            $file = $request->file('file_artikel');
+
+            if (!$file->isValid()) {
+
+                switch ($file->getError()) {
+                    case UPLOAD_ERR_INI_SIZE:
+                    case UPLOAD_ERR_FORM_SIZE:
+                        return back()
+                            ->withErrors([
+                                'file_artikel' => 'The uploaded file exceeds the maximum allowed size of 10 MB.'
+                            ])
+                            ->withInput();
+
+                    case UPLOAD_ERR_PARTIAL:
+                        return back()
+                            ->withErrors([
+                                'file_artikel' => 'The file was only partially uploaded.'
+                            ])
+                            ->withInput();
+
+                    default:
+                        return back()
+                            ->withErrors([
+                                'file_artikel' => 'Failed to upload the file.'
+                            ])
+                            ->withInput();
+                }
+            }
+        }
+
         $request->validate([
             'file_artikel' => 'required|file|mimes:doc,docx|max:10240',
         ], [
             'file_artikel.required' => 'Please select an article file.',
-            'file_artikel.file' => 'Invalid file.',
-            'file_artikel.mimes' => 'Only DOC and DOCX files are allowed.',
-            'file_artikel.max' => 'Maximum file size is 10 MB.',
+            'file_artikel.mimes'    => 'Only DOC and DOCX files are allowed.',
+            'file_artikel.max'      => 'The uploaded file exceeds the maximum allowed size of 10 MB.',
         ]);
 
         try {
             // Ambil data pendaftaran
             $submission = PesertaConferences::findOrFail($id_pc);
 
-            // PERBAIKAN SECURITY CHECK: 
-            // Langsung bandingkan user_id di tabel dengan ID user yang sedang login
+            // Security check
             if ($submission->user_id != Auth::id()) {
                 return redirect()->back()->with('error', 'Unauthorized action. This record does not belong to your account.');
             }
@@ -981,27 +1011,30 @@ class PesertaController extends Controller
                 File::makeDirectory($path, 0777, true, true);
             }
 
-            // 1. Hapus file artikel lama jika ada (Manajemen Storage)
+            // Hapus file lama
             if ($submission->file_artikel) {
                 $oldFile = $path . '/' . $submission->file_artikel;
+
                 if (File::exists($oldFile)) {
                     File::delete($oldFile);
                 }
             }
 
-            // 2. Simpan file artikel baru dengan prefix 'article_'
-            $fileName = time() . '_article_' . $userId . '.' . $request->file_artikel->extension();
-            $request->file_artikel->move($path, $fileName);
+            // Simpan file baru
+            $fileName = time() . '_article_' . $userId . '.' . $request->file('file_artikel')->extension();
 
-            // 3. Update database: Status artikel menjadi 'waiting review'
+            $request->file('file_artikel')->move($path, $fileName);
+
+            // Update database
             $submission->update([
-                'file_artikel' => $fileName,
+                'file_artikel'   => $fileName,
                 'status_artikel' => 'waiting review',
             ]);
 
             return redirect()->back()->with('success', 'Full Article has been uploaded successfully. Current status: Waiting Review.');
         } catch (\Exception $e) {
             Log::error('Article Upload Error for ID ' . $id_pc . ': ' . $e->getMessage());
+
             return redirect()->back()->with('error', 'Failed to upload article. Please try again or contact support.');
         }
     }
