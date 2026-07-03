@@ -990,14 +990,13 @@ class PesertaController extends Controller
             'file_artikel' => [
                 'required',
                 'file',
-                'mimes:doc,docx,dot,dotx',
-                'mimes:application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'extensions:doc,docx', // Cukup memeriksa ekstensi file
                 'max:10240'
             ],
         ], [
-            'file_artikel.required' => 'Please select an article file.',
-            'file_artikel.mimes'    => 'Only DOC and DOCX files are allowed.',
-            'file_artikel.max'      => 'The uploaded file exceeds the maximum allowed size of 10 MB.',
+            'file_artikel.extensions' => 'Only DOC and DOCX files are allowed.',
+            'file_artikel.required'   => 'Please select an article file.',
+            'file_artikel.max'        => 'The uploaded file exceeds the maximum allowed size of 10 MB.',
         ]);
 
         try {
