@@ -112,7 +112,7 @@ class PesertaController extends Controller
 
         return view('participants.submit', compact('conference', 'kategoris', 'publikasis'));
     }
-    
+
     public function submitAddForm(int $id_conf)
     {
         $conference = Conferences::findOrFail($id_conf);
@@ -990,7 +990,8 @@ class PesertaController extends Controller
             'file_artikel' => [
                 'required',
                 'file',
-                'mimes:doc,docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'mimes:doc,docx,dot,dotx',
+                'mimes:application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                 'max:10240'
             ],
         ], [
