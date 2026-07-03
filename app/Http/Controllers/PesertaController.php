@@ -1026,12 +1026,29 @@ class PesertaController extends Controller
             }
 
             $extension = $request->file('file_artikel')->getClientOriginalExtension();
+
             $fileName = time() . '_article_' . $userId . '.' . $extension;
 
-            // Simpan file baru
-            $fileName = time() . '_article_' . $userId . '.' . $request->file('file_artikel')->extension();
-
             $request->file('file_artikel')->move($path, $fileName);
+
+            $fullPath = $path . DIRECTORY_SEPARATOR . $fileName;
+
+            // Simpan file baru
+            if (pathinfo($fullPath, PATHINFO_EXTENSION) === 'bin' || pathinfo($fullPath, PATHINFO_EXTENSION) === '') {
+                $newPath = str_replace('.bin', '.docx', $fullPath);
+
+                // Pastikan path baru berakhir dengan .docx jika sebelumnya tidak ada atau .bin
+                if (!str_ends_with($newPath, '.docx')) {
+                    $newPath = $fullPath . '.docx';
+                }
+
+                if (!file_exists($newPath)) {
+                    rename($fullPath, $newPath);
+                    // Update variabel nama file agar database menyimpan nama yang sudah benar
+                    $fileName = pathinfo($newPath, PATHINFO_BASENAME);
+                }
+            }
+
 
             // Update database
             $submission->update([
