@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Peserta;
+use App\Models\ReviewArticle;
 use App\Models\Publikasi;
 use App\Models\Conferences;
 use App\Models\PesertaConferences;
@@ -174,7 +174,10 @@ class ReviewerController extends Controller
         $scopes = Scope::where('id_conf', $id_conf)->orderBy('nama_sc', 'asc')->get();
         $publikasi = Publikasi::all();
 
-        return view('reviewer.presenters_list', compact('conference', 'presenters', 'stats', 'totalCount', 'scopes', 'statsSC', 'publikasi'));
+        $allHistory = ReviewArticle::orderBy('created_at', 'desc')->get()
+            ->groupBy('id_global');
+
+        return view('reviewer.presenters_list', compact('conference', 'presenters', 'stats', 'totalCount', 'scopes', 'statsSC', 'publikasi', 'allHistory'));
     }
 
     public function exportPresentersPdf(Request $request)
@@ -913,10 +916,11 @@ class ReviewerController extends Controller
         // VALIDASI
         $request->validate([
             'status' => 'required|in:accepted,revision',
-
             'comment' => 'nullable|required_if:status,revision',
+            'nama_file' => 'nullable|required_if:status,revision|file|mimes:doc,docx|max:10240',
         ], [
             'comment.required_if' => 'Revision comment wajib diisi.',
+            'nama_file.required_if' => 'Please upload the Revision Notes file.',
         ]);
 
         try {
@@ -982,7 +986,29 @@ class ReviewerController extends Controller
             // =====================================================
             if ($status === 'revision') {
 
-                // HAPUS FILE ARTIKEL LAMA
+                // 1. Tangani Upload File Revisi
+                $path = config('path.submissions'); // Mengambil path dari konfigurasi
+                $pathFile = null;
+
+                if ($request->hasFile('nama_file')) {
+                    // Membuat nama file yang unik
+                    $fileName = time() . '_review_' . $id . '.' . $request->file('nama_file')->extension();
+
+                    // Memindahkan file ke path yang ditentukan
+                    $request->file('nama_file')->move($path, $fileName);
+
+                    // Simpan hanya nama filenya (atau path relatifnya) ke database
+                    $pathFile = $fileName;
+                }
+
+                // 2. Simpan ke tabel review_article
+                ReviewArticle::create([
+                    'id_global' => $id,            // ID dari presenter/peserta
+                    'nama_file' => $pathFile,      // Path file hasil upload
+                    'ket'       => $comment,       // Catatan/Feedback
+                ]);
+
+                // 3. HAPUS FILE ARTIKEL LAMA (Logika lama Anda)
                 if ($presenter->file_artikel) {
 
                     $path = storage_path(
@@ -1271,4 +1297,5 @@ class ReviewerController extends Controller
 
         return view('reviewer.all_presenters', compact('presenters'));
     }
+    
 }

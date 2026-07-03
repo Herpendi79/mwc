@@ -987,7 +987,12 @@ class PesertaController extends Controller
         }
 
         $request->validate([
-            'file_artikel' => 'required|file|mimes:doc,docx|max:10240',
+            'file_artikel' => [
+                'required',
+                'file',
+                'mimes:doc,docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'max:10240'
+            ],
         ], [
             'file_artikel.required' => 'Please select an article file.',
             'file_artikel.mimes'    => 'Only DOC and DOCX files are allowed.',

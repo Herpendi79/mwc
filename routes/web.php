@@ -243,3 +243,4 @@ Route::get('submit/payment/{snapToken}', function ($snapToken) {
         'conference'     => $submission->kategori->conference,
     ]);
 })->middleware(['auth', 'verified'])->name('payment');
+

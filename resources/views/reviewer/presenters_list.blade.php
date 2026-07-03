@@ -238,6 +238,7 @@
                                                 <th class="p-4 text-gray-500 font-semibold text-sm">Abstract & Status</th>
                                                 <th class="p-4 text-gray-500 font-semibold text-sm">Review Abstract</th>
                                                 <th class="p-4 text-gray-500 font-semibold text-sm">Article & Status</th>
+                                                <th class="p-4 text-gray-500 font-semibold text-sm">History</th>
                                                 <th class="p-4 text-gray-500 font-semibold text-sm">Review Article</th>
                                             </tr>
                                         </thead>
@@ -436,7 +437,7 @@
                                                                                         </button>
                                                                                         <button type="button"
                                                                                             @click="open = false"
-                                                                                            class="w-full py-2 text-sm font-bold text-gray-400 hover:text-gray-600 transition-colors">
+                                                                                            class="w-full py-2 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition-all rounded-xl">
                                                                                             Cancel
                                                                                         </button>
                                                                                     </div>
@@ -482,6 +483,70 @@
                                                             {{ $p->status_artikel ?? 'Not Uploaded' }}
                                                         </span>
                                                     </td>
+                                                    @php
+                                                        // Ambil data history berdasarkan id_global dari record presenter ($p)
+                                                        $history = $allHistory[$p->id_global] ?? null;
+                                                    @endphp
+
+                                                    <td class="p-4" x-data="{
+                                                        openModal: false,
+                                                        historyData: {{ $history ? json_encode($history) : '[]' }}
+                                                    }">
+                                                        @if ($history)
+                                                            <button @click="openModal = true"
+                                                                class="p-2 bg-gray-500/10 text-gray-500 rounded-lg hover:bg-gray-500 hover:text-white transition-all shadow-sm"
+                                                                title="View History">
+                                                                <i class="ri-history-line text-lg"></i>
+                                                            </button>
+
+                                                            <template x-teleport="body">
+                                                                <div x-show="openModal"
+                                                                    class="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+                                                                    x-cloak>
+                                                                    <div @click="openModal = false"
+                                                                        class="fixed inset-0 bg-black/60 backdrop-blur-sm">
+                                                                    </div>
+
+                                                                    <div
+                                                                        class="relative bg-white dark:bg-zinc-900 rounded-3xl shadow-xl w-full max-w-lg p-6 overflow-y-auto max-h-[80vh]">
+                                                                        <h3 class="text-lg font-bold mb-4 dark:text-white">
+                                                                            Review History</h3>
+
+                                                                        <div class="space-y-4">
+                                                                            <template x-for="item in historyData"
+                                                                                :key="item.id_rev">
+                                                                                <div
+                                                                                    class="p-3 border dark:border-zinc-700 rounded-xl">
+                                                                                    {{-- Nama File sebagai Link --}}
+                                                                                    <a :href="'{{ config('path.submissions_url') }}' +
+                                                                                    '/' + item.nama_file"
+                                                                                        target="_blank"
+                                                                                        class="font-bold text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                                                                                        x-text="item.nama_file">
+                                                                                    </a>
+
+                                                                                    <div class="text-xs text-gray-500"
+                                                                                        x-text="item.ket"></div>
+
+                                                                                    {{-- Format Tanggal menggunakan JavaScript --}}
+                                                                                    <div class="text-[10px] text-gray-400 mt-1"
+                                                                                        x-text="new Date(item.created_at).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })">
+                                                                                    </div>
+                                                                                </div>
+                                                                            </template>
+                                                                        </div>
+
+                                                                        <button @click="openModal = false"
+                                                                            class="mt-6 w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition-colors">
+                                                                            Close
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </template>
+                                                        @else
+                                                            <span class="text-xs text-gray-400 italic">No History</span>
+                                                        @endif
+                                                    </td>
 
                                                     <td class="p-4">
                                                         {{-- Tombol hanya muncul jika status artikel BELUM 'Accepted' --}}
@@ -526,6 +591,7 @@
                                                                                 {{-- Form Action disesuaikan untuk Artikel jika routenya berbeda --}}
                                                                                 <form
                                                                                     action="{{ route('reviewer.updateStatusArtikel', ['id' => $p->id_global, 'sumber' => $p->sumber]) }}"
+                                                                                    enctype="multipart/form-data"
                                                                                     method="POST">
                                                                                     @csrf
                                                                                     <div class="space-y-3">
@@ -553,26 +619,45 @@
                                                                                                 class="ml-3 text-sm font-semibold text-gray-700 dark:text-gray-300">Accepted</span>
                                                                                         </label>
 
+                                                                                        {{-- Textarea Revision (Muncul jika Revision) --}}
+
                                                                                         <div x-show="decision === 'revision'"
                                                                                             x-transition x-cloak
                                                                                             class="pt-2">
-                                                                                            <textarea name="comment" x-bind:required="decision === 'revision'"
-                                                                                                class="w-full p-4 rounded-2xl border border-gray-200 dark:border-zinc-800 dark:bg-zinc-800 dark:text-white text-xs outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px] resize-none"
-                                                                                                placeholder="Write article revision notes here..."></textarea>
-                                                                                        </div>
-                                                                                    </div>
 
-                                                                                    <div class="mt-6 flex flex-col gap-2">
-                                                                                        <button type="submit"
-                                                                                            class="w-full py-3 text-sm font-bold text-white bg-blue-600 rounded-2xl hover:bg-blue-700 shadow-lg transition-all active:scale-95">
-                                                                                            Submit Decision
-                                                                                        </button>
-                                                                                        <button type="button"
-                                                                                            @click="open = false"
-                                                                                            class="w-full py-2 text-sm font-bold text-gray-400 hover:text-gray-600 transition-colors">
-                                                                                            Cancel
-                                                                                        </button>
-                                                                                    </div>
+                                                                                            {{-- Input File --}}
+                                                                                            <div class="pt-2">
+                                                                                                <label
+                                                                                                    class="block text-[10px] font-bold text-gray-400 mb-1">
+                                                                                                    Review File (doc/docx
+                                                                                                    Max 10MB)
+                                                                                                </label>
+                                                                                                <input type="file"
+                                                                                                    name="nama_file"
+                                                                                                    class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border border-gray-200 dark:border-zinc-800 rounded-2xl p-2"
+                                                                                                    x-bind:required="decision === 'revision'">
+                                                                                                {{-- Atribut required ini akan aktif jika decision == 'revision' --}}
+                                                                                            </div>
+                                                                                            <div class="pt-2">
+
+                                                                                                <textarea name="comment" x-bind:required="decision === 'revision'"
+                                                                                                    class="w-full p-4 rounded-2xl border border-gray-200 dark:border-zinc-800 dark:bg-zinc-800 dark:text-white text-xs outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px] resize-none"
+                                                                                                    placeholder="Write article revision notes here..."></textarea>
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                        <div
+                                                                                            class="mt-6 flex flex-col gap-2">
+                                                                                            <button type="submit"
+                                                                                                class="w-full py-3 text-sm font-bold text-white bg-blue-600 rounded-2xl hover:bg-blue-700 shadow-lg transition-all active:scale-95">
+                                                                                                Submit Decision
+                                                                                            </button>
+                                                                                            <button type="button"
+                                                                                                @click="open = false"
+                                                                                                class="w-full py-2 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition-all rounded-xl">
+                                                                                                Cancel
+                                                                                            </button>
+                                                                                        </div>
                                                                                 </form>
                                                                             </div>
                                                                         </div>

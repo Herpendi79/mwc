@@ -106,7 +106,9 @@
                 "{{ $comment }}"
             </div>
 
-            <p>Please revise your full paper based on the comments above and &nbsp;<strong>re-upload</strong>&nbsp; the document
+            <p><strong>Please go to your dashboard to view the revision details.</strong></p>
+
+            <p>Please revise your full paper based on the comments and &nbsp;<strong>re-upload</strong>&nbsp; the document
                 through your presenter dashboard.</p>
 
             <div style="text-align: center;">
