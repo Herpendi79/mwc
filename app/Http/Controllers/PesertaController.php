@@ -1025,6 +1025,9 @@ class PesertaController extends Controller
                 }
             }
 
+            $extension = $request->file('file_artikel')->getClientOriginalExtension();
+            $fileName = time() . '_article_' . $userId . '.' . $extension;
+
             // Simpan file baru
             $fileName = time() . '_article_' . $userId . '.' . $request->file('file_artikel')->extension();
 
