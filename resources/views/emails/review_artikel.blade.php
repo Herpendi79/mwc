@@ -161,6 +161,11 @@
                 Please wait for the final publication notification and any additional information from the publication
                 team.
             </p>
+            @elseif(strtolower($status) == 'production')
+            <p>
+                Congratulations! Your manuscript has successfully completed the&nbsp;
+                <strong>Production</strong>&nbsp; stage.
+            </p>
         @else
             <p>
                 Thank you for your submission to &nbsp;<strong>ICPIP-HE 2026</strong>. After reviewing your full paper, the
