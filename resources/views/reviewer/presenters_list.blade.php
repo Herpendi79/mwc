@@ -172,6 +172,9 @@
                                                 <option value="art_production"
                                                     {{ request('status') == 'art_production' ? 'selected' : '' }}>Article:
                                                     Production</option>
+                                                <option value="art_revision_required"
+                                                    {{ request('status') == 'art_revision_required' ? 'selected' : '' }}>Article:
+                                                    Revision Required</option>
                                             </select>
                                         </div>
 

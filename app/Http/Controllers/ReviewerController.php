@@ -178,6 +178,10 @@ class ReviewerController extends Controller
                 case 'art_production':
                     $baseQuery->where('status_artikel', 'production');
                     break;
+
+                case 'art_revision_required':
+                    $baseQuery->where('status_artikel', 'revision required');
+                    break;
             }
         }
         if ($request->filled('pub')) $baseQuery->where('nama_publikasi', $request->pub);
@@ -269,6 +273,10 @@ class ReviewerController extends Controller
 
                 case 'art_production':
                     $query->where('status_artikel', 'production');
+                    break;
+
+                case 'art_revision_required':
+                    $query->where('status_artikel', 'revision required');
                     break;
             }
         }
@@ -395,6 +403,10 @@ class ReviewerController extends Controller
 
                 case 'art_production':
                     $query->where('status_artikel', 'production');
+                    break;
+                    
+                case 'art_revision_required':
+                    $query->where('status_artikel', 'revision required');
                     break;
             }
         }
