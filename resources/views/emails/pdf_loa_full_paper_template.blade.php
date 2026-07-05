@@ -138,22 +138,39 @@
         <div class="content">
             <p>Dear Author (<strong>{{ $nama }}</strong>),</p>
 
-            
+
             <p>We are pleased to inform you that your manuscript entitled:</p>
 
             <div class="title-box">
                 "{{ $judul }}"
             </div>
 
-            <p>has successfully met all the academic and publication requirements and has been <strong>accepted for
-                    publication</strong> in the <strong>{{ $nama_jurnal }}</strong> (SCITEPRESS Proceedings).</p>
+            @php
+                $publicationName = $nama_jurnal;
 
-            <p>The article has met the requirements and is accepted for publication in the <strong>SCITEPRESS
-                    Proceedings</strong>. Therefore, this Letter of Acceptance is officially issued and may be used for
-                all appropriate academic and administrative purposes.</p>
+                if ($nama_jurnal == 'Proceeding ICPIP-HE 2026') {
+                    $publicationName .= ' (SCITEPRESS Proceedings)';
+                }
+            @endphp
 
-            <p>We sincerely appreciate your valuable contribution and thank you for choosing to publish your research
-                with us. We look forward to seeing your work published in the conference proceedings.</p>
+            <p>
+                has successfully met all the academic and publication requirements and has been
+                <strong>accepted for publication</strong> in the
+                <strong>{{ $publicationName }}</strong>.
+            </p>
+
+            <p>
+                The article has met the requirements and is accepted for publication in
+                <strong>{{ $publicationName }}</strong>.
+                Therefore, this Letter of Acceptance is officially issued and may be used for all appropriate academic
+                and administrative purposes.
+            </p>
+
+            <p>
+                We sincerely appreciate your valuable contribution and thank you for choosing to publish your research
+                with us.
+                We look forward to seeing your work published in the conference proceedings.
+            </p>
 
             <p style="margin-bottom: 0; margin-top: 15px;">Contact Person:</p>
             <p style="margin-top: 0; font-size: 10pt;">
@@ -161,7 +178,7 @@
                 +62 823-6575-6299 (Jon) /
                 +62 813-2248-3370 (Antha)
             </p>
-            
+
 
         </div>
 
