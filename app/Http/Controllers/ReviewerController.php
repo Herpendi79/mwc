@@ -148,11 +148,37 @@ class ReviewerController extends Controller
             $baseQuery->where('nama_user', 'like', '%' . $request->search . '%');
         }
         if ($request->filled('status')) {
-            $status = $request->status;
-            if ($status == 'abs_waiting') $baseQuery->where('status_abstract', 'waiting review');
-            elseif ($status == 'abs_accepted') $baseQuery->where('status_abstract', 'accepted');
-            elseif ($status == 'art_waiting') $baseQuery->where('status_artikel', 'waiting review');
-            elseif ($status == 'art_accepted') $baseQuery->where('status_artikel', 'accepted');
+
+            switch ($request->status) {
+
+                case 'abs_waiting':
+                    $baseQuery->where('status_abstract', 'waiting review');
+                    break;
+
+                case 'abs_accepted':
+                    $baseQuery->where('status_abstract', 'accepted');
+                    break;
+
+                case 'art_waiting':
+                    $baseQuery->where('status_artikel', 'waiting review');
+                    break;
+
+                case 'art_accepted_by_editor':
+                    $baseQuery->where('status_artikel', 'accepted by editor');
+                    break;
+
+                case 'art_accepted_by_reviewer':
+                    $baseQuery->where('status_artikel', 'accepted by reviewer');
+                    break;
+
+                case 'art_copy_editing':
+                    $baseQuery->where('status_artikel', 'copy editing');
+                    break;
+
+                case 'art_production':
+                    $baseQuery->where('status_artikel', 'production');
+                    break;
+            }
         }
         if ($request->filled('pub')) $baseQuery->where('nama_publikasi', $request->pub);
         if ($request->filled('category')) $baseQuery->whereHas('kategori', fn($q) => $q->where('nama_ktg', $request->category));
@@ -214,15 +240,36 @@ class ReviewerController extends Controller
         }
 
         if ($request->filled('status')) {
-            $status = $request->status;
-            if ($status === 'abs_waiting') {
-                $query->where('status_abstract', 'waiting review');
-            } elseif ($status === 'abs_accepted') {
-                $query->where('status_abstract', 'accepted');
-            } elseif ($status === 'art_waiting') {
-                $query->where('status_artikel', 'waiting review');
-            } elseif ($status === 'art_accepted') {
-                $query->where('status_artikel', 'accepted');
+
+            switch ($request->status) {
+
+                case 'abs_waiting':
+                    $query->where('status_abstract', 'waiting review');
+                    break;
+
+                case 'abs_accepted':
+                    $query->where('status_abstract', 'accepted');
+                    break;
+
+                case 'art_waiting':
+                    $query->where('status_artikel', 'waiting review');
+                    break;
+
+                case 'art_accepted_by_editor':
+                    $query->where('status_artikel', 'accepted by editor');
+                    break;
+
+                case 'art_accepted_by_reviewer':
+                    $query->where('status_artikel', 'accepted by reviewer');
+                    break;
+
+                case 'art_copy_editing':
+                    $query->where('status_artikel', 'copy editing');
+                    break;
+
+                case 'art_production':
+                    $query->where('status_artikel', 'production');
+                    break;
             }
         }
 
@@ -319,11 +366,37 @@ class ReviewerController extends Controller
             $query->where('nama_user', 'like', '%' . $request->search . '%');
         }
         if ($request->filled('status')) {
-            $status = $request->status;
-            if ($status === 'abs_waiting') $query->where('status_abstract', 'waiting review');
-            elseif ($status === 'abs_accepted') $query->where('status_abstract', 'accepted');
-            elseif ($status === 'art_waiting') $query->where('status_artikel', 'waiting review');
-            elseif ($status === 'art_accepted') $query->where('status_artikel', 'accepted');
+
+            switch ($request->status) {
+
+                case 'abs_waiting':
+                    $query->where('status_abstract', 'waiting review');
+                    break;
+
+                case 'abs_accepted':
+                    $query->where('status_abstract', 'accepted');
+                    break;
+
+                case 'art_waiting':
+                    $query->where('status_artikel', 'waiting review');
+                    break;
+
+                case 'art_accepted_by_editor':
+                    $query->where('status_artikel', 'accepted by editor');
+                    break;
+
+                case 'art_accepted_by_reviewer':
+                    $query->where('status_artikel', 'accepted by reviewer');
+                    break;
+
+                case 'art_copy_editing':
+                    $query->where('status_artikel', 'copy editing');
+                    break;
+
+                case 'art_production':
+                    $query->where('status_artikel', 'production');
+                    break;
+            }
         }
 
         $data = $query->orderBy('nama_user', 'asc')->get();

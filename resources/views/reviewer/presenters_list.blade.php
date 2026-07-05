@@ -159,10 +159,19 @@
                                                     Accepted</option>
                                                 <option value="art_waiting"
                                                     {{ request('status') == 'art_waiting' ? 'selected' : '' }}>Article:
-                                                    Waiting</option>
-                                                <option value="art_accepted"
-                                                    {{ request('status') == 'art_accepted' ? 'selected' : '' }}>Article:
-                                                    Accepted</option>
+                                                    Waiting Review</option>
+                                                <option value="art_accepted_by_editor"
+                                                    {{ request('status') == 'art_accepted_by_editor' ? 'selected' : '' }}>Article:
+                                                    Accepted By Editor</option>
+                                                <option value="art_accepted_by_reviewer"
+                                                    {{ request('status') == 'art_accepted_by_reviewer' ? 'selected' : '' }}>Article:
+                                                    Accepted By Reviewer</option>
+                                                <option value="art_copy_editing"
+                                                    {{ request('status') == 'art_copy_editing' ? 'selected' : '' }}>Article:
+                                                    Copy Editing</option>
+                                                <option value="art_production"
+                                                    {{ request('status') == 'art_production' ? 'selected' : '' }}>Article:
+                                                    Production</option>
                                             </select>
                                         </div>
 
