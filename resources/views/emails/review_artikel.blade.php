@@ -98,6 +98,10 @@
                     Copy Editing
                 @break
 
+                @case('production')
+                    Production
+                @break
+
                 @default
                     Revision Required
             @endswitch
@@ -161,14 +165,15 @@
                 Please wait for the final publication notification and any additional information from the publication
                 team.
             </p>
-            @elseif(strtolower($status) == 'production')
+        @elseif(strtolower($status) == 'production')
             <p>
                 Congratulations! Your manuscript has successfully completed the&nbsp;
                 <strong>Production</strong>&nbsp; stage.
             </p>
         @else
             <p>
-                Thank you for your submission to &nbsp;<strong>ICPIP-HE 2026</strong>. After reviewing your full paper, the
+                Thank you for your submission to &nbsp;<strong>ICPIP-HE 2026</strong>. After reviewing your full paper,
+                the
                 reviewer
                 has determined that&nbsp;
                 <span style="color:#d97706;font-weight:bold;">Revision is Required</span>&nbsp;
