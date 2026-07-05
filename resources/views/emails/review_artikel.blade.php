@@ -107,8 +107,8 @@
             <p>
                 Congratulations! After a thorough editorial review process, we are pleased to inform you that your full
                 paper
-                submission for <strong>ICPIP-HE 2026</strong> has been
-                <span style="color:#059669;font-weight:bold;">Accepted by the Editor</span>.
+                submission for &nbsp;<strong>ICPIP-HE 2026</strong>&nbsp; has been
+                &nbsp;<span style="color:#059669;font-weight:bold;">Accepted by the Editor</span>.
             </p>
 
             <p>
@@ -123,12 +123,12 @@
         @elseif(strtolower($status) == 'accepted by reviewer')
             <p>
                 Congratulations! We are pleased to inform you that your full paper has been
-                <span style="color:#059669;font-weight:bold;">Accepted by the Reviewer</span>.
+                &nbsp;<span style="color:#059669;font-weight:bold;">Accepted by the Reviewer</span>.
             </p>
 
             <p>
                 Your manuscript has successfully passed the peer-review process and will now proceed to the
-                <strong>Copy Editing</strong> stage.
+                &nbsp;<strong>Copy Editing</strong>&nbsp; stage.
             </p>
 
             <p>
@@ -142,13 +142,13 @@
             </p>
         @elseif(strtolower($status) == 'copy editing')
             <p>
-                Congratulations! Your manuscript has successfully completed the
-                <strong>Copy Editing</strong> stage.
+                Congratulations! Your manuscript has successfully completed the&nbsp;
+                <strong>Copy Editing</strong>&nbsp; stage.
             </p>
 
             <p>
                 Your paper will now proceed to the
-                <strong>Production</strong> stage.
+                &nbsp;<strong>Production</strong>&nbsp; stage.
             </p>
 
             <p>
@@ -163,10 +163,10 @@
             </p>
         @else
             <p>
-                Thank you for your submission to <strong>ICPIP-HE 2026</strong>. After reviewing your full paper, the
+                Thank you for your submission to &nbsp;<strong>ICPIP-HE 2026</strong>. After reviewing your full paper, the
                 reviewer
-                has determined that
-                <span style="color:#d97706;font-weight:bold;">Revision is Required</span>
+                has determined that&nbsp;
+                <span style="color:#d97706;font-weight:bold;">Revision is Required</span>&nbsp;
                 before it can be accepted.
             </p>
 
@@ -180,7 +180,7 @@
 
             <p>
                 Please revise your full paper based on the reviewer's comments and
-                <strong>re-upload</strong> the revised manuscript through your presenter dashboard.
+                &nbsp;<strong>re-upload</strong>&nbsp; the revised manuscript through your presenter dashboard.
             </p>
 
             <div style="text-align:center;">
