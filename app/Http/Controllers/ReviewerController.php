@@ -196,7 +196,7 @@ class ReviewerController extends Controller
         if ($request->filled('pub')) {
             $query->where('nama_publikasi', $request->pub);
         }
-        
+
         if ($request->filled('category')) {
             $query->whereHas('kategori', function ($q) use ($request) {
                 $q->where('nama_ktg', $request->category);
@@ -392,7 +392,7 @@ class ReviewerController extends Controller
                     ['List of Registered Presenters'], // Baris 2: Sub-judul
                     ['Export Date: ' . now()->format('d M Y H:i')], // Baris 3: Tanggal
                     [], // Baris 4: Kosong
-                    ["No", "Name", "WhatsApp", "Email", "Country", "Category","Publication", "Scope", "Abstract Status", "Article Status", "Source", "Registered At"] // Baris 5: Header Tabel
+                    ["No", "Name", "WhatsApp", "Email", "Country", "Category", "Publication", "Scope", "Abstract Status", "Article Status", "Source", "Registered At"] // Baris 5: Header Tabel
                 ];
             }
 
@@ -768,7 +768,7 @@ class ReviewerController extends Controller
             else {
 
                 // Buat nama file: idcard_random6.png
-             /*   $safeIdCard = preg_replace('/[^A-Za-z0-9]/', '', $presenter->peserta->nama_peserta ?? $presenter->user->name ?? 'presenter');
+                /*   $safeIdCard = preg_replace('/[^A-Za-z0-9]/', '', $presenter->peserta->nama_peserta ?? $presenter->user->name ?? 'presenter');
                 $randomString = Str::upper(Str::random(6));
                 $fileNameOnly = "{$safeIdCard}_{$randomString}";
                 $fileName = "{$fileNameOnly}.png";
@@ -783,7 +783,7 @@ class ReviewerController extends Controller
                 $presenter->update([
                     'status_abstract' => 'accepted',
                     'id_sc'           => $id_sc,
-                   // 'qr_code'           => $fileName,
+                    // 'qr_code'           => $fileName,
                 ]);
 
                 // NOMOR SURAT
@@ -1039,84 +1039,156 @@ class ReviewerController extends Controller
             // =====================================================
             else {
 
-                // UPDATE DATABASE
-                $presenter->update([
-                    'status_artikel' => 'accepted',
-                ]);
+                // Status artikel saat ini
+                $currentStatus = strtolower(trim($presenter->status_artikel));
 
-                // NOMOR SURAT
-                $filePath = storage_path('app/last_no_surat.txt');
+                // Tentukan status berikutnya
+                switch ($currentStatus) {
 
-                $lastNo = file_exists($filePath)
-                    ? (int) file_get_contents($filePath)
-                    : 0;
+                    case 'waiting review':
+                        $nextStatus = 'accepted by editor';
+                        break;
 
-                $newNo = $lastNo + 1;
+                    case 'accepted by editor':
+                        $nextStatus = 'accepted by reviewer';
+                        break;
 
-                file_put_contents($filePath, $newNo);
+                    case 'accepted by reviewer':
+                        $nextStatus = 'copy editing';
+                        break;
 
-                // BULAN ROMAWI
-                $romawi = [
-                    1 => 'I',
-                    2 => 'II',
-                    3 => 'III',
-                    4 => 'IV',
-                    5 => 'V',
-                    6 => 'VI',
-                    7 => 'VII',
-                    8 => 'VIII',
-                    9 => 'IX',
-                    10 => 'X',
-                    11 => 'XI',
-                    12 => 'XII'
-                ];
+                    case 'copy editing':
+                        $nextStatus = 'production';
+                        break;
 
-                $bulanRomawi = $romawi[date('n')];
-
-                // FORMAT NOMOR SURAT
-                $no_surat = sprintf(
-                    "%02d/ICPIP-HE-I/ADAKSI/%s/%d",
-                    $newNo,
-                    $bulanRomawi,
-                    date('Y')
-                );
-
-                // DATA PDF
-                $pdfData = [
-                    'nama' => $nama_peserta,
-                    'judul' => $judul_artikel,
-                    'no_surat' => $no_surat,
-                    'tanggal' => now()->format('F d, Y'),
-                    'nama_jurnal' => $presenter->publikasi->nama_pub ?? '(Journal Name)',
-                ];
-
-                // GENERATE PDF
-                $pdf = Pdf::loadView(
-                    'emails.pdf_loa_full_paper_template',
-                    $pdfData
-                );
-
-                // DIRECTORY TEMP
-                $tempPath = storage_path('app/public/temp');
-
-                if (!File::isDirectory($tempPath)) {
-                    File::makeDirectory($tempPath, 0777, true, true);
+                    default:
+                        // Jika status tidak dikenali, tetap ke Accepted by Editor
+                        $nextStatus = 'accepted by editor';
+                        break;
                 }
 
-                // FILE PDF
-                $fileName = 'LoA_FullPaper_' .
-                    time() .
-                    '_' .
-                    Str::slug($nama_peserta) .
-                    '.pdf';
+                // Update status artikel
+                $presenter->update([
+                    'status_artikel' => $nextStatus,
+                ]);
 
-                $attachmentPath = $tempPath . '/' . $fileName;
+                // =====================================================
+                // NOMOR SURAT (LOA hanya dibuat saat pertama kali lolos editor)
+                // =====================================================
+                $attachmentPath = null;
 
-                $pdf->save($attachmentPath);
+                if ($nextStatus == 'accepted by reviewer') {
 
-                $subject = "Accepted: Full Paper Submission Notification - {$nama_conference}";
+                    $filePath = storage_path('app/last_no_surat.txt');
 
-                $text = "Congratulations {$nama_peserta}, your Full Paper has been accepted.";
+                    $lastNo = file_exists($filePath)
+                        ? (int) file_get_contents($filePath)
+                        : 0;
+
+                    $newNo = $lastNo + 1;
+
+                    file_put_contents($filePath, $newNo);
+
+                    $romawi = [
+                        1 => 'I',
+                        2 => 'II',
+                        3 => 'III',
+                        4 => 'IV',
+                        5 => 'V',
+                        6 => 'VI',
+                        7 => 'VII',
+                        8 => 'VIII',
+                        9 => 'IX',
+                        10 => 'X',
+                        11 => 'XI',
+                        12 => 'XII'
+                    ];
+
+                    $bulanRomawi = $romawi[date('n')];
+
+                    $no_surat = sprintf(
+                        "%02d/ICPIP-HE-I/ADAKSI/%s/%d",
+                        $newNo,
+                        $bulanRomawi,
+                        date('Y')
+                    );
+
+                    $pdfData = [
+                        'nama' => $nama_peserta,
+                        'judul' => $judul_artikel,
+                        'no_surat' => $no_surat,
+                        'tanggal' => now()->format('F d, Y'),
+                        'nama_jurnal' => $presenter->publikasi->nama_pub ?? '(Journal Name)',
+                    ];
+
+                    $pdf = Pdf::loadView(
+                        'emails.pdf_loa_full_paper_template',
+                        $pdfData
+                    );
+
+                    $tempPath = storage_path('app/public/temp');
+
+                    if (!File::isDirectory($tempPath)) {
+                        File::makeDirectory($tempPath, 0777, true, true);
+                    }
+
+                    $fileName = 'LoA_FullPaper_' .
+                        time() .
+                        '_' .
+                        Str::slug($nama_peserta) .
+                        '.pdf';
+
+                    $attachmentPath = $tempPath . '/' . $fileName;
+
+                    $pdf->save($attachmentPath);
+                }
+
+                // Untuk dikirim ke email
+                $status = $nextStatus;
+
+                switch ($nextStatus) {
+
+                    case 'accepted by editor':
+                        $subject = "Editorial Review Completed - {$nama_conference}";
+                        break;
+
+                    case 'accepted by reviewer':
+                        $subject = "Congratulations! Your Full Paper Has Been Accepted - {$nama_conference}";
+                        break;
+
+                    case 'copy editing':
+                        $subject = "Copy Editing Process Started - {$nama_conference}";
+                        break;
+
+                    case 'production':
+                        $subject = "Production Stage Notification - {$nama_conference}";
+                        break;
+
+                    default:
+                        $subject = "Full Paper Status Update - {$nama_conference}";
+                }
+
+                switch ($nextStatus) {
+
+                    case 'accepted by editor':
+                        $text = "Your manuscript has successfully passed the editorial review and will proceed to peer review.";
+                        break;
+
+                    case 'accepted by reviewer':
+                        $text = "Congratulations! Your manuscript has successfully passed the peer-review process. Your Letter of Acceptance (LoA) is attached to this email.";
+                        break;
+
+                    case 'copy editing':
+                        $text = "Your manuscript has entered the Copy Editing stage.";
+                        break;
+
+                    case 'production':
+                        $text = "Your manuscript has entered the Production stage.";
+                        break;
+
+                    default:
+                        $text = "Your manuscript status has been updated.";
+                }
             }
 
             // =====================================================
@@ -1297,5 +1369,4 @@ class ReviewerController extends Controller
 
         return view('reviewer.all_presenters', compact('presenters'));
     }
-    
 }

@@ -136,26 +136,35 @@
         </div>
 
         <div class="content">
-            <p>Dear Author ({{ $nama }}),</p>
+            <p>Dear Author (<strong>{{ $nama }}</strong>),</p>
 
-            <p>It is our pleasure to inform you that your manuscript entitled:</p>
+            
+            <p>We are pleased to inform you that your manuscript entitled:</p>
 
             <div class="title-box">
                 "{{ $judul }}"
             </div>
 
-            <p>is accepted subject to revision for publication in <strong>{{ $nama_jurnal }}</strong>. Please see the reviews for further details.</p>
+            <p>has successfully met all the academic and publication requirements and has been <strong>accepted for
+                    publication</strong> in the <strong>{{ $nama_jurnal }}</strong> (SCITEPRESS Proceedings).</p>
 
-            <p>Indicate the revised portions of your manuscript based on reviewer comments. Please send the revised manuscript to <a
-                    href="https://www.conference.adaksi.org/submission-information">https://www.conference.adaksi.org/submission-information</a> using your validated account before <strong>July 15<sup>th</sup> 2026</strong>. We presume that you withdraw the article if your submission is overdue.</p>
+            <p>The article has met the requirements and is accepted for publication in the <strong>SCITEPRESS
+                    Proceedings</strong>. Therefore, this Letter of Acceptance is officially issued and may be used for
+                all appropriate academic and administrative purposes.</p>
 
-            <p>The revised manuscript should also be accompanied by a summary of your responses to the reviewers' comments. Please note that in some cases revised manuscripts will be re-reviewed and the final decision may be changed based on your revised paper.</p>
+            <p>We sincerely appreciate your valuable contribution and thank you for choosing to publish your research
+                with us. We look forward to seeing your work published in the conference proceedings.</p>
 
-            <p>We look forward to receiving your revised paper.</p>
-            
             <p style="margin-bottom: 0; margin-top: 15px;">Contact Person:</p>
-            <p style="margin-top: 0; font-size: 10pt;">+62 857-3561-7107 (Rio) / +62 823-6575-6299 (Jon) / +62 813-2248-3370 (Antha)</p>
+            <p style="margin-top: 0; font-size: 10pt;">
+                +62 857-3561-7107 (Rio) /
+                +62 823-6575-6299 (Jon) /
+                +62 813-2248-3370 (Antha)
+            </p>
+            
+
         </div>
+
 
         <div class="clearfix">
             <div class="signature-container">

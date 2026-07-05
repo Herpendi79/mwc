@@ -59,4 +59,10 @@ class PesertaConferencesAdaksi extends Model
     {
         return $this->belongsTo(Publikasi::class, 'id_pub', 'id_pub');
     }
+
+    // Di dalam class PesertaConferencesAdaksi
+    public function getIdGlobalAttribute()
+    {
+        return $this->id_pca;
+    }
 }

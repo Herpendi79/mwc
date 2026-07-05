@@ -85,34 +85,108 @@
         <p>Dear &nbsp;<strong>{{ $nama }}</strong>,</p>
 
         <div class="status-badge">
-            {{ $status == 'accepted' ? 'Accepted' : 'Revision Required' }}
+            @switch(strtolower($status))
+                @case('accepted by editor')
+                    Accepted by Editor
+                @break
+
+                @case('accepted by reviewer')
+                    Accepted by Reviewer
+                @break
+
+                @case('copy editing')
+                    Copy Editing
+                @break
+
+                @default
+                    Revision Required
+            @endswitch
         </div>
 
-        @if ($status == 'accepted')
-            {{-- KONTEN JIKA ACCEPTED --}}
-            <p>Congratulations! After a thorough review process, we are pleased to inform you that your full paper
-                submission for &nbsp;<strong>ICPIP-HE 2026</strong>&nbsp; has been &nbsp;<span
-                    style="color: #059669; font-weight: bold;">Accepted</span>.</p>
+        @if (strtolower($status) == 'accepted by editor')
+            <p>
+                Congratulations! After a thorough editorial review process, we are pleased to inform you that your full
+                paper
+                submission for <strong>ICPIP-HE 2026</strong> has been
+                <span style="color:#059669;font-weight:bold;">Accepted by the Editor</span>.
+            </p>
 
-            <p>Please wait the next information from us or publication management </p>
+            <p>
+                Your manuscript will now proceed to the next stage, where it will be assigned to expert reviewers for a
+                comprehensive substantive review of its academic content, methodology, and overall quality.
+            </p>
+
+            <p>
+                Please wait for the review results and further instructions regarding the next stage of the publication
+                process.
+            </p>
+        @elseif(strtolower($status) == 'accepted by reviewer')
+            <p>
+                Congratulations! We are pleased to inform you that your full paper has been
+                <span style="color:#059669;font-weight:bold;">Accepted by the Reviewer</span>.
+            </p>
+
+            <p>
+                Your manuscript has successfully passed the peer-review process and will now proceed to the
+                <strong>Copy Editing</strong> stage.
+            </p>
+
+            <p>
+                During this stage, our editorial team will review the language, formatting, grammar, references, and
+                overall
+                consistency of your manuscript to ensure it meets publication standards.
+            </p>
+
+            <p>
+                Please wait for further updates regarding the copy editing process.
+            </p>
+        @elseif(strtolower($status) == 'copy editing')
+            <p>
+                Congratulations! Your manuscript has successfully completed the
+                <strong>Copy Editing</strong> stage.
+            </p>
+
+            <p>
+                Your paper will now proceed to the
+                <strong>Production</strong> stage.
+            </p>
+
+            <p>
+                During production, the editorial team will finalize the layout, typesetting, proofreading, and
+                preparation of
+                your manuscript for publication.
+            </p>
+
+            <p>
+                Please wait for the final publication notification and any additional information from the publication
+                team.
+            </p>
         @else
-            {{-- KONTEN JIKA REVISION --}}
-            <p>Thank you for your submission to &nbsp;<strong>ICPIP-HE 2026</strong>. After reviewing your full paper, the
-                reviewer has determined that &nbsp;<span style="color: #d97706; font-weight: bold;">Revision is
-                    Required</span>&nbsp; before it can be accepted.</p>
+            <p>
+                Thank you for your submission to <strong>ICPIP-HE 2026</strong>. After reviewing your full paper, the
+                reviewer
+                has determined that
+                <span style="color:#d97706;font-weight:bold;">Revision is Required</span>
+                before it can be accepted.
+            </p>
 
             <p><strong>Reviewer's Feedback:</strong></p>
+
             <div class="comment-box">
                 "{{ $comment }}"
             </div>
 
             <p><strong>Please go to your dashboard to view the revision details.</strong></p>
 
-            <p>Please revise your full paper based on the comments and &nbsp;<strong>re-upload</strong>&nbsp; the document
-                through your presenter dashboard.</p>
+            <p>
+                Please revise your full paper based on the reviewer's comments and
+                <strong>re-upload</strong> the revised manuscript through your presenter dashboard.
+            </p>
 
-            <div style="text-align: center;">
-                <a href="{{ route('login') }}" class="btn">Go to Dashboard</a>
+            <div style="text-align:center;">
+                <a href="{{ route('login') }}" class="btn">
+                    Go to Dashboard
+                </a>
             </div>
         @endif
 
@@ -126,4 +200,3 @@
 </body>
 
 </html>
-

@@ -52,4 +52,10 @@ class PesertaConferences extends Model
         // Parameter: Model tujuan, foreign key di pendaftaran, primary key di publikasi
         return $this->belongsTo(Publikasi::class, 'id_pub', 'id_pub');
     }
+
+    // Di dalam class PesertaConferencesAdaksi
+    public function getIdGlobalAttribute()
+    {
+        return $this->id_pc;
+    }
 }

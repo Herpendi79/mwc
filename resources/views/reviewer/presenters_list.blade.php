@@ -460,16 +460,28 @@
                                                     <td class="p-4">
                                                         @php
                                                             $artStatus = strtolower($p->status_artikel);
-                                                            $artClass =
-                                                                $artStatus == 'accepted'
-                                                                    ? 'bg-green-500/10 text-green-500'
-                                                                    : ($artStatus == 'waiting review'
-                                                                        ? 'bg-yellow-500/10 text-yellow-600'
-                                                                        : 'bg-gray-500/10 text-gray-500');
+
+                                                            $artClass = in_array($artStatus, [
+                                                                'accepted',
+                                                                'accepted by editor',
+                                                                'accepted by reviewer',
+                                                                'copy editing',
+                                                                'production',
+                                                            ])
+                                                                ? 'bg-green-500/10 text-green-500'
+                                                                : ($artStatus == 'waiting review'
+                                                                    ? 'bg-yellow-500/10 text-yellow-600'
+                                                                    : 'bg-gray-500/10 text-gray-500');
                                                         @endphp
 
                                                         {{-- Tombol View File hanya tampil jika status 'waiting review' atau 'accepted' --}}
-                                                        @if (in_array($artStatus, ['waiting review', 'accepted']) && $p->file_artikel)
+                                                        @if (in_array($artStatus, [
+                                                                'waiting review',
+                                                                'accepted by editor',
+                                                                'accepted by reviewer',
+                                                                'copy editing',
+                                                                'production',
+                                                            ]) && $p->file_artikel)
                                                             <a href="{{ config('path.submissions_url') . $p->file_artikel }}"
                                                                 target="_blank"
                                                                 class="p-2 bg-orange-500/10 text-orange-500 rounded-lg hover:bg-orange-500 hover:text-white transition-all shadow-sm"
@@ -544,13 +556,18 @@
                                                                 </div>
                                                             </template>
                                                         @else
-                                                            <span class="text-xs text-gray-400 italic">No History</span>
+                                                            <span class="text-xs text-gray-400 italic">-</span>
                                                         @endif
                                                     </td>
 
                                                     <td class="p-4">
                                                         {{-- Tombol hanya muncul jika status artikel BELUM 'Accepted' --}}
-                                                        @if (strtolower($p->status_artikel) == 'waiting review')
+                                                        @if (in_array(strtolower($p->status_artikel), [
+                                                                'waiting review',
+                                                                'accepted by editor',
+                                                                'accepted by reviewer',
+                                                                'copy editing',
+                                                            ]))
                                                             <div x-data="{ open: false, decision: 'accepted' }">
                                                                 <button @click="open = true"
                                                                     class="p-2 bg-blue-500/10 text-blue-500 rounded-lg hover:bg-blue-500 hover:text-white transition-all shadow-sm"
@@ -574,8 +591,7 @@
                                                                             x-transition:enter="ease-out duration-300"
                                                                             x-transition:enter-start="opacity-0 scale-95"
                                                                             x-transition:enter-end="opacity-100 scale-100"
-                                                                            class="relative bg-white dark:bg-zinc-900 rounded-3xl shadow-2xl border border-gray-200 dark:border-zinc-800 z-10"
-                                                                            style="width: 100% !important; max-width: 350px !important; margin: auto !important; position: relative !important;">
+                                                                            class="relative w-full max-w-4xl bg-white dark:bg-zinc-900 rounded-3xl shadow-2xl border border-gray-200 dark:border-zinc-800 z-10 mx-4">
 
                                                                             <div class="p-6">
                                                                                 <div class="text-center mb-6">

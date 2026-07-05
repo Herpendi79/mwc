@@ -110,6 +110,9 @@
                                             <th
                                                 class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 text-center">
                                                 Full Article Status</th>
+                                            <th
+                                                class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 text-center">
+                                                History</th>
 
                                             <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">
                                                 Payment Note</th>
@@ -443,14 +446,91 @@
                                                                     <span
                                                                         class="px-2 py-1 bg-orange-500/20 text-orange-600 border border-orange-200 text-[10px] font-bold rounded-full uppercase">Revision
                                                                         Required</span>
-                                                                @elseif($status == 'accepted')
+                                                                @elseif($status == 'accepted by editor' || $status == 'accepted by reviewer' || $status == 'copyediting' || $status == 'production' || $status == 'accepted')
                                                                     <span
-                                                                        class="px-2 py-1 bg-green-500/10 text-green-500 text-[10px] font-bold rounded-full uppercase">Accepted</span>
+                                                                        class="px-2 py-1 bg-green-500/10 text-green-500 text-[10px] font-bold rounded-full uppercase">{{$status}}</span>
                                                                 @endif
                                                             @else
                                                                 <span class="text-muted small">-</span>
                                                             @endif
                                                         </td>
+
+                                                        @foreach ($userSubmissions as $confId => $submissions)
+                                                            @foreach ($submissions as $submission)
+                                                                @php
+                                                                    $history =
+                                                                        $allHistory[$submission->id_global] ?? null;
+                                                                    // Gunakan ID unik untuk menamai variabel modal
+                                                                    $modalId = 'modal_' . $submission->id_global;
+                                                                @endphp
+
+                                                                <td class="p-4" x-data="{ open: false }">
+
+                                                                    @if ($history)
+                                                                        <button @click="open = true"
+                                                                            class="p-2 bg-gray-500/10 text-gray-500 rounded-lg hover:bg-gray-500 hover:text-white transition-all shadow-sm">
+                                                                            <i class="ri-history-line text-lg"></i>
+                                                                        </button>
+
+                                                                        <template x-teleport="body">
+                                                                            <div x-show="open" x-cloak
+                                                                                class="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+
+                                                                                {{-- Backdrop --}}
+                                                                                <div x-show="open" x-transition.opacity
+                                                                                    @click="open = false"
+                                                                                    class="fixed inset-0 bg-black/60 backdrop-blur-sm">
+                                                                                </div>
+
+                                                                                {{-- Modal --}}
+                                                                                <div x-show="open" x-transition.scale
+                                                                                    @click.stop
+                                                                                    class="relative bg-white dark:bg-zinc-900 rounded-3xl shadow-xl w-full max-w-lg p-6 max-h-[80vh] overflow-y-auto z-10">
+
+                                                                                    <h3
+                                                                                        class="text-lg font-bold mb-4 dark:text-white">
+                                                                                        Review History
+                                                                                    </h3>
+
+                                                                                    <div class="space-y-4">
+                                                                                        @foreach ($history as $item)
+                                                                                            <div
+                                                                                                class="p-3 border dark:border-zinc-700 rounded-xl">
+
+                                                                                                <a href="{{ config('path.submissions_url') . '/' . $item->nama_file }}"
+                                                                                                    target="_blank"
+                                                                                                    class="font-bold text-sm text-blue-600 hover:underline">
+                                                                                                    {{ $item->nama_file }}
+                                                                                                </a>
+
+                                                                                                <div
+                                                                                                    class="text-xs text-gray-500">
+                                                                                                    {{ $item->ket }}
+                                                                                                </div>
+
+                                                                                                <div
+                                                                                                    class="text-[10px] text-gray-400 mt-1">
+                                                                                                    {{ \Carbon\Carbon::parse($item->created_at)->format('d M Y, H:i') }}
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        @endforeach
+                                                                                    </div>
+
+                                                                                    <button @click="open = false"
+                                                                                        class="mt-6 w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold">
+                                                                                        Close
+                                                                                    </button>
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </template>
+                                                                    @else
+                                                                        <span class="text-xs text-gray-400 italic">-</span>
+                                                                    @endif
+
+                                                                </td>
+                                                            @endforeach
+                                                        @endforeach
 
                                                         {{-- Kolom Payment Note --}}
                                                         <td class="px-6 py-4">
@@ -850,6 +930,7 @@
 @endsection
 
 @section('scripts')
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="{{ asset('assets/js/dark-mode.js') }}" defer></script>
     <script>
         // 1. PINDAHKAN FUNGSI MODAL KE GLOBAL SCOPE (Di luar DOMContentLoaded)

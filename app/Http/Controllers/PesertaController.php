@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Peserta;
 use App\Models\Publikasi;
 use App\Models\Conferences;
+use App\Models\ReviewArticle;
 use App\Models\Kategori; // Pastikan Model Kategori di-import
 use App\Models\PesertaConferences;
 use Carbon\Carbon;
@@ -61,11 +62,15 @@ class PesertaController extends Controller
                 return $item->kategori?->id_conf;
             });
 
+        $allHistory = ReviewArticle::orderBy('created_at', 'desc')
+            ->get()
+            ->groupBy('id_global');
+
 
         return view('participants.conferences', compact(
             'conferences',
             'today',
-            'userSubmissions'
+            'userSubmissions', 'allHistory'
         ));
     }
 
