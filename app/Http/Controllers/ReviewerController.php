@@ -1002,7 +1002,7 @@ class ReviewerController extends Controller
         $request->validate([
             'status' => 'required|in:accepted,revision',
             'comment' => 'nullable|required_if:status,revision',
-            'nama_file' => 'nullable|required_if:status,revision|file|mimes:doc,docx|max:10240',
+            'nama_file' => 'nullable|required_if:status,revision|file|mimes:doc,docx,pdf|max:10240',
         ], [
             'comment.required_if' => 'Revision comment wajib diisi.',
             'nama_file.required_if' => 'Please upload the Revision Notes file.',

@@ -657,7 +657,7 @@
                                                                                             <div class="pt-2">
                                                                                                 <label
                                                                                                     class="block text-[10px] font-bold text-gray-400 mb-1">
-                                                                                                    Review File (doc/docx
+                                                                                                    Review File (doc/docx/PDF
                                                                                                     Max 10MB)
                                                                                                 </label>
                                                                                                 <input type="file"
