@@ -176,7 +176,9 @@ class AdminController extends Controller
 
     public function anggota(Request $request)
     {
-        $query = AnggotaModel::with('user');
+        $query = AnggotaModel::with('user')->whereHas('user', function ($q) {
+            $q->where('role', '!=', 'admin');
+        });
 
         // Pencarian berdasarkan nama
         if ($request->has('search')) {
@@ -341,5 +343,5 @@ class AdminController extends Controller
         return back()->with('success', 'Template KTA berhasil diperbarui.');
     }
 
-   
+
 }

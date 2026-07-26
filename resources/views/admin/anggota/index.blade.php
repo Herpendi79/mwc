@@ -107,7 +107,7 @@
                                         <td class="p-4">{{ $anggota->firstItem() + $index }}</td>
                                         <td class="p-4 truncate max-w-[150px]">{{ $item->id_anggota ?? '-' }}</td>
                                         <td class="p-4 flex items-center gap-3">
-                                            <img src="{{ $item->foto ? asset('storage/foto/' . $item->foto) : asset('assets/images/default-avatar.png') }}"
+                                            <img src="{{ $item->foto && Storage::disk('public')->exists('foto/' . $item->foto) ? asset('storage/foto/' . $item->foto) : asset('assets/images/default-avatar.png') }}"
                                                 class="w-10 h-10 rounded-full object-cover">
                                             {{ $item->user->name ?? '-' }}
                                         </td>
@@ -139,7 +139,8 @@
                                                     </button>
 
                                                     <!-- Tombol Tolak (Form Terpisah) -->
-                                                    <form action="{{ route('admin.anggota.verifikasi', $item->id_anggota) }}"
+                                                    <form
+                                                        action="{{ route('admin.anggota.verifikasi', $item->id_anggota) }}"
                                                         method="POST"
                                                         onsubmit="return confirm('Yakin ingin menolak dan menghapus data anggota ini?')">
                                                         @csrf @method('PUT')
