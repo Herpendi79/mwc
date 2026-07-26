@@ -77,9 +77,18 @@
                             {{-- Poster Preview --}}
                             <div>
                                 <label class="block text-sm font-bold mb-2 dark:text-gray-300">Poster</label>
+                                @php
+                                    $posterExists =
+                                        $kajian->poster &&
+                                        Storage::disk('public')->exists('foto_kajian/' . $kajian->poster);
+                                    $posterUrl = $posterExists
+                                        ? asset('storage/foto_kajian/' . $kajian->poster)
+                                        : asset('storage/foto_kajian/kajian-default.jpeg');
+                                @endphp
+
                                 @if ($kajian->poster)
                                     <div class="mb-2">
-                                        <img src="{{ asset('storage/foto_kajian/' . $kajian->poster) }}"
+                                        <img src="{{ $posterUrl }}"
                                             class="w-full h-32 object-cover rounded-xl border border-gray-200 dark:border-gray-700">
                                     </div>
                                 @endif
