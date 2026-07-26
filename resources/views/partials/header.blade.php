@@ -49,12 +49,16 @@
                                             </li>
                                             <li><a href="#">Download > </a>
                                                 <ul class="submenu">
-                                                    <li><a href="{{ route('khutbah') }}" target="_blank">Khutbah Jumat</a></li>
-                                                    <li><a href="{{ route('pesan_dakwah') }}" target="_blank">Pesan Dakwah</a></li>
-                                                    <li><a href="{{ route('infografis') }}" target="_blank">Infografis</a></li>
+                                                    <li><a href="{{ route('khutbah') }}" target="_blank">Khutbah
+                                                            Jumat</a></li>
+                                                    <li><a href="{{ route('pesan_dakwah') }}" target="_blank">Pesan
+                                                            Dakwah</a></li>
+                                                    <li><a href="{{ route('infografis') }}"
+                                                            target="_blank">Infografis</a></li>
                                                 </ul>
                                             </li>
-
+                                            <li><a href="{{ route('login') }}" target="_blank">Login</a>
+                                            </li>
                                         </ul>
                                     </nav>
                                 </div>

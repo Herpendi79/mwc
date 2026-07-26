@@ -141,7 +141,7 @@
                         <div class="pt-4 md:pt-6">
                             <button type="submit"
                                 class="w-full bg-[#065039] hover:bg-[#086347] text-white text-lg md:text-xl font-bold py-3.5 md:py-4 rounded-2xl shadow-xl transition-all transform hover:scale-[1.02] border border-white/10">
-                                Sign In to Account
+                                Login
                             </button>
                         </div>
                     </form>
@@ -149,14 +149,14 @@
                     <!-- Links -->
                     <div class="mt-8 md:mt-10 space-y-3">
                         <p class="text-gray-300 text-sm md:text-base">
-                            Don't have an account?
-                            <a href="{{ url('/register') }}" class="text-[#c0f037] font-bold hover:underline ml-1">Register
-                                here</a>
+                            Belum Punya Akun?
+                            <a href="{{ url('/register') }}" class="text-[#c0f037] font-bold hover:underline ml-1">Daftar Akun
+                                Disini</a>
                         </p>
                         <p class="text-gray-300 text-sm md:text-base">
-                            Back to Home?
-                            <a href="{{ url('/') }}" class="text-[#c0f037] font-bold hover:underline ml-1">Click
-                                here</a>
+                            Kembali ke Beranda?
+                            <a href="{{ url('/') }}" class="text-[#c0f037] font-bold hover:underline ml-1">
+                                Klik Disini</a>
                         </p>
                     </div>
 
