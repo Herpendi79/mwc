@@ -120,7 +120,7 @@
 <body>
     <div class="card">
         <div class="foto-container">
-            <img src="{{ $anggota->foto ? asset('storage/foto/' . $anggota->foto) : asset('assets/images/default-avatar.png') }}"
+            <img src="{{ $anggota->foto && Storage::disk('public')->exists('foto/' . $anggota->foto) ? asset('storage/foto/' . $anggota->foto) : asset('assets/images/default-avatar.png') }}"
                 class="foto">
         </div>
 

@@ -32,7 +32,7 @@
                             <div>
                                 {{-- Memberikan label kosong atau judul setara agar tinggi kolom sejajar --}}
 
-                            <p class="text-gray-500 mb-2">Berikut adalah kartu anggota anda:</p>
+                                <p class="text-gray-500 mb-2">Berikut adalah kartu anggota anda:</p>
 
                                 @if ($anggota)
                                     @php
@@ -53,7 +53,7 @@
 
                                         <div
                                             class="absolute top-[30%] right-[7%] w-[35%] aspect-square rounded-full overflow-hidden border-4 border-yellow-500 shadow-lg">
-                                            <img src="{{ $anggota->foto ? asset('storage/foto/' . $anggota->foto) : asset('assets/images/default-avatar.png') }}"
+                                            <img src="{{ $anggota->foto && Storage::disk('public')->exists('foto/' . $anggota->foto) ? asset('storage/foto/' . $anggota->foto) : asset('assets/images/default-avatar.png') }}"
                                                 alt="Foto" class="w-full h-full object-cover">
                                         </div>
 
@@ -105,57 +105,57 @@
                                     style="background-image: url('{{ asset($templatePath) }}'); background-size: cover; background-position: center;">
                                 </div>
 
-                                    <div class="mt-6">
-                                        <button type="button" @click="showTemplateModal = true"
-                                            class="inline-block px-8 py-3 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-700 transition">
-                                            Ganti Template
-                                        </button>
-                                    </div>
+                                <div class="mt-6">
+                                    <button type="button" @click="showTemplateModal = true"
+                                        class="inline-block px-8 py-3 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-700 transition">
+                                        Ganti Template
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    {{-- MODAL UPLOAD TEMPLATE --}}
+                    <div x-show="showTemplateModal" style="display: none;"
+                        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+
+                        <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 w-full max-w-md shadow-xl border dark:border-gray-800"
+                            @click.outside="showTemplateModal = false">
+
+                            <h3 class="text-lg font-bold mb-2 dark:text-white">Ganti Template KTA</h3>
+                            <p class="text-sm text-gray-500 mb-4">Pilih file gambar baru (Format: JPG, PNG, WEBP, maks.
+                                2MB). Disarankan ukuran 1011x639px.</p>
+
+                            <form action="{{ route('admin.update_template') }}" method="POST"
+                                enctype="multipart/form-data">
+                                @csrf @method('POST')
+
+                                <div class="mb-4">
+                                    <input type="file" name="template" accept="image/*" required
+                                        class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border dark:border-gray-700 rounded-xl p-2">
+                                    @error('template')
+                                        <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
+                                    @enderror
                                 </div>
 
-                            </div>
+                                <div class="flex justify-end gap-3">
+                                    <button type="button" @click="showTemplateModal = false"
+                                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 transition">
+                                        Batal
+                                    </button>
+                                    <button type="submit"
+                                        class="px-4 py-2 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition">
+                                        Upload & Simpan
+                                    </button>
+                                </div>
+                            </form>
                         </div>
-
-                        {{-- MODAL UPLOAD TEMPLATE --}}
-                        <div x-show="showTemplateModal" style="display: none;"
-                            class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-
-                            <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 w-full max-w-md shadow-xl border dark:border-gray-800"
-                                @click.outside="showTemplateModal = false">
-
-                                <h3 class="text-lg font-bold mb-2 dark:text-white">Ganti Template KTA</h3>
-                                <p class="text-sm text-gray-500 mb-4">Pilih file gambar baru (Format: JPG, PNG, WEBP, maks.
-                                    2MB). Disarankan ukuran 1011x639px.</p>
-
-                                <form action="{{ route('admin.update_template') }}" method="POST"
-                                    enctype="multipart/form-data">
-                                    @csrf @method('POST')
-
-                                    <div class="mb-4">
-                                        <input type="file" name="template" accept="image/*" required
-                                            class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border dark:border-gray-700 rounded-xl p-2">
-                                        @error('template')
-                                            <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-
-                                    <div class="flex justify-end gap-3">
-                                        <button type="button" @click="showTemplateModal = false"
-                                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 transition">
-                                            Batal
-                                        </button>
-                                        <button type="submit"
-                                            class="px-4 py-2 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition">
-                                            Upload & Simpan
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-
-                        {{-- Memanggil Footer --}}
-                        @include('admin.partials._footer')
                     </div>
+
+                    {{-- Memanggil Footer --}}
+                    @include('admin.partials._footer')
+                </div>
             </main>
         </div>
     </div>
