@@ -467,9 +467,22 @@
 
                                                                         <div class="whats-right-img"
                                                                             style="min-width:120px;">
+                                                                            @php
+                                                                                // Ambil nama file secara acak atau default
+                                                                                $randomFile =
+                                                                                    $files[array_rand($files)] ??
+                                                                                    'model1.jpeg';
+                                                                            @endphp
 
-                                                                            <img src="{{ asset('storage/foto_mangrove/' . ($files[array_rand($files)] ?? 'model1.jpeg')) }}"
-                                                                                style="width:120px;height:100px;object-fit:cover;border-radius:4px;">
+                                                                            @if (!empty($randomFile) && Storage::disk('public')->exists('foto_mangrove/' . $randomFile))
+                                                                                <img src="{{ asset('storage/foto_mangrove/' . $randomFile) }}"
+                                                                                    style="width:120px;height:100px;object-fit:cover;border-radius:4px;">
+                                                                            @else
+                                                                                <div
+                                                                                    style="width:120px;height:100px;display:flex;align-items:center;justify-content:center;background:#f0f0f0;color:#666;font-size:11px;border-radius:4px;text-align:center;padding:5px;">
+                                                                                    Gambar tidak tersedia
+                                                                                </div>
+                                                                            @endif
                                                                         </div>
 
                                                                         <div class="whats-right-cap ml-15">
