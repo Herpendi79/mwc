@@ -468,14 +468,12 @@
                                                                         <div class="whats-right-img"
                                                                             style="min-width:120px;">
                                                                             @php
-                                                                                // Ambil nama file secara acak atau default
-                                                                                $randomFile =
-                                                                                    $files[array_rand($files)] ??
-                                                                                    'model1.jpeg';
+                                                                                // Ganti variabel $filename dengan nama variabel gambar yang Anda gunakan di controller
+                                                                                $imageName = $filename ?? 'model1.jpeg';
                                                                             @endphp
 
-                                                                            @if (!empty($randomFile) && Storage::disk('public')->exists('foto_mangrove/' . $randomFile))
-                                                                                <img src="{{ asset('storage/foto_mangrove/' . $randomFile) }}"
+                                                                            @if (!empty($imageName) && Storage::disk('public')->exists('foto_mangrove/' . $imageName))
+                                                                                <img src="{{ asset('storage/foto_mangrove/' . $imageName) }}"
                                                                                     style="width:120px;height:100px;object-fit:cover;border-radius:4px;">
                                                                             @else
                                                                                 <div
