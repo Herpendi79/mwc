@@ -13,7 +13,10 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth; // Untuk mengatasi Undefined method 'login'
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AktivasiPesertaMail;
 use App\Jobs\SendSubmissionEmail;
+use App\Models\AnggotaModel;
 
 class RegisterController extends Controller
 {
@@ -24,128 +27,67 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
-        // 1. Validasi input (Tetap sama)
+        // 1. Validasi input dengan pesan kustom untuk email
         $validator = Validator::make($request->all(), [
             'name'     => 'required|string|max:255',
-            'email'    => 'required|string|email|max:255',
+            'alamat'   => 'required|string|max:255',
+            'email'    => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
-            'country'  => 'required|string|max:100',
-            'whatsapp' => 'required|string|max:20',
+            'foto'     => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'telpon'   => 'required|string|max:20',
+        ], [
+            'email.unique' => 'Email sudah terdaftar. Silakan gunakan email lain.',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        // 2. Cek Member ADAKSI & User Existing (Tetap sama)
-        $isAdaksiMember = \Illuminate\Support\Facades\DB::table('users')
-            ->where('email', $request->email)
-            ->exists();
-
-        if ($isAdaksiMember) {
-            return redirect()->back()
-                ->with('error', 'You are registered as an ADAKSI member. Please continue your registration through your ADAKSI account at (www.adaksi.org)')
-                ->withInput();
-        }
-
-        $existingConferenceUser = User::where('email', $request->email)->first();
-        if ($existingConferenceUser) {
-            return redirect()->route('login')
-                ->with('error', 'This email is already registered for the conference. Please sign in to your account.');
-        }
-
         DB::beginTransaction();
         try {
-            // 4. Simpan User & Peserta
+            // Handle Upload Foto ke storage/app/public/foto
+            $filename = null;
+            if ($request->hasFile('foto')) {
+                $file = $request->file('foto');
+                // Membuat nama unik file
+                $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+                // Menyimpan menggunakan disk 'public' langsung ke folder 'foto'
+                // Hasilnya akan masuk ke storage/app/public/foto/$filename
+                $file->storeAs('foto', $filename, 'public');
+            }
+
+            // Simpan User
             $user = User::create([
                 'name'     => $request->name,
                 'email'    => $request->email,
+                'role'     => 'anggota',
                 'password' => Hash::make($request->password),
             ]);
 
-            $peserta = Peserta::create([
+            // Simpan Anggota (Menyimpan nama file murni, misal: 171123456_abc.jpg)
+            $peserta = AnggotaModel::create([
                 'user_id'  => $user->id,
-                'nama'     => $request->name,
-                'negara'   => $request->country,
-                'no_wa'    => $request->whatsapp,
-                'status'   => 'waiting',
+                'alamat'   => $request->alamat,
+                'foto'     => $filename,
+                'telpon'   => $request->telpon,
+                'status'   => 'menunggu validasi',
             ]);
 
-            // 5. Generate Link Verifikasi
-            $url = URL::temporarySignedRoute(
-                'verification.verify',
-                now()->addHours(24),
-                ['id' => $user->id, 'hash' => sha1($user->email)]
-            );
-
-            // 6. Siapkan Data Email untuk Antrean
-            $html = view('emails.aktivasi-peserta', compact('peserta', 'url'))->render();
-            //$text = "Hello {$peserta->nama}, please verify your email: {$url}";
-            $text = "Hello {$peserta->nama}, Thank you for registering for ICPIP-HE 2026. Please verify your email by clicking the link below:\n\n{$url}";
-
-            EmailApiService::send(
-                $user->email,
-                'Registration Email Verification for ICPIP-HE 2026',
-                $text,
-                $html
-            );
-
+            // Kirim Email Notifikasi
+            Mail::to($user->email)->send(new AktivasiPesertaMail($user->name));
 
             DB::commit();
 
             Auth::login($user);
-
-          
-
-            return redirect()->route('verification.notice')
-                ->with('success', 'Registration successful! Please check your email.');
+            return redirect()->route('register')
+                ->with('success', 'Registrasi berhasil! Silakan cek email Anda untuk informasi selanjutnya.');
         } catch (\Exception $e) {
             DB::rollback();
             Log::error('Register Error: ' . $e->getMessage());
             return redirect()->back()
                 ->with('error', 'Something went wrong, please try again.')
                 ->withInput();
-        }
-    }
-
-    public function resend(Request $request)
-    {
-        $user = $request->user();
-
-        // 1. Jika user sudah verifikasi, arahkan ke halaman utama
-        if ($user->hasVerifiedEmail()) {
-            return redirect()->intended('/login')->with('message', 'Your email is already verified. Please sign in.');
-        }
-
-        try {
-            // 2. Generate ulang Signed URL (berlaku 24 jam)
-            $url = URL::temporarySignedRoute(
-                'verification.verify',
-                now()->addHours(24),
-                ['id' => $user->id, 'hash' => sha1($user->email)]
-            );
-
-            // 3. Ambil data peserta untuk kebutuhan variabel di view email
-            $peserta = Peserta::where('user_id', $user->id)->first();
-
-            // 4. Render konten email (Gunakan view aktivasi-peserta yang sudah kita buat)
-            
-            $html = view('emails.aktivasi-peserta', compact('peserta', 'url'))->render();
-            $text = "Hello {$peserta->nama}, Thank you for registering for ICPIP-HE 2026. Please verify your email by clicking the link below:\n\n{$url}";
-
-            EmailApiService::send(
-                $user->email,
-                'Registration Email Verification for ICPIP-HE 2026',
-                $text,
-                $html
-            );
-
-            Log::info("Email Resend Aktivasi Terkirim");
-
-            return back()->with('message', 'Verification link sent!');
-        } catch (\Exception $e) {
-            Log::error('Resend Email Error: ' . $e->getMessage());
-            return back()->with('error', 'Failed to resend email. Please try again later.');
         }
     }
 }

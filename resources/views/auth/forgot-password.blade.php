@@ -16,7 +16,7 @@
         <!-- items-start di mobile agar bisa scroll, items-center di desktop -->
         <section
             class="min-h-screen py-10 md:py-20 bg-cover bg-center relative flex items-start md:items-center justify-center"
-            style="background-image: url('{{ asset('assets/images/event/event-coming-soon.jpg') }}'); background-attachment: fixed;">
+            style="background-image: url('{{ asset('assets/images/event/back.jpeg') }}'); background-attachment: fixed;">
 
             <!-- Overlay diturunkan ke 40% agar background jelas -->
             <div class="absolute inset-0 bg-black/40 z-0"></div>
@@ -27,14 +27,13 @@
                     data-sal="zoom-in" data-sal-duration="800">
 
                     <a href="{{ url('/') }}" class="inline-block mb-6 md:mb-8">
-                        <img src="{{ asset('assets/images/logo/logo.png') }}" alt="Logo" class="h-10 md:h-12 mx-auto">
+                        <img src="{{ asset('assets/images/logo/logo.webp') }}" alt="Logo" class="h-30 md:h-42 mx-auto">
                     </a>
 
                     <h2 class="font-bold leading-snug mb-3 text-3xl md:text-4xl tracking-tight drop-shadow-md text-white">
                         Reset Password
                     </h2>
-                    <p class="text-gray-200 mb-8 md:mb-10 text-base md:text-lg">Enter your email and we will send you a link
-                        to reset your password.</p>
+                    <p class="text-gray-200 mb-8 md:mb-10 text-base md:text-lg">Masukkan email Anda, kami akan mengirimkan link untuk reset password Anda.</p>
                     <!-- Notifikasi Sukses (Berhasil Kirim Password Baru) -->
                     @if (session('success'))
                         <div
@@ -71,13 +70,14 @@
                             </ul>
                         </div>
                     @endif
-                    <form action="#" method="POST" class="space-y-5 md:space-y-6 text-left">
+                    <!-- PERBAIKAN: Arahkan action ke route backend yang sesuai -->
+                    <form action="{{ route('auth.reset_password') }}" method="POST" class="space-y-5 md:space-y-6 text-left">
                         @csrf
 
                         <!-- Email -->
                         <div class="group">
                             <label class="block text-xs font-medium mb-2 ml-1 text-gray-200 uppercase tracking-wider">Email
-                                Address</label>
+                                </label>
                             <input type="email" name="email" placeholder="example@university.ac.id" required
                                 class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 md:px-6 py-3.5 md:py-4 outline-none focus:border-[#c0f037] focus:bg-white/20 transition-all text-white text-base md:text-lg placeholder-gray-400">
                         </div>
@@ -86,7 +86,7 @@
                         <div class="pt-2 md:pt-4">
                             <button type="submit"
                                 class="w-full bg-[#065039] hover:bg-[#086347] text-white text-lg md:text-xl font-bold py-3.5 md:py-4 rounded-2xl shadow-xl transition-all transform hover:scale-[1.02] border border-white/10">
-                                Send Reset Link
+                                Kirim Password Baru
                             </button>
                         </div>
                     </form>
@@ -94,16 +94,16 @@
                     <!-- Important Note -->
                     <div class="mt-8 p-4 bg-black/20 rounded-2xl border border-white/10 text-left">
                         <p class="text-xs md:text-sm text-gray-200 leading-relaxed">
-                            <span class="text-[#c0f037] font-bold">Note:</span>
-                            The confirmation link to get your new password will be sent to your email.
-                            <span class="text-white font-semibold">Please check your Inbox or Spam folder.</span>
+                            <span class="text-[#c0f037] font-bold">Catatan:</span>
+                            Password baru Anda akan dikirimkan ke email Anda.
+                            <span class="text-white font-semibold">Silakan periksa kotak masuk (Inbox) atau folder Spam Anda.</span>
                         </p>
                     </div>
 
                     <!-- Back to Login Link -->
                     <p class="mt-8 md:mt-10 text-gray-300 text-sm md:text-base mb-4">
-                        Remember your password?
-                        <a href="{{ url('/login') }}" class="text-[#c0f037] font-bold hover:underline ml-1">Sign In here</a>
+                        Ingat paswword Anda?
+                        <a href="{{ url('/login') }}" class="text-[#c0f037] font-bold hover:underline ml-1">Login disini</a>
                     </p>
 
                 </div>

@@ -1,226 +1,257 @@
-console.log("DEBUG: File app.js dimuat sepenuhnya! ✅");
 // ================= IMPORT CSS =================
-// Naik ke resources, lalu masuk ke assets/css
 import "../assets/css/icons.css";
 import "../assets/css/plugins.css";
 import "../assets/css/tailwind.css";
 
-// ================= IMPORT JS MODULES =================
-// Kita naik satu tingkat ke folder 'resources', lalu masuk ke 'assets/js/'
-import "../assets/js/header";
+// ================= IMPORT JS =================
 import "../assets/js/sal.init";
 import "../assets/js/dark-mode";
+import "../assets/js/bootstrap";
+
+// ================= ALPINE =================
+import Alpine from "alpinejs";
+import collapse from "@alpinejs/collapse";
+import persist from "@alpinejs/persist";
+
+window.Alpine = Alpine;
+
+Alpine.plugin(collapse);
+Alpine.plugin(persist);
+
+Alpine.start();
+
 console.log("APP RUNNING 🚀");
 
 // ================= INITIALIZER =================
 document.addEventListener("DOMContentLoaded", () => {
-    // Paksa kembali ke LTR jika tidak ingin menu terbalik
+    // Paksa LTR
     document.documentElement.setAttribute("dir", "ltr");
-    
+
     displayCurrentYear();
     initCountdown();
     initScrollTop();
-    // Inisialisasi Swiper Sponsor
     initSponsorSwiper();
     initTabs();
     initGallerySwiper();
     initReviewSwiper();
+    initSidebar();
 });
 
+// ================= SIDEBAR =================
+function initSidebar() {
+    const sidebar = document.getElementById("main-sidebar");
+    const overlay = document.getElementById("sidebar-overlay");
+
+    const openBtn = document.getElementById("mobile-menu-btn");
+    const closeBtn = document.getElementById("sidebar-close");
+
+    if (!sidebar) return;
+
+    function openSidebar() {
+        sidebar.classList.remove("-translate-x-full");
+        sidebar.classList.add("translate-x-0");
+
+        if (overlay) {
+            overlay.classList.remove("hidden");
+
+            requestAnimationFrame(() => {
+                overlay.classList.add("opacity-100");
+            });
+
+            document.body.classList.add("overflow-hidden");
+        }
+    }
+
+    function closeSidebar() {
+        sidebar.classList.remove("translate-x-0");
+        sidebar.classList.add("-translate-x-full");
+
+        if (overlay) {
+            overlay.classList.remove("opacity-100");
+
+            setTimeout(() => {
+                overlay.classList.add("hidden");
+            }, 300);
+
+            document.body.classList.remove("overflow-hidden");
+        }
+    }
+
+    openBtn?.addEventListener("click", openSidebar);
+
+    closeBtn?.addEventListener("click", closeSidebar);
+
+    overlay?.addEventListener("click", closeSidebar);
+
+    window.addEventListener("resize", () => {
+        if (window.innerWidth >= 1024) {
+            sidebar.classList.remove("-translate-x-full");
+            sidebar.classList.add("translate-x-0");
+
+            overlay?.classList.add("hidden");
+            overlay?.classList.remove("opacity-100");
+
+            document.body.classList.remove("overflow-hidden");
+        } else {
+            sidebar.classList.add("-translate-x-full");
+            sidebar.classList.remove("translate-x-0");
+        }
+    });
+}
 // ================= REVIEW / TESTIMONI SWIPER =================
 function initReviewSwiper() {
-    // Gunakan '.reviwe-swiper' sesuai typo di HTML Anda agar terbaca
-    const sliderEl = document.querySelector('.reviwe-swiper');
-    
-    if (typeof Swiper !== 'undefined' && sliderEl) {
-        new Swiper(".reviwe-swiper", {
-            loop: true,
-            slidesPerView: 1,
-            spaceBetween: 30,
-            // Pastikan selector navigation SAMA PERSIS dengan class di HTML
-            navigation: {
-                nextEl: ".swiper-button-next-custom",
-                prevEl: ".swiper-button-prev-custom",
-            },
-            autoplay: {
-                delay: 5000,
-                disableOnInteraction: false,
-            },
-        });
-        console.log("Review Swiper Ready! ⭐");
-    } else {
-        // Coba lagi jika library belum siap
+
+    const slider = document.querySelector(".reviwe-swiper");
+
+    if (!slider || typeof Swiper === "undefined") {
         setTimeout(initReviewSwiper, 500);
+        return;
     }
+
+    new Swiper(".reviwe-swiper", {
+        loop: true,
+        slidesPerView: 1,
+        spaceBetween: 30,
+
+        navigation: {
+            nextEl: ".swiper-button-next-custom",
+            prevEl: ".swiper-button-prev-custom",
+        },
+
+        autoplay: {
+            delay: 5000,
+            disableOnInteraction: false,
+        },
+    });
+
+    console.log("⭐ Review Swiper Ready");
+
 }
 
 // ================= GALLERY SWIPER =================
 function initGallerySwiper() {
-    if (typeof Swiper !== 'undefined' && document.querySelector('.galleryswiper')) {
-        new Swiper(".galleryswiper", {
-            slidesPerView: 1,
-            spaceBetween: 20,
-            loop: true,
-            autoplay: {
-                delay: 3000,
-                disableOnInteraction: false,
-            },
-            breakpoints: {
-                640: { slidesPerView: 2, spaceBetween: 20 },
-                1024: { slidesPerView: 3, spaceBetween: 30 },
-                1280: { slidesPerView: 4, spaceBetween: 30 },
-            },
-        });
-        console.log("Gallery Swiper Ready! 📸");
-    } else {
+
+    const gallery = document.querySelector(".galleryswiper");
+
+    if (!gallery || typeof Swiper === "undefined") {
         setTimeout(initGallerySwiper, 500);
+        return;
     }
+
+    new Swiper(".galleryswiper", {
+
+        slidesPerView: 1,
+        spaceBetween: 20,
+        loop: true,
+
+        autoplay: {
+            delay: 3000,
+            disableOnInteraction: false,
+        },
+
+        breakpoints: {
+            640: {
+                slidesPerView: 2,
+                spaceBetween: 20,
+            },
+            1024: {
+                slidesPerView: 3,
+                spaceBetween: 30,
+            },
+            1280: {
+                slidesPerView: 4,
+                spaceBetween: 30,
+            },
+        },
+
+    });
+
+    console.log("📸 Gallery Swiper Ready");
+
 }
 
-// ================= TABS LOGIC =================
+// ================= TABS =================
 function initTabs() {
+
     const tabs = document.querySelectorAll(".tab-btn");
     const panels = document.querySelectorAll("[role='tabpanel']");
 
-    if (tabs.length === 0 || panels.length === 0) return;
-
-    console.log("Tabs Initialized 📑");
+    if (!tabs.length || !panels.length) return;
 
     tabs.forEach((tab, index) => {
+
         tab.addEventListener("click", () => {
-            // 1. Reset semua tab (Kembalikan ke warna gelap)
-            tabs.forEach((t) => {
-                t.classList.remove("bg-[#c0f037]");
-                t.classList.add("bg-white/10");
-                t.setAttribute("aria-selected", "false");
-                // Cari p, h2, h3, h4 dan hapus warna hitam
-                t.querySelectorAll("p, h2, h3, h4").forEach((el) => el.classList.remove("text-black"));
+
+            tabs.forEach((btn) => {
+
+                btn.classList.remove("bg-[#c0f037]");
+                btn.classList.add("bg-white/10");
+
+                btn.setAttribute("aria-selected", "false");
+
+                btn.querySelectorAll("p,h2,h3,h4").forEach((el) => {
+                    el.classList.remove("text-black");
+                });
+
             });
 
-            // 2. Sembunyikan semua panel
             panels.forEach((panel) => {
-                panel.classList.add("opacity-0", "translate-y-4", "hidden");
-                panel.classList.remove("opacity-100", "translate-y-0");
+
+                panel.classList.add(
+                    "hidden",
+                    "opacity-0",
+                    "translate-y-4"
+                );
+
+                panel.classList.remove(
+                    "opacity-100",
+                    "translate-y-0"
+                );
+
             });
 
-            // 3. Aktifkan tab yang diklik (Ubah jadi hijau)
-            tab.classList.add("bg-[#c0f037]");
             tab.classList.remove("bg-white/10");
+            tab.classList.add("bg-[#c0f037]");
             tab.setAttribute("aria-selected", "true");
-            tab.querySelectorAll("p, h2, h3, h4").forEach((el) => el.classList.add("text-black"));
 
-            // 4. Tampilkan panel yang sesuai
-            const targetPanel = panels[index];
-            if (targetPanel) {
-                targetPanel.classList.remove("hidden");
+            tab.querySelectorAll("p,h2,h3,h4").forEach((el) => {
+                el.classList.add("text-black");
+            });
+
+            const target = panels[index];
+
+            if (target) {
+
+                target.classList.remove("hidden");
+
                 setTimeout(() => {
-                    targetPanel.classList.remove("opacity-0", "translate-y-4");
-                    targetPanel.classList.add("opacity-100", "translate-y-0");
-                }, 50);
+
+                    target.classList.remove(
+                        "opacity-0",
+                        "translate-y-4"
+                    );
+
+                    target.classList.add(
+                        "opacity-100",
+                        "translate-y-0"
+                    );
+
+                }, 30);
+
             }
+
         });
+
     });
 
-    // Jalankan klik simulasi pada tab pertama agar aktif saat pertama load
-    const activeTab = document.querySelector('.tab-btn[aria-selected="true"]');
+    const activeTab = document.querySelector(
+        '.tab-btn[aria-selected="true"]'
+    );
+
     if (activeTab) {
         activeTab.click();
     } else {
-        tabs[0].click();
+        tabs[0]?.click();
     }
+
 }
-
-// ================= SPONSOR SWIPER (Marquee Style) =================
-function initSponsorSwiper() {
-    // Pastikan library Swiper sudah ada (dari CDN)
-    if (typeof Swiper !== 'undefined' && document.querySelector('.sponsorSwiper')) {
-        new Swiper(".sponsorSwiper", {
-            loop: true,
-            slidesPerView: 2,
-            spaceBetween: 30,
-            speed: 5000, // Kecepatan gerak (ms)
-            allowTouchMove: false, // Biar lancar seperti marquee
-            autoplay: {
-                delay: 0,
-                disableOnInteraction: false,
-            },
-            breakpoints: {
-                640: { slidesPerView: 3 },
-                768: { slidesPerView: 4 },
-                1024: { slidesPerView: 5 },
-                1280: { slidesPerView: 6 },
-            },
-        });
-        console.log("Sponsor Swiper Ready! 🎡");
-    } else {
-        // Jika Swiper belum siap, coba lagi dalam 500ms
-        setTimeout(initSponsorSwiper, 500);
-    }
-}
-
-// ================= SCROLL TO TOP =================
-function initScrollTop() {
-    const scrollBtn = document.getElementById("scrollTopBtn");
-    if (!scrollBtn) return;
-
-    window.addEventListener("scroll", () => {
-        // Gunakan window.pageYOffset untuk kompatibilitas lebih luas
-        const scrollPos = window.pageYOffset || document.documentElement.scrollTop;
-        
-        if (scrollPos > 300) {
-            scrollBtn.style.display = "block"; // Pastikan muncul dulu
-            setTimeout(() => {
-                scrollBtn.classList.remove("opacity-0", "invisible", "scale-75");
-                scrollBtn.classList.add("opacity-100", "visible", "scale-100");
-            }, 10);
-        } else {
-            scrollBtn.classList.add("opacity-0", "invisible", "scale-75");
-            scrollBtn.classList.remove("opacity-100", "visible", "scale-100");
-        }
-    });
-
-    scrollBtn.addEventListener("click", () => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-}
-// ================= CURRENT YEAR =================
-function displayCurrentYear() {
-    const el = document.getElementById("currentYearFooter");
-    if (el) el.textContent = new Date().getFullYear();
-}
-
-// ================= COUNTDOWN (26 JUNI 2026) =================
-function initCountdown() {
-    const targetDate = new Date("2026-06-26T00:00:00").getTime();
-    const el = {
-        d: document.getElementById("cd-days"),
-        h: document.getElementById("cd-hours"),
-        m: document.getElementById("cd-minutes"),
-        s: document.getElementById("cd-seconds"),
-    };
-
-    if (!el.d) return;
-
-    const format = (n) => String(n).padStart(2, "0");
-
-    const update = () => {
-        const now = new Date().getTime();
-        const diff = targetDate - now;
-
-        if (diff <= 0) {
-            Object.values(el).forEach((e) => {
-                if (e) e.innerText = "00";
-            });
-            return;
-        }
-
-        el.d.innerText = format(Math.floor(diff / (1000 * 60 * 60 * 24)));
-        el.h.innerText = format(Math.floor((diff / (1000 * 60 * 60)) % 24));
-        el.m.innerText = format(Math.floor((diff / (1000 * 60)) % 60));
-        el.s.innerText = format(Math.floor((diff / 1000) % 60));
-    };
-
-    setInterval(update, 1000);
-    update();
-}
-

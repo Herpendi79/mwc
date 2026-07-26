@@ -16,13 +16,14 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
 
-    protected $table = 'users_iciphe';
+    protected $table = 'users';
 
     protected $fillable = [
         'name',
         'email',
         'password',
         'google_id',
+        'role', // Tambahkan kolom role
     ];
 
     protected $hidden = [
@@ -38,23 +39,10 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-    /**
-     * Relasi LANGSUNG ke tabel peserta_conferences
-     */
-    public function pendaftaran(): HasMany
+    public function anggota()
     {
-        // Karena relasinya langsung User -> PesertaConferences, gunakan hasMany
-        return $this->hasMany(PesertaConferences::class, 'user_id');
+        return $this->hasOne(AnggotaModel::class, 'user_id', 'id');
     }
 
-    /**
-     * Relasi ke tabel peserta (Jika masih digunakan)
-     */
-    // app/Models/User.php
-
-    public function peserta()
-    {
-        // Hubungkan 'id' di tabel users_iciphe ke 'user_id' di tabel peserta
-        return $this->hasOne(Peserta::class, 'user_id', 'id');
-    }
+    
 }

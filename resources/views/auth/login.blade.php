@@ -30,7 +30,7 @@
     <div class="relative font-ibm">
         <section
             class="min-h-screen py-10 md:py-20 bg-cover bg-center relative flex items-start md:items-center justify-center"
-            style="background-image: url('{{ asset('assets/images/event/event-coming-soon.jpg') }}'); background-attachment: fixed;">
+            style="background-image: url('{{ asset('assets/images/event/back.jpeg') }}'); background-attachment: fixed;">
 
             <!-- Overlay -->
             <div class="absolute inset-0 bg-black/40 z-0"></div>
@@ -40,13 +40,13 @@
                     data-sal="zoom-in" data-sal-duration="800">
 
                     <a href="{{ url('/') }}" class="inline-block mb-6 md:mb-8">
-                        <img src="{{ asset('assets/images/logo/logo.png') }}" alt="Logo" class="h-10 md:h-12 mx-auto">
+                        <img src="{{ asset('assets/images/logo/logo.webp') }}" alt="Logo" class="h-30 md:h-42 mx-auto">
                     </a>
 
                     <h2 class="font-bold leading-snug mb-2 text-3xl md:text-4xl tracking-tight drop-shadow-md">
                         Sign In
                     </h2>
-                    <p class="text-gray-200 mb-8 md:mb-10 text-base md:text-lg">Welcome back! Access your dashboard.</p>
+                    <p class="text-gray-200 mb-8 md:mb-10 text-base md:text-lg">Welcome backsss! Access your dashboard.</p>
 
                     <!-- Google Sign In -->
                     <a href="{{ route('auth.google') }}"
@@ -118,9 +118,9 @@
                         <!-- Email -->
                         <div class="group">
                             <label
-                                class="block text-xs font-medium mb-2 ml-1 text-gray-200 uppercase tracking-wider text-left">Email
-                                Address</label>
-                            <input type="email" name="email" value="{{ old('email') }}"
+                                class="block text-xs font-medium mb-2 ml-1 text-gray-200 uppercase tracking-wider text-left">Email / Telpon
+                        </label>
+                            <input type="text" name="email" value="{{ old('email') }}"
                                 placeholder="example@university.ac.id" required
                                 class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 md:px-6 py-3.5 md:py-4 outline-none focus:border-[#c0f037] focus:bg-white/20 transition-all text-white text-base md:text-lg placeholder-gray-400">
                         </div>
@@ -131,7 +131,7 @@
                                 <label
                                     class="block text-xs font-medium ml-1 text-gray-200 uppercase tracking-wider">Password</label>
                                 <a href="{{ url('forgot-password') }}"
-                                    class="text-xs text-[#c0f037] hover:underline">Forgot Password?</a>
+                                    class="text-xs text-[#c0f037] hover:underline">Lupa Password?</a>
                             </div>
                             <input type="password" name="password" placeholder="••••••••" required
                                 class="w-full bg-white/10 border border-white/20 rounded-2xl px-5 md:px-6 py-3.5 md:py-4 outline-none focus:border-[#c0f037] focus:bg-white/20 transition-all text-white text-base md:text-lg placeholder-gray-400">

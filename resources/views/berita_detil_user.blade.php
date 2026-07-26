@@ -1,0 +1,310 @@
+@extends('layouts.main_free')
+
+@section('title', 'Portal MWC NU Tugu')
+
+@section('content')
+    <!-- Preloader Start -->
+    <div id="preloader-active" style="background: white !important;">
+        <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+            <img src="{{ asset('assets/images/MWC_TUGU.ico') }}" alt="Logo" width="100" height="100"
+                style="border:0 !important;">
+        </div>
+    </div>
+    <!-- Preloader Start -->
+    @include('partials.header')
+    <main>
+        <!--================Blog Area =================-->
+        <section class="blog_area single-post-area section-padding">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 posts-list">
+                        <div class="single-post">
+                            <div class="feature-img">
+                                <img class="img-fluid"
+                                    src="{{ !empty($dataBerita->foto) && file_exists(public_path('storage/foto_berita/' . $dataBerita->foto))
+                                        ? asset('storage/foto_berita/' . $dataBerita->foto)
+                                        : asset('storage/foto_berita/berita-default.jpeg') }}"
+                                    alt="{{ $dataBerita->judul ?? 'Berita' }}">
+                            </div>
+                            <div class="blog_details">
+                                <h2>
+                                    {{ $dataBerita->judul ?? 'Judul Tidak Tersedia' }}
+                                </h2>
+                                <ul class="blog-info-link mt-3 mb-4">
+                                    <li><a href="#"><i class="fa fa-user"></i>
+                                            {{ $dataBerita->penulis ?? 'Admin' }}</a></li>
+                                    <li><a href="#"><i class="fa fa-book"></i>
+                                            {{ $dataBerita->kategori ?? 'Berita' }}</a></li>
+                                </ul>
+
+                                <p class="excert">
+                                    {!! $dataBerita->isi !!}
+                                </p>
+                            </div>
+                        </div>
+
+                        {{-- Notifikasi Sukses --}}
+                        @if (session('success'))
+                            <div class="bg-green-100 border border-green-200 text-green-700 p-4 rounded-xl mb-6 shadow-sm">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+
+                        {{-- Notifikasi Error (Pesan Manual) --}}
+                        @if (session('error'))
+                            <div class="bg-red-100 border border-red-200 text-red-700 p-4 rounded-xl mb-6 shadow-sm">
+                                {{ session('error') }}
+                            </div>
+                        @endif
+
+                        {{-- Notifikasi Error Validasi Form --}}
+                        @if ($errors->any())
+                            <div class="bg-red-100 border border-red-200 text-red-700 p-4 rounded-xl mb-6 shadow-sm">
+                                <ul class="list-disc list-inside">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                        <div class="comments-area">
+                            <h3 id="comments-count-title">{{ $dataBerita->komentar->count() }} Comments</h3>
+
+                            <!-- PENTING: ID INI WAJIB ADA AGAR JAVASCRIPT BISA MENEMPATKAN KOMENTAR BARU -->
+                            <div id="comments-list-wrapper">
+                                @forelse($dataBerita->komentar as $komentar)
+                                    <div class="comment-list" id="comment-item-{{ $komentar->id_com }}">
+                                        <div class="single-comment justify-content-between d-flex">
+                                            <div class="user justify-content-between d-flex">
+                                                <div class="thumb">
+                                                    <img src="{{ asset('assets/img/comment/comment_1.png') }}"
+                                                        alt="">
+                                                </div>
+                                                <div class="desc">
+                                                    <p class="comment">{{ $komentar->isi }}</p>
+                                                    <div class="d-flex justify-content-between">
+                                                        <div class="d-flex align-items-center">
+                                                            <h5>
+                                                                <a href="#">{{ $komentar->nama }}</a>
+                                                                @if ($komentar->sosmed)
+                                                                    <span class="text-muted"
+                                                                        style="font-size: 12px; margin-left: 5px;">({{ $komentar->sosmed }})</span>
+                                                                @endif
+                                                            </h5>
+                                                            <p class="date">{{ $komentar->created_at->diffForHumans() }}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {{-- Wadah Balasan Admin --}}
+                                    <div id="admin-reply-container-{{ $komentar->id_com }}">
+                                        @if (!empty($komentar->reply))
+                                            <div class="comment-list"
+                                                style="margin-left: 50px; background-color: #f9f9f9; padding: 15px; border-radius: 5px; border-left: 3px solid #007bff;">
+                                                <div class="single-comment justify-content-between d-flex">
+                                                    <div class="user justify-content-between d-flex">
+                                                        <div class="thumb">
+                                                            <img src="{{ asset('assets/img/comment/comment_2.png') }}"
+                                                                alt="Admin">
+                                                        </div>
+                                                        <div class="desc">
+                                                            <p class="comment">{{ $komentar->reply }}</p>
+                                                            <div class="d-flex justify-content-between">
+                                                                <div class="d-flex align-items-center">
+                                                                    <h5><a href="#" style="color: #007bff;">Admin MWC
+                                                                            NU Tugu</a></h5>
+                                                                    <p class="date">Official Response</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @empty
+                                    <p id="no-comment-text" class="text-muted">Belum ada komentar.</p>
+                                @endforelse
+                            </div>
+                        </div>
+
+                        <div class="comment-form">
+                            <h4>Leave a Reply</h4>
+                            <form class="form-contact comment_form"
+                                action="{{ route('berita.comment.store', $dataBerita->id_br ?? $dataBerita->id) }}"
+                                method="POST" id="mainCommentForm">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <textarea class="form-control w-100" name="comment" id="comment" cols="30" rows="9"
+                                                placeholder="Write Comment" required></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <input class="form-control" name="name" id="name" type="text"
+                                                placeholder="Name" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <input class="form-control" name="email" id="email" type="email"
+                                                placeholder="Email" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <input class="form-control" name="website" id="website" type="text"
+                                                placeholder="Website / Social Media (Optional)">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" id="mainCommentSubmitBtn"
+                                        class="button button-contactForm btn_1 boxed-btn">Send Message</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="blog_right_sidebar">
+                            <aside class="single_sidebar_widget search_widget">
+                                <form action="{{ route('berita') }}" method="GET">
+                                    <div class="form-group">
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" name="keyword"
+                                                placeholder='Search Keyword' value="{{ request('keyword') }}"
+                                                onfocus="this.placeholder = ''"
+                                                onblur="this.placeholder = 'Search Keyword'">
+                                            <div class="input-group-append">
+                                                <button class="btns" type="submit"><i class="ti-search"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
+                                        type="submit">Search</button>
+                                </form>
+                            </aside>
+                            <aside class="single_sidebar_widget post_category_widget">
+                                <h4 class="widget_title">Archives</h4>
+                                <ul class="list cat-list">
+                                    @foreach ($archives as $arc)
+                                        <li>
+                                            <a href="{{ route('berita', ['bulan' => $arc->month, 'tahun' => $arc->year]) }}"
+                                                class="d-flex">
+                                                <p>
+                                                    {{ \Carbon\Carbon::create($arc->year, $arc->month)->format('F Y') }}
+                                                </p>
+                                                <p>({{ $arc->total }})</p>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </aside>
+
+                            <aside class="single_sidebar_widget popular_post_widget">
+                                <h3 class="widget_title">Recent Post</h3>
+                                <div class="relawan-vertical-active">
+                                    @foreach ($recentPosts as $post)
+                                        <div class="media post_item">
+                                            <img src="{{ !empty($post->poster) && Storage::disk('public')->exists('foto_berita/' . $post->poster)
+                                                ? asset('storage/foto_berita/' . $post->poster)
+                                                : asset('storage/foto_berita/berita-default-sm.jpeg') }}"
+                                                alt="post" style="width: 80px; height: 80px; object-fit: cover;">
+                                            <div class="media-body">
+                                                <a href="#">
+                                                    <h3 style="margin: 0; font-size: 16px; line-height: 1.2;">
+                                                        {{ Str::limit($post->judul, 70) }}
+                                                    </h3>
+                                                </a>
+                                                <p style="margin: 0; font-size: 12px;">
+                                                    {{ $post->updated_at->diffForHumans() }}</p>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </aside>
+
+                            <aside class="single_sidebar_widget popular_post_widget">
+                                <h3 class="widget_title">Download Materi</h3>
+                                <div class="materi-vertical-slider">
+                                    @foreach ($beritaPosts->take(10) as $post)
+                                        <div class="media post_item"
+                                            style="margin-bottom: 15px; display: flex; align-items: center;">
+                                            <div class="media-body"
+                                                style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                                                <h4 style="margin: 0; font-size: 14px; color: #444; flex: 1;">
+                                                    {{ Str::limit($post->judul, 30) }}
+                                                </h4>
+                                                <a href="{{ asset('storage/file/' . $post->lampiran) }}" target="_blank">
+                                                    <div
+                                                        style="width: 40px; height: 40px; background: #eef5f5; display: flex; align-items: center; justify-content: center; margin-right: 15px; border-radius: 5px; flex-shrink: 0;">
+                                                        <i class="ti-download" style="color: #008080;"></i>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </aside>
+
+                            <aside class="single_sidebar_widget tag_cloud_widget">
+                                <h4 class="widget_title">Tag Clouds</h4>
+                                <ul class="list">
+                                    @if (isset($tags) && $tags->count() > 0)
+                                        @foreach ($tags as $kata => $jumlah)
+                                            <li>
+                                                <a href="{{ route('berita', ['keyword' => $kata]) }}">
+                                                    {{ $kata }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    @else
+                                        <li>
+                                            <span class="text-muted" style="padding: 5px 0; display: block;">Belum ada tag
+                                                tersedia</span>
+                                        </li>
+                                    @endif
+                                </ul>
+                            </aside>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--================ Blog Area end =================-->
+    </main>
+    @include('partials.footer')
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            function initVerticalSlider(selector) {
+                if ($(selector).length && !$(selector).hasClass('slick-initialized')) {
+                    $(selector).slick({
+                        vertical: true,
+                        verticalSwiping: true,
+                        slidesToShow: 3,
+                        slidesToScroll: 1,
+                        autoplay: true,
+                        autoplaySpeed: 2500,
+                        arrows: false,
+                        dots: false,
+                        infinite: true,
+                        pauseOnHover: true
+                    });
+                }
+            }
+
+            initVerticalSlider('.materi-vertical-slider');
+            initVerticalSlider('.relawan-vertical-active');
+            initVerticalSlider('#roan-container');
+        });
+    </script>
+@endsection
