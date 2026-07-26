@@ -102,13 +102,15 @@
                                 <label class="block text-sm font-bold mb-2 dark:text-gray-300">Ganti Foto</label>
                                 <input type="file" name="foto"
                                     class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none">
-                                @if ($opini->foto)
+                                @if ($opini->foto && Storage::disk('public')->exists('foto_berita/' . $opini->foto))
                                     <p class="text-xs text-blue-500 mt-1">File saat ini:</p>
-                                    <a href="{{ asset('storage/foto_opini/' . $opini->foto) }}" target="_blank"
+                                    <a href="{{ asset('storage/foto_berita/' . $opini->foto) }}" target="_blank"
                                         rel="noopener noreferrer">
-                                        <img src="{{ asset('storage/foto_opini/' . $opini->foto) }}"
+                                        <img src="{{ asset('storage/foto_berita/' . $opini->foto) }}"
                                             class="w-full h-auto max-h-96 object-cover rounded-xl border dark:border-gray-700 shadow-sm">
                                     </a>
+                                @else
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 italic">Tidak ada foto</p>
                                 @endif
 
                             </div>

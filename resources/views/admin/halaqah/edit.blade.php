@@ -90,10 +90,14 @@
                             <div>
                                 <label class="block text-sm font-bold mb-2 dark:text-gray-300">Thumbnail (Biarkan kosong
                                     jika tidak diganti)</label>
-                                @if ($halaqah->thumbnail)
+                                @if ($halaqah->thumbnail && Storage::disk('public')->exists('foto_halaqah/' . $halaqah->thumbnail))
                                     <div class="mb-2">
                                         <img src="{{ asset('storage/foto_halaqah/' . $halaqah->thumbnail) }}"
                                             class="w-24 h-24 object-cover rounded-xl border">
+                                    </div>
+                                @else
+                                    <div class="mb-2 text-sm text-gray-500 dark:text-gray-400 italic">
+                                        Tidak Thumbnail
                                     </div>
                                 @endif
                                 <input type="file" name="thumbnail" accept="image/*"
@@ -104,15 +108,35 @@
                                     semua foto lama)</label>
 
                                 {{-- Preview Foto Lama --}}
-                                @if ($halaqah->foto)
+                                @php
+                                    $hasPhoto = false;
+                                    if ($halaqah->foto) {
+                                        foreach (explode(';', $halaqah->foto) as $f) {
+                                            $fileName = trim($f);
+                                            if (
+                                                !empty($fileName) &&
+                                                Storage::disk('public')->exists('foto_halaqah/' . $fileName)
+                                            ) {
+                                                $hasPhoto = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                @endphp
+
+                                @if ($hasPhoto)
                                     <div class="grid grid-cols-4 gap-2 mb-3">
                                         @foreach (explode(';', $halaqah->foto) as $f)
                                             @php $fileName = trim($f); @endphp
-                                            @if (!empty($fileName))
+                                            @if (!empty($fileName) && Storage::disk('public')->exists('foto_halaqah/' . $fileName))
                                                 <img src="{{ asset('storage/foto_halaqah/' . $fileName) }}"
                                                     class="w-full h-16 object-cover rounded-lg border dark:border-gray-700">
                                             @endif
                                         @endforeach
+                                    </div>
+                                @else
+                                    <div class="mb-3 text-sm text-gray-500 dark:text-gray-400 italic">
+                                        Tidak ada foto
                                     </div>
                                 @endif
 
@@ -122,14 +146,14 @@
                         </div>
 
                         <div class="flex gap-4 mt-6">
-                                <button type="submit" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold">
-                                    Simpan Data
-                                </button>
-                                <a href="{{ route('admin.halaqah.index') }}"
-                                    class="flex-1 text-center bg-gray-200 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all">
-                                    Batal
-                                </a>
-                            </div>
+                            <button type="submit" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold">
+                                Simpan Data
+                            </button>
+                            <a href="{{ route('admin.halaqah.index') }}"
+                                class="flex-1 text-center bg-gray-200 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all">
+                                Batal
+                            </a>
+                        </div>
                     </form>
                 </div>
             </main>

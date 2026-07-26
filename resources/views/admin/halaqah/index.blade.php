@@ -84,9 +84,9 @@
                                             {{-- Thumbnail --}}
                                             <td class="p-4">
                                                 @if (!empty($item->thumbnail))
-                                                    <a href="{{ asset('storage/foto_halaqah/' . $item->thumbnail) }}"
+                                                    <a href="{{ $item->thumbnail && Storage::disk('public')->exists('foto_halaqah/' . $item->thumbnail) ? asset('storage/foto_halaqah/' . $item->thumbnail) : asset('storage/foto_halaqah/default-halaqah.jpeg') }}"
                                                         target="_blank" rel="noopener noreferrer">
-                                                        <img src="{{ asset('storage/foto_halaqah/' . $item->thumbnail) }}"
+                                                        <img src="{{ $item->thumbnail && Storage::disk('public')->exists('foto_halaqah/' . $item->thumbnail) ? asset('storage/foto_halaqah/' . $item->thumbnail) : asset('storage/foto_halaqah/default-halaqah.jpeg') }}"
                                                             class="w-12 h-12 object-cover rounded-lg border border-gray-200 hover:opacity-80 transition-opacity">
                                                     </a>
                                                 @else
@@ -198,9 +198,9 @@
                                                 @foreach (explode(';', $item->foto) as $f)
                                                     @php $fileName = basename(trim($f)); @endphp
                                                     @if (!empty($fileName))
-                                                        <a href="{{ asset('storage/foto_halaqah/' . $fileName) }}"
+                                                        <a href="{{ $fileName && Storage::disk('public')->exists('foto_halaqah/' . $fileName) ? asset('storage/foto_halaqah/' . $fileName) : asset('storage/foto_halaqah/default-halaqah.jpeg') }}"
                                                             target="_blank" rel="noopener noreferrer">
-                                                            <img src="{{ asset('storage/foto_halaqah/' . $fileName) }}"
+                                                            <img src="{{ $fileName && Storage::disk('public')->exists('foto_halaqah/' . $fileName) ? asset('storage/foto_halaqah/' . $fileName) : asset('storage/foto_halaqah/default-halaqah.jpeg') }}"
                                                                 class="w-full h-24 object-cover rounded-lg border dark:border-gray-700 hover:opacity-80 transition-opacity">
                                                         </a>
                                                     @endif
