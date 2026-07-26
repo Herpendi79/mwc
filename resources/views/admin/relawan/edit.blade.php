@@ -82,8 +82,18 @@
                                 @if ($relawan->poster && $relawan->poster !== 'none')
                                     <div class="mb-3">
                                         <p class="text-xs text-gray-500 mb-1">Poster saat ini:</p>
-                                        <img src="{{ asset('storage/foto_relawan/' . $relawan->poster) }}"
-                                            class="h-32 w-full object-cover rounded-lg border dark:border-gray-700">
+                                        @if (Storage::disk('public')->exists('foto_relawan/' . $relawan->poster))
+                                            <img src="{{ asset('storage/foto_relawan/' . $relawan->poster) }}"
+                                                class="h-32 w-full object-cover rounded-lg border dark:border-gray-700">
+                                        @else
+                                            <div class="relative">
+                                                <img src="{{ asset('storage/foto_relawan/relawan-default.jpeg') }}"
+                                                    class="h-32 w-full object-cover rounded-lg border dark:border-gray-700 opacity-75">
+                                                <span
+                                                    class="absolute bottom-2 left-2 text-[10px] bg-red-600 text-white px-2 py-0.5 rounded">File
+                                                    fisik tidak ditemukan, menggunakan gambar default</span>
+                                            </div>
+                                        @endif
                                     </div>
                                 @endif
                                 <input type="file" name="poster" accept="image/*"
@@ -98,9 +108,33 @@
                                     <div class="mb-3">
                                         <p class="text-xs text-gray-500 mb-1">Foto saat ini:</p>
                                         <div class="flex gap-2 flex-wrap">
-                                            @foreach (explode(';', $relawan->foto) as $f)
-                                                <img src="{{ asset('storage/foto_relawan/' . $f) }}"
-                                                    class="h-16 w-16 object-cover rounded-lg border dark:border-gray-700">
+                                            @php
+                                                $fotoList = array_filter(
+                                                    explode(';', $relawan->foto),
+                                                    fn($f) => trim($f) !== '',
+                                                );
+                                            @endphp
+
+                                            @foreach ($fotoList as $f)
+                                                @php
+                                                    $fileName = trim($f);
+                                                    $exists = Storage::disk('public')->exists(
+                                                        'foto_relawan/' . $fileName,
+                                                    );
+                                                @endphp
+
+                                                @if ($exists)
+                                                    <img src="{{ asset('storage/foto_relawan/' . $fileName) }}"
+                                                        class="h-16 w-16 object-cover rounded-lg border dark:border-gray-700">
+                                                @else
+                                                    <div class="relative">
+                                                        <img src="{{ asset('storage/foto_relawan/relawan-default.jpeg') }}"
+                                                            class="h-16 w-16 object-cover rounded-lg border dark:border-gray-700 opacity-75">
+                                                        <span
+                                                            class="absolute bottom-0 left-0 right-0 text-[9px] text-center bg-red-600 text-white px-0.5 rounded-b-lg">Tidak
+                                                            ada</span>
+                                                    </div>
+                                                @endif
                                             @endforeach
                                         </div>
                                     </div>

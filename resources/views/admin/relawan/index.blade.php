@@ -112,25 +112,51 @@
                         </div>
                         <h4 class="font-bold mb-3 dark:text-white">Poster</h4>
                         <div class="grid grid-cols-3 gap-3 mb-6">
-                            @if (!empty($item->poster))
+                            @if (!empty($item->poster) && Storage::disk('public')->exists('foto_relawan/' . $item->poster))
                                 <a href="{{ asset('storage/foto_relawan/' . $item->poster) }}" target="_blank">
                                     <img src="{{ asset('storage/foto_relawan/' . $item->poster) }}"
                                         class="w-full h-24 object-cover rounded-lg border dark:border-gray-700 hover:opacity-75 transition">
                                 </a>
                             @else
-                                <p class="text-sm text-gray-400 italic">Tidak ada foto.</p>
+                                <a href="{{ asset('storage/foto_relawan/relawan-default.jpeg') }}" target="_blank">
+                                    <img src="{{ asset('storage/foto_relawan/relawan-default.jpeg') }}"
+                                        class="w-full h-24 object-cover rounded-lg border dark:border-gray-700 hover:opacity-75 transition">
+                                </a>
                             @endif
                         </div>
                         <h4 class="font-bold mb-3 dark:text-white">Galeri Foto</h4>
                         <div class="grid grid-cols-3 gap-3 mb-6">
-                            @foreach (explode(';', $item->foto) as $f)
-                                @if (trim($f))
-                                    <a href="{{ asset('storage/foto_relawan/' . trim($f)) }}" target="_blank">
-                                        <img src="{{ asset('storage/foto_relawan/' . trim($f)) }}"
-                                            class="w-full h-24 object-cover rounded-lg border dark:border-gray-700 hover:opacity-75 transition">
-                                    </a>
+                            @if (!empty($item->foto))
+                                @php
+                                    $fotoList = array_filter(explode(';', $item->foto), fn($f) => trim($f) !== '');
+                                @endphp
+
+                                @if (count($fotoList) > 0)
+                                    @foreach ($fotoList as $f)
+                                        @php
+                                            $fileName = trim($f);
+                                            $exists = Storage::disk('public')->exists('foto_relawan/' . $fileName);
+                                        @endphp
+
+                                        @if ($exists)
+                                            <a href="{{ asset('storage/foto_relawan/' . $fileName) }}" target="_blank">
+                                                <img src="{{ asset('storage/foto_relawan/' . $fileName) }}"
+                                                    class="w-full h-24 object-cover rounded-lg border dark:border-gray-700 hover:opacity-75 transition">
+                                            </a>
+                                        @else
+                                            <a href="{{ asset('storage/foto_relawan/relawan-default.jpeg') }}"
+                                                target="_blank">
+                                                <img src="{{ asset('storage/foto_relawan/relawan-default.jpeg') }}"
+                                                    class="w-full h-24 object-cover rounded-lg border dark:border-gray-700 hover:opacity-75 transition">
+                                            </a>
+                                        @endif
+                                    @endforeach
+                                @else
+                                    <p class="text-sm text-gray-400 italic col-span-3">Tidak ada foto.</p>
                                 @endif
-                            @endforeach
+                            @else
+                                <p class="text-sm text-gray-400 italic col-span-3">Tidak ada foto.</p>
+                            @endif
                         </div>
 
                         <h4 class="font-bold mb-3 dark:text-white">Daftar Peserta</h4>
