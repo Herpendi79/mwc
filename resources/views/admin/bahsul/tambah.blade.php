@@ -12,7 +12,7 @@
             <main class="flex-1 overflow-y-auto p-8">
                 <div class="container mx-auto max-w-3xl">
                     <div class="mb-8">
-                        <h2 class="text-3xl font-bold dark:text-white">Tambah Bahsul Masail</h2>
+                        <h2 class="text-3xl font-bold dark:text-white">Tambah Bahtsul Masail</h2>
                         <p class="text-gray-500">Isi formulir berikut untuk menambahkan data pembahasan.</p>
                     </div>
                     @if ($errors->any())
@@ -97,13 +97,13 @@
 
                             <div class="mb-5">
                                 <label class="block text-sm font-bold mb-2 dark:text-gray-300">Putusan</label>
-                                <textarea name="putusan" rows="3" 
+                                <textarea name="putusan" rows="3"
                                     class="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-blue-500">{{ old('putusan') }}</textarea>
                             </div>
 
                             <div class="mb-5">
                                 <label class="block text-sm font-bold mb-2 dark:text-gray-300">Dasar Hukum</label>
-                                <textarea name="dasar_hukum" rows="2" 
+                                <textarea name="dasar_hukum" rows="2"
                                     class="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-blue-500">{{ old('dasar_hukum') }}</textarea>
                             </div>
 

@@ -15,7 +15,7 @@
                     {{-- Header & Aksi --}}
                     <div class="flex justify-between items-center mb-8">
                         <div>
-                            <h2 class="text-3xl font-bold dark:text-white">Bahsul Masail</h2>
+                            <h2 class="text-3xl font-bold dark:text-white">Bahtsul Masail</h2>
                             <p class="text-gray-500">Daftar pembahasan masalah keagamaan</p>
                         </div>
                         <a href="{{ route('admin.bahsul.tambah') }}"

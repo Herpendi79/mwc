@@ -12,7 +12,7 @@
             <main class="flex-1 overflow-y-auto p-8">
                 <div class="container mx-auto max-w-3xl">
                     <div class="mb-8">
-                        <h2 class="text-3xl font-bold dark:text-white">Edit Bahsul Masail</h2>
+                        <h2 class="text-3xl font-bold dark:text-white">Edit Bahtsul Masail</h2>
                     </div>
                     @if ($errors->any())
                         <div class="bg-red-100 p-4 mb-4 text-red-700">

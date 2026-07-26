@@ -76,7 +76,7 @@
             <div x-show="open" x-cloak x-collapse.duration.250ms x-transition.opacity class="pl-8 mt-1 space-y-1">
                 <a href="{{ route('admin.bahsul.index') }}"
                     class="block px-4 py-2 rounded-xl transition-all duration-200 {{ request()->routeIs('admin.bahsul.index', 'admin.bahsul.tambah', 'admin.bahsul.edit') ? 'bg-gray-100 dark:bg-zinc-800 text-black dark:text-white font-semibold' : 'text-gray-600 dark:text-gray-400 font-normal hover:bg-gray-100 dark:hover:bg-zinc-800 hover:text-black dark:hover:text-white' }}">
-                    Bahsul Masail
+                    Bahtsul Masail
                 </a>
 
                 <a href="{{ route('admin.halaqah.index') }}"
