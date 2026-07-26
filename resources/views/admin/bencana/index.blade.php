@@ -134,14 +134,36 @@
                             <p><strong>Deskripsi:</strong> {{ $item->deskripsi }}</p>
                         </div>
                         <h4 class="font-bold mb-2 dark:text-white">Dokumentasi</h4>
-                        @foreach (explode(';', $item->foto) as $f)
-                            @if (trim($f))
-                                <a href="{{ asset('storage/foto_bencana/' . trim($f)) }}" target="_blank">
-                                    <img src="{{ asset('storage/foto_bencana/' . trim($f)) }}"
-                                        class="w-full h-24 object-cover rounded-lg border dark:border-gray-700 hover:opacity-75 transition mb-2">
-                                </a>
+                        @if (!empty($item->foto))
+                            @php
+                                $fotoList = array_filter(explode(';', $item->foto), fn($f) => trim($f) !== '');
+                            @endphp
+
+                            @if (count($fotoList) > 0)
+                                @foreach ($fotoList as $f)
+                                    @php
+                                        $fileName = trim($f);
+                                        $exists = Storage::disk('public')->exists('foto_bencana/' . $fileName);
+                                    @endphp
+
+                                    @if ($exists)
+                                        <a href="{{ asset('storage/foto_bencana/' . $fileName) }}" target="_blank">
+                                            <img src="{{ asset('storage/foto_bencana/' . $fileName) }}"
+                                                class="w-full h-24 object-cover rounded-lg border dark:border-gray-700 hover:opacity-75 transition mb-2">
+                                        </a>
+                                    @else
+                                        <a href="{{ asset('storage/foto_bencana/bencana-default.jpeg') }}" target="_blank">
+                                            <img src="{{ asset('storage/foto_bencana/bencana-default.jpeg') }}"
+                                                class="w-full h-24 object-cover rounded-lg border dark:border-gray-700 hover:opacity-75 transition mb-2">
+                                        </a>
+                                    @endif
+                                @endforeach
+                            @else
+                                <p class="text-sm text-gray-400 italic">Tidak ada foto.</p>
                             @endif
-                        @endforeach
+                        @else
+                            <p class="text-sm text-gray-400 italic">Tidak ada foto.</p>
+                        @endif
                         <button @click="openModal = false"
                             class="mt-6 w-full bg-gray-100 dark:bg-gray-800 py-2 rounded-xl text-sm font-bold dark:text-white hover:bg-gray-200">Tutup</button>
                     </div>
@@ -154,7 +176,8 @@
             <div @click.away="showModal = false"
                 class="bg-white dark:bg-gray-900 p-6 rounded-2xl w-full max-w-sm shadow-xl">
                 <h3 class="font-bold text-lg mb-2 dark:text-white">Konfirmasi Tindakan Laporan</h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Silakan pilih tindakan untuk laporan bencana ini:</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Silakan pilih tindakan untuk laporan bencana ini:
+                </p>
 
                 <form :action="actionUrl" method="POST" class="flex flex-col gap-3">
                     @csrf
@@ -167,7 +190,8 @@
                     </button>
 
                     {{-- Tombol Tolak & Hapus --}}
-                    <button type="submit" name="aksi" value="tolak" onclick="return confirm('Yakin ingin menolak dan menghapus laporan ini?')"
+                    <button type="submit" name="aksi" value="tolak"
+                        onclick="return confirm('Yakin ingin menolak dan menghapus laporan ini?')"
                         class="w-full px-4 py-2 bg-red-600 text-white rounded-xl text-sm font-bold hover:bg-red-700 transition">
                         Tolak & Hapus Laporan
                     </button>

@@ -88,15 +88,38 @@
 
                             {{-- Tampilan Foto Lama --}}
                             @if ($bencana->foto)
-                                <div class="mb-4">
-                                    <p class="text-xs text-gray-500 mb-2">Foto Saat Ini:</p>
-                                    <div class="flex gap-2">
-                                        @foreach (explode(';', $bencana->foto) as $f)
-                                            <img src="{{ asset('storage/foto_bencana/' . trim($f)) }}"
-                                                class="w-20 h-20 object-cover rounded-lg border">
-                                        @endforeach
+                                @php
+                                    $fotoList = array_filter(explode(';', $bencana->foto), fn($f) => trim($f) !== '');
+                                @endphp
+
+                                @if (count($fotoList) > 0)
+                                    <div class="mb-4">
+                                        <p class="text-xs text-gray-500 mb-2">Foto Saat Ini:</p>
+                                        <div class="flex gap-2 flex-wrap">
+                                            @foreach ($fotoList as $f)
+                                                @php
+                                                    $fileName = trim($f);
+                                                    $exists = Storage::disk('public')->exists(
+                                                        'foto_bencana/' . $fileName,
+                                                    );
+                                                @endphp
+
+                                                @if ($exists)
+                                                    <img src="{{ asset('storage/foto_bencana/' . $fileName) }}"
+                                                        class="w-20 h-20 object-cover rounded-lg border dark:border-gray-700">
+                                                @else
+                                                    <div class="relative">
+                                                        <img src="{{ asset('storage/foto_bencana/bencana-default.jpeg') }}"
+                                                            class="w-20 h-20 object-cover rounded-lg border dark:border-gray-700 opacity-75">
+                                                        <span
+                                                            class="absolute bottom-0 left-0 right-0 text-[9px] text-center bg-red-600 text-white px-0.5 rounded-b-lg">Tidak
+                                                            ada</span>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
                                     </div>
-                                </div>
+                                @endif
                             @endif
 
                             {{-- Input & Preview Baru --}}
@@ -115,14 +138,14 @@
 
                         {{-- Tombol Aksi --}}
                         <div class="flex gap-4 mt-6">
-                                <button type="submit" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold">
-                                    Simpan Data
-                                </button>
-                                <a href="{{ route('admin.bencana.index') }}"
-                                    class="flex-1 text-center bg-gray-200 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all">
-                                    Batal
-                                </a>
-                            </div>
+                            <button type="submit" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold">
+                                Simpan Data
+                            </button>
+                            <a href="{{ route('admin.bencana.index') }}"
+                                class="flex-1 text-center bg-gray-200 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all">
+                                Batal
+                            </a>
+                        </div>
                     </form>
                 </div>
             </main>
