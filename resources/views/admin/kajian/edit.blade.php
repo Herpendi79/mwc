@@ -92,12 +92,23 @@
                             <div>
                                 <label class="block text-sm font-bold mb-2 dark:text-gray-300">Galeri Foto</label>
                                 <div class="grid grid-cols-3 gap-2 mb-2">
-                                    @foreach (explode(';', $kajian->foto) as $f)
-                                        @if (!empty(trim($f)))
-                                            <img src="{{ asset('storage/foto_kajian/' . trim($f)) }}"
-                                                class="w-full h-16 object-cover rounded-lg border dark:border-gray-700">
-                                        @endif
-                                    @endforeach
+                                    @if ($kajian->foto)
+                                        @foreach (explode(';', $kajian->foto) as $f)
+                                            @php
+                                                $fileName = trim($f);
+                                                $exists =
+                                                    !empty($fileName) &&
+                                                    Storage::disk('public')->exists('foto_kajian/' . $fileName);
+                                                $fileUrl = $exists
+                                                    ? asset('storage/foto_kajian/' . $fileName)
+                                                    : asset('storage/foto_kajian/kajian-default.jpeg');
+                                            @endphp
+                                            @if (!empty($fileName))
+                                                <img src="{{ $fileUrl }}"
+                                                    class="w-full h-16 object-cover rounded-lg border dark:border-gray-700">
+                                            @endif
+                                        @endforeach
+                                    @endif
                                 </div>
                                 <input type="file" name="foto[]" multiple accept="image/*"
                                     class="w-full p-2 border dark:border-gray-700 rounded-xl dark:bg-gray-800 dark:text-white">
@@ -120,14 +131,14 @@
                         </div>
 
                         <div class="flex gap-4 mt-6">
-                                <button type="submit" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold">
-                                    Simpan Data
-                                </button>
-                                <a href="{{ route('admin.kajian.index') }}"
-                                    class="flex-1 text-center bg-gray-200 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all">
-                                    Batal
-                                </a>
-                            </div>
+                            <button type="submit" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold">
+                                Simpan Data
+                            </button>
+                            <a href="{{ route('admin.kajian.index') }}"
+                                class="flex-1 text-center bg-gray-200 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all">
+                                Batal
+                            </a>
+                        </div>
                     </form>
                 </div>
             </main>

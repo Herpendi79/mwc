@@ -71,9 +71,9 @@
                                         {{-- Preview Poster --}}
                                         <td class="p-4">
                                             @if (!empty($item->poster))
-                                                <a href="{{ asset('storage/foto_kajian/' . $item->poster) }}"
+                                                <a href="{{ $item->poster && Storage::disk('public')->exists('foto_kajian/' . $item->poster) ? asset('storage/foto_kajian/' . $item->poster) : asset('storage/foto_kajian/kajian-default.jpeg') }}"
                                                     target="_blank" rel="noopener noreferrer">
-                                                    <img src="{{ asset('storage/foto_kajian/' . $item->poster) }}"
+                                                    <img src="{{ $item->poster && Storage::disk('public')->exists('foto_kajian/' . $item->poster) ? asset('storage/foto_kajian/' . $item->poster) : asset('storage/foto_kajian/kajian-default.jpeg') }}"
                                                         class="w-12 h-12 object-cover rounded-lg border border-gray-200 hover:opacity-80 transition-opacity">
                                                 </a>
                                             @else
@@ -125,16 +125,30 @@
 
                                                         <p class="font-bold">Galeri Foto:</p>
                                                         <div class="grid grid-cols-3 gap-2">
-                                                            @foreach (explode(';', $item->foto) as $f)
-                                                                @if (!empty(trim($f)))
+                                                            @if ($item->foto)
+                                                                @foreach (explode(';', $item->foto) as $f)
                                                                     @php $fileName = trim($f); @endphp
-                                                                    <a href="{{ asset('storage/foto_kajian/' . $fileName) }}"
-                                                                        target="_blank" rel="noopener noreferrer">
-                                                                        <img src="{{ asset('storage/foto_kajian/' . $fileName) }}"
-                                                                            class="w-full h-20 object-cover rounded-lg border dark:border-gray-700 hover:opacity-80 transition-opacity">
-                                                                    </a>
-                                                                @endif
-                                                            @endforeach
+                                                                    @if (!empty($fileName))
+                                                                        @php
+                                                                            $exists = Storage::disk('public')->exists(
+                                                                                'foto_kajian/' . $fileName,
+                                                                            );
+                                                                            $fileUrl = $exists
+                                                                                ? asset(
+                                                                                    'storage/foto_kajian/' . $fileName,
+                                                                                )
+                                                                                : asset(
+                                                                                    'storage/foto_kajian/kajian-default.jpeg',
+                                                                                );
+                                                                        @endphp
+                                                                        <a href="{{ $fileUrl }}" target="_blank"
+                                                                            rel="noopener noreferrer">
+                                                                            <img src="{{ $fileUrl }}"
+                                                                                class="w-full h-20 object-cover rounded-lg border dark:border-gray-700 hover:opacity-80 transition-opacity">
+                                                                        </a>
+                                                                    @endif
+                                                                @endforeach
+                                                            @endif
                                                         </div>
                                                     </div>
 
