@@ -100,7 +100,8 @@ class SampahController extends Controller
             'jenis_sedekah' => 'required|in:sampah,pengelolaan',
             'nilai'         => 'required|numeric',
             'petugas'       => 'required|string',
-            'penyetor'       => 'required|string',
+            'penyetor'      => 'required|string',
+            'email'         => 'required|email', // Validasi inputan email
             'tgl'           => 'required|date',
             'foto'          => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'ket'           => 'nullable|string',
@@ -117,17 +118,17 @@ class SampahController extends Controller
 
         $validated = $request->validate($rules);
 
-        // Jika mode pengelolaan, isi nilai jenis dengan tanda atau string kosong
-        // agar tidak error "Column 'jenis' cannot be null" di database
+        // Ambil dan amankan variabel email, lalu hapus dari array $validated agar tidak error saat create ke database
+        $emailTujuan = $validated['email'];
+        unset($validated['email']);
+
+        // Jika mode pengelolaan, isi nilai jenis dengan string default dan berat dengan 0
         if ($request->input('jenis_sedekah') === 'pengelolaan') {
-            $validated['jenis'] = 'Biaya Pengelolaan'; // atau '' sesuaikan kebutuhan database
-            $validated['berat'] = 0;   // berikan default angka 0 untuk berat
+            $validated['jenis'] = 'Biaya Pengelolaan';
+            $validated['berat'] = 0;
         }
 
-        // 2. Tambahkan nama penyetor dari user login
-       // $validated['penyetor'] = Auth::user()->name;
-
-        // 3. Handle File Upload
+        // Handle File Upload
         if ($request->hasFile('foto')) {
             $file = $request->file('foto');
             $filename = time() . '_' . $file->getClientOriginalName();
@@ -139,10 +140,18 @@ class SampahController extends Controller
             $validated['foto'] = $filename;
         }
 
-        // 4. Simpan ke database
+        // Simpan ke database
         $sampah = SampahModel::create($validated);
 
-        return redirect()->route('admin.sampah.index')->with('success', 'Data berhasil ditambah!');
+        // Kirim Email Konfirmasi menggunakan email yang diinputkan form
+        try {
+            Mail::to($emailTujuan)->send(new SampahTerkirimMail($validated));
+        } catch (\Exception $e) {
+            // Tangani jika pengiriman email gagal agar tidak memutus proses redirect
+        }
+
+        return redirect()->route('admin.sampah.index')
+            ->with('success', 'Data berhasil ditambah dan email konfirmasi telah dikirim!');
     }
 
     public function edit($id_sm)

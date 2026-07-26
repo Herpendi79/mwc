@@ -26,7 +26,8 @@
                     @endif
 
                     <form action="{{ route('admin.sampah.store') }}" method="POST" enctype="multipart/form-data"
-                        class="bg-white dark:bg-gray-900 p-8 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm">
+                        class="bg-white dark:bg-gray-900 p-8 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm"
+                        x-data="{ jenisSedekah: 'sampah' }">
                         @csrf
 
                         {{-- Opsi Radio Button Jenis Sedekah --}}
@@ -47,14 +48,24 @@
                             </div>
                         </div>
 
-                        {{-- Baris Penyetor & Jenis (Jenis Sampah hanya muncul jika opsi 'sampah') --}}
+                        {{-- Baris Penyetor & Email --}}
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                             <div>
                                 <label class="block text-sm font-bold mb-2 dark:text-gray-300">Nama Penyetor</label>
                                 <input type="text" name="penyetor" value="{{ old('penyetor') }}" required
                                     class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none">
                             </div>
-                            <div x-show="jenisSedekah === 'sampah'">
+                            <div>
+                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Email Konfirmasi</label>
+                                <input type="email" name="email" value="{{ old('email') }}" required
+                                    placeholder="email@domain.com"
+                                    class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none">
+                            </div>
+                        </div>
+
+                        {{-- Baris Jenis Sampah (Hanya muncul jika opsi 'sampah') --}}
+                        <div class="grid grid-cols-1 md:grid-cols-1 gap-5 mb-5" x-show="jenisSedekah === 'sampah'">
+                            <div>
                                 <label class="block text-sm font-bold mb-2 dark:text-gray-300">Jenis Sampah</label>
                                 <input type="text" name="jenis" value="{{ old('jenis') }}"
                                     :required="jenisSedekah === 'sampah'"
@@ -83,9 +94,10 @@
                                 <input type="hidden" name="nilai" id="nilai">
                             </div>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-                            {{-- Total Nilai Manual (Hanya muncul jika opsi 'pengelolaan') --}}
-                            <div class="mb-5" x-show="jenisSedekah === 'pengelolaan'">
+
+                        {{-- Total Nilai Manual (Hanya muncul jika opsi 'pengelolaan') --}}
+                        <div class="grid grid-cols-1 md:grid-cols-1 gap-5 mb-5" x-show="jenisSedekah === 'pengelolaan'">
+                            <div>
                                 <label class="block text-sm font-bold mb-2 dark:text-gray-300">Total Nilai (Rp)</label>
                                 <input type="text" id="display_nilai_manual" value="Rp 0" placeholder="Rp 0"
                                     :required="jenisSedekah === 'pengelolaan'"
@@ -123,7 +135,8 @@
                         </div>
 
                         <div class="flex gap-4 mt-6">
-                            <button type="submit" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold">
+                            <button type="submit"
+                                class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition">
                                 Simpan Data
                             </button>
                             <a href="{{ route('admin.sampah.index') }}"
