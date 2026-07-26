@@ -105,7 +105,7 @@
                                 @foreach ($anggota as $index => $item)
                                     <tr>
                                         <td class="p-4">{{ $anggota->firstItem() + $index }}</td>
-                                        <td class="p-4 truncate max-w-[150px]">{{ $item->id_anggota ?? '-' }}</td>
+                                        <td class="p-4 truncate max-w-[150px]">{{ $item->no_anggota ?? '-' }}</td>
                                         <td class="p-4 flex items-center gap-3">
                                             <img src="{{ $item->foto && Storage::disk('public')->exists('foto/' . $item->foto) ? asset('storage/foto/' . $item->foto) : asset('assets/images/default-avatar.png') }}"
                                                 class="w-10 h-10 rounded-full object-cover">
