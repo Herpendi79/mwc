@@ -81,8 +81,13 @@
                         <label class="block text-sm font-bold mb-2 dark:text-gray-300">Foto Bukti</label>
                         @if ($sampah->foto)
                             <div class="mb-2">
-                                <img src="{{ asset('storage/foto_sampah/' . $sampah->foto) }}"
-                                    class="w-24 h-24 object-cover rounded-lg border">
+                                @if ($sampah->foto && Storage::disk('public')->exists('foto_sampah/' . $sampah->foto))
+                                    <img src="{{ asset('storage/foto_sampah/' . $sampah->foto) }}"
+                                        class="w-24 h-24 object-cover rounded-lg border">
+                                @else
+                                    <img src="{{ asset('storage/foto_sampah/sampah-default.jpeg') }}"
+                                        class="w-24 h-24 object-cover rounded-lg border">
+                                @endif
                             </div>
                         @endif
                         <input type="file" name="foto"
@@ -101,7 +106,7 @@
                         <button type="submit" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold">
                             Simpan Data
                         </button>
-                        <a href="{{ route('admin.edit.index') }}"
+                        <a href="{{ route('admin.sampah.index') }}"
                             class="flex-1 text-center bg-gray-200 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all">
                             Batal
                         </a>
