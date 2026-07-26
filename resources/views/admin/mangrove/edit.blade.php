@@ -25,7 +25,17 @@
                     @endif
 
                     <form action="{{ route('admin.mangrove.update', $mangrove->id) }}" method="POST"
-                        class="bg-white dark:bg-gray-900 p-8 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm">
+                        enctype="multipart/form-data"
+                        class="bg-white dark:bg-gray-900 p-8 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm"
+                        x-data="{
+                            harga: {{ $hargaMangrove ?? 5000 }},
+                            jumlah: {{ old('jumlah_pohon', $mangrove->jumlah_pohon) }},
+                            metode: '{{ old('pembayaran', $mangrove->pembayaran) }}',
+                            rekening: {{ isset($rekening) ? json_encode($rekening) : '{}' }},
+                            formatRupiah(num) {
+                                return 'Rp ' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                            }
+                        }">
                         @csrf
                         @method('PUT')
 
@@ -47,27 +57,22 @@
                         {{-- Baris Harga, Jumlah, Total --}}
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
                             <div>
-                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Harga/Pohon (Rp)</label>
-                                {{-- Harga diambil dari Infaq / Jumlah, atau set default --}}
-                                @php $hargaPerPohon = $mangrove->jumlah_pohon > 0 ? ($mangrove->jumlah_infaq / $mangrove->jumlah_pohon) : 5000; @endphp
-                                <input type="text" id="display_harga"
-                                    value="Rp {{ number_format($hargaPerPohon, 0, ',', '.') }}"
-                                    class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none">
-                                <input type="hidden" name="harga_pohon" id="harga_pohon" value="{{ $hargaPerPohon }}">
-                            </div>
-                            <div>
                                 <label class="block text-sm font-bold mb-2 dark:text-gray-300">Jumlah Pohon</label>
-                                <input type="number" name="jumlah_pohon" id="jumlah_pohon"
-                                    value="{{ old('jumlah_pohon', $mangrove->jumlah_pohon) }}" required
+                                <input type="number" name="jumlah_pohon" x-model.number="jumlah" required
                                     class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none">
+                            </div>
+                            <div class="md:col-span-1">
+                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Harga Satuan</label>
+                                <div class="p-3 bg-gray-100 dark:bg-gray-800 rounded-xl border dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium"
+                                    x-text="formatRupiah(harga)">
+                                    Rp {{ number_format($hargaMangrove ?? 5000, 0, ',', '.') }}
+                                </div>
                             </div>
                             <div>
                                 <label class="block text-sm font-bold mb-2 dark:text-gray-300">Total Infaq (Rp)</label>
-                                <input type="text" id="display_infaq"
-                                    value="Rp {{ number_format($mangrove->jumlah_infaq, 0, ',', '.') }}" readonly
+                                <input type="text" :value="formatRupiah(harga * jumlah)" readonly
                                     class="w-full p-3 rounded-xl border bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 outline-none">
-                                <input type="hidden" name="jumlah_infaq" id="jumlah_infaq"
-                                    value="{{ $mangrove->jumlah_infaq }}">
+                                <input type="hidden" name="jumlah_infaq" :value="harga * jumlah">
                             </div>
                         </div>
 
@@ -75,31 +80,68 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                             <div>
                                 <label class="block text-sm font-bold mb-2 dark:text-gray-300">Metode Pembayaran</label>
-                                <select name="pembayaran" required
+                                <select name="pembayaran" x-model="metode" required
                                     class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none">
-                                    <option value="tunai" {{ $mangrove->pembayaran == 'tunai' ? 'selected' : '' }}>Tunai
-                                    </option>
-                                    <option value="transfer" {{ $mangrove->pembayaran == 'transfer' ? 'selected' : '' }}>
-                                        Transfer</option>
+                                    <option value="tunai">Tunai</option>
+                                    <option value="transfer">Transfer</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="block text-sm font-bold mb-2 dark:text-gray-300">Tanggal</label>
                                 <input type="date" name="tanggal"
-                                    value="{{ old('tanggal', $mangrove->tanggal->format('Y-m-d')) }}" required
+                                    value="{{ old('tanggal', optional($mangrove->tanggal)->format('Y-m-d') ?? date('Y-m-d')) }}"
+                                    required
                                     class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none">
                             </div>
                         </div>
 
-                        <div class="flex gap-4 mt-6">
-                                <button type="submit" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold">
-                                    Simpan Data
-                                </button>
-                                <a href="{{ route('admin.mangrove.index') }}"
-                                    class="flex-1 text-center bg-gray-200 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all">
-                                    Batal
-                                </a>
+                        {{-- Info Rekening & Upload Bukti (Muncul jika Transfer) --}}
+                        <div x-show="metode === 'transfer'" x-cloak
+                            class="mb-5 p-4 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-xl space-y-4">
+                            <div>
+                                <h4 class="font-bold text-blue-800 dark:text-blue-300 mb-2">Informasi Rekening Tujuan:</h4>
+                                <div class="text-sm text-blue-700 dark:text-blue-400" x-show="rekening && rekening.bank">
+                                    <p>Bank: <span class="font-bold" x-text="rekening.bank"></span></p>
+                                    <p>No. Rekening: <span class="font-bold" x-text="rekening.no_rek"></span></p>
+                                    <p>Atas Nama: <span class="font-bold" x-text="rekening.an"></span></p>
+                                </div>
+                                <p x-show="!rekening || !rekening.bank" class="text-red-500 text-sm">Data rekening tidak
+                                    tersedia.</p>
                             </div>
+                            <hr class="border-blue-200 dark:border-blue-800">
+                            <div>
+                                <label class="block text-sm font-bold mb-2 text-red-800 dark:text-red-300">
+                                    Ganti Bukti Transfer (Opsional, Max 2MB):
+                                </label>
+                                @if ($mangrove->bukti_tf)
+                                    <div class="mb-2">
+                                        <p class="text-xs text-gray-500 mb-1">File saat ini:</p>
+                                        @if (Storage::disk('public')->exists('bukti_tf/' . $mangrove->bukti_tf))
+                                            <a href="{{ asset('storage/bukti_tf/' . $mangrove->bukti_tf) }}"
+                                                target="_blank" class="text-blue-600 underline text-xs font-medium">
+                                                Lihat Bukti Transfer
+                                            </a>
+                                        @else
+                                            <span class="text-red-500 text-xs font-semibold italic">Foto tidak ditemukan di
+                                                storage</span>
+                                        @endif
+                                    </div>
+                                @endif
+                                <input type="file" name="bukti_tf" accept="image/*"
+                                    class="w-full p-2 text-sm rounded-xl border border-red-200 dark:border-red-700 bg-white dark:bg-gray-800 dark:text-white outline-none">
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4 mt-6">
+                            <button type="submit"
+                                class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition">
+                                Simpan Perubahan
+                            </button>
+                            <a href="{{ route('admin.mangrove.index') }}"
+                                class="flex-1 text-center bg-gray-200 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all">
+                                Batal
+                            </a>
+                        </div>
                     </form>
                 </div>
             </main>

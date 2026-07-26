@@ -62,7 +62,7 @@
                             </div>
                             {{-- HARGA DARI FILE (Tambahan Baru) --}}
                             <div class="md:col-span-1">
-                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Harga Satuan</label>
+                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Harga Per Pohon</label>
                                 <div
                                     class="p-3 bg-gray-100 dark:bg-gray-800 rounded-xl border dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium">
                                     Rp {{ number_format($hargaMangrove ?? 0, 0, ',', '.') }}

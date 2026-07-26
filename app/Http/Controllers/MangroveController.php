@@ -39,7 +39,11 @@ class MangroveController extends Controller
 
     public function create()
     {
-        return view('admin.mangrove.tambah');
+        $hargaMangrove = Storage::exists('harga_mangrove.txt') ? Storage::get('harga_mangrove.txt') : 5000;
+        $rekening = Storage::exists('rekening.txt')
+            ? json_decode(Storage::get('rekening.txt'), true)
+            : ['bank' => '-', 'no_rek' => '-', 'an' => '-'];
+        return view('admin.mangrove.tambah', compact('hargaMangrove', 'rekening'));
     }
 
     public function create_anggota()
@@ -111,17 +115,28 @@ class MangroveController extends Controller
 
     public function store(Request $request)
     {
-        // 1. Validasi Data
-        $validated = $request->validate([
+        // 1. Validasi Data (ditambahkan validasi email, donatur, dan bukti_tf)
+        $request->validate([
             'donatur'       => 'required|string|max:255',
             'email'         => 'required|email',
+            'jumlah_pohon'  => 'required|integer|min:1',
             'jumlah_infaq'  => 'required|numeric',
-            'jumlah_pohon'  => 'required|integer',
             'pembayaran'    => 'required|in:tunai,transfer',
             'tanggal'       => 'required|date',
+            'bukti_tf'      => 'required_if:pembayaran,transfer|image|mimes:jpeg,png,jpg,pdf|max:2048',
         ]);
 
-        // 2. Generate Nomor Sertifikat Otomatis
+        // 2. Siapkan data dasar dari request
+        $data = [
+            'donatur'       => $request->donatur,
+            'email'         => $request->email,
+            'jumlah_pohon'  => $request->jumlah_pohon,
+            'jumlah_infaq'  => $request->jumlah_infaq,
+            'pembayaran'    => $request->pembayaran,
+            'tanggal'       => $request->tanggal,
+        ];
+
+        // 3. Generate Nomor Sertifikat Otomatis
         $tanggalInput = \Carbon\Carbon::parse($request->tanggal);
         $formatTanggal = $tanggalInput->format('Ymd');
 
@@ -139,22 +154,39 @@ class MangroveController extends Controller
             $newNumber = '001';
         }
 
-        $validated['no_sertifikat'] = 'MNG-' . $formatTanggal . '-' . $newNumber;
+        $data['no_sertifikat'] = 'MNG-' . $formatTanggal . '-' . $newNumber;
 
-        // 3. Simpan ke Database
-        MangroveModel::create($validated);
+        // 4. Proses Upload Bukti Transfer (jika ada)
+        if ($request->hasFile('bukti_tf')) {
+            $file = $request->file('bukti_tf');
+            $filename = time() . '_' . $file->getClientOriginalName();
 
-        // 4. Redirect
+            // Simpan ke storage/app/public/bukti_tf
+            $file->storeAs('bukti_tf', $filename, 'public');
+
+            // Simpan nama file ke array data
+            $data['bukti_tf'] = $filename;
+        }
+
+        // 5. Simpan ke Database
+        $donasi = MangroveModel::create($data);
+
+        // 6. Kirim Email Ucapan Terima Kasih menggunakan data inputan
+        Mail::to($request->email)->send(new DonasiBerhasilMail($request->donatur, $data['no_sertifikat']));
+
+        // 7. Redirect dengan pesan sukses
         return redirect()->route('admin.mangrove.index')
-            ->with('success', 'Data donasi berhasil disimpan dengan No. Sertifikat: ' . $validated['no_sertifikat']);
+            ->with('success', 'Data donasi berhasil disimpan, email konfirmasi terkirim dengan No. Sertifikat: ' . $data['no_sertifikat']);
     }
-
-
 
     public function edit($id)
     {
         $mangrove = MangroveModel::findOrFail($id);
-        return view('admin.mangrove.edit', compact('mangrove'));
+        $hargaMangrove = Storage::exists('harga_mangrove.txt') ? Storage::get('harga_mangrove.txt') : 0;
+        $rekening = Storage::exists('rekening.txt')
+            ? json_decode(Storage::get('rekening.txt'), true)
+            : ['bank' => '-', 'no_rek' => '-', 'an' => '-'];
+        return view('admin.mangrove.edit', compact('mangrove','hargaMangrove','rekening'));
     }
 
     public function update(Request $request, $id)
