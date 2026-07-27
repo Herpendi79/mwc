@@ -103,30 +103,38 @@
 
                             <div class="space-y-6">
                                 {{-- Poster --}}
-                                @if (!empty($item->poster))
+                                @if (!empty($item->poster) && Storage::disk('public')->exists('foto_khutbah/' . $item->poster))
                                     <a href="{{ asset('storage/foto_khutbah/' . $item->poster) }}" target="_blank"
                                         rel="noopener noreferrer">
                                         <img src="{{ asset('storage/foto_khutbah/' . $item->poster) }}"
                                             class="w-full h-auto max-h-96 object-cover rounded-xl border dark:border-gray-700 shadow-sm">
                                     </a>
+                                @else
+                                    <a href="{{ asset('storage/foto_khutbah/khutbah-default.jpeg') }}" target="_blank"
+                                        rel="noopener noreferrer">
+                                        <img src="{{ asset('storage/foto_khutbah/khutbah-default.jpeg') }}"
+                                            class="w-full h-auto max-h-96 object-cover rounded-xl border dark:border-gray-700 shadow-sm">
+                                    </a>
                                 @endif
-                                    {{-- Isi --}}
-                                    <div
-                                        class="prose dark:prose-invert max-w-none text-justify [&_blockquote]:border-l-4 [&_blockquote]:border-emerald-500 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:bg-gray-100 dark:[&_blockquote]:bg-gray-800">
-                                        {!! $item->isi !!}
-                                    </div>
+                                {{-- Isi --}}
+                                <div
+                                    class="prose dark:prose-invert max-w-none text-justify [&_blockquote]:border-l-4 [&_blockquote]:border-emerald-500 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:bg-gray-100 dark:[&_blockquote]:bg-gray-800">
+                                    {!! $item->isi !!}
+                                </div>
 
-                                    {{-- Lampiran --}}
-                                    @if ($item->lampiran)
-                                        <div
-                                            class="mt-6 p-4 bg-gray-100 dark:bg-gray-800 rounded-xl border dark:border-gray-700">
-                                            <a href="{{ asset('storage/file/' . $item->lampiran) }}" target="_blank"
-                                                class="text-blue-600 font-bold hover:underline">
-                                                <i class="ri-download-2-line"></i> Download Lampiran
-                                                ({{ strtoupper(pathinfo($item->lampiran, PATHINFO_EXTENSION)) }})
-                                            </a>
-                                        </div>
-                                    @endif
+                                {{-- Lampiran --}}
+                                @if (!empty($item->lampiran) && Storage::disk('public')->exists('file/' . $item->lampiran))
+                                    <div
+                                        class="mt-6 p-4 bg-gray-100 dark:bg-gray-800 rounded-xl border dark:border-gray-700">
+                                        <a href="{{ asset('storage/file/' . $item->lampiran) }}" target="_blank"
+                                            class="text-blue-600 font-bold hover:underline">
+                                            <i class="ri-download-2-line"></i> Download Lampiran
+                                            ({{ strtoupper(pathinfo($item->lampiran, PATHINFO_EXTENSION)) }})
+                                        </a>
+                                    </div>
+                                @else
+                                    <p class="text-sm text-gray-400 italic mt-4">Tidak ada lampiran.</p>
+                                @endif
                             </div>
                         </div>
                     @endforeach

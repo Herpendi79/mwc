@@ -87,35 +87,62 @@ class KhutbahController extends Controller
     public function update(Request $request, $id)
     {
         $khutbah = KhutbahModel::findOrFail($id);
+        $mode = $request->input('mode_input', 'lengkap');
 
-        $validated = $request->validate([
-            'judul' => 'required',
-            'tema' => 'required',
-            'khatib' => 'required',
-            'masjid' => 'required',
-            'tgl' => 'required|date',
-            'ringkasan' => 'required',
-            'isi' => 'required',
-            'poster' => 'image|mimes:jpeg,png,jpg|max:2048',
-            'lampiran' => 'nullable|file|mimes:pdf,doc,docx|max:5120'
-        ]);
+        // 1. Validasi dinamis berdasarkan mode
+        if ($mode === 'file') {
+            $validated = $request->validate([
+                'judul'    => 'required',
+                'lampiran' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            ]);
 
-        // Update Poster
+            // Berikan nilai default ke kolom teks jika beralih ke mode file
+            $validated['tema']      = '-';
+            $validated['khatib']    = '-';
+            $validated['masjid']    = '-';
+            $validated['tgl']       = now()->toDateString();
+            $validated['ringkasan'] = '-';
+            $validated['isi']       = '-';
+            $validated['poster']    = null;
+        } else {
+            $validated = $request->validate([
+                'judul'     => 'required',
+                'tema'      => 'required',
+                'khatib'    => 'required',
+                'masjid'    => 'required',
+                'tgl'       => 'required|date',
+                'ringkasan' => 'nullable',
+                'isi'       => 'required',
+                'poster'    => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+                'lampiran'  => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            ]);
+
+            if (empty($validated['ringkasan'])) {
+                $validated['ringkasan'] = '-';
+            }
+        }
+
+        // 2. Update Poster (Hapus fisik lama jika ada file baru)
         if ($request->hasFile('poster')) {
-            if ($khutbah->poster) Storage::delete('public/foto_khutbah/' . $khutbah->poster);
+            if ($khutbah->poster && Storage::disk('public')->exists('foto_khutbah/' . $khutbah->poster)) {
+                Storage::disk('public')->delete('foto_khutbah/' . $khutbah->poster);
+            }
             $filename = time() . '_' . $request->file('poster')->getClientOriginalName();
             $request->file('poster')->storeAs('foto_khutbah', $filename, 'public');
             $validated['poster'] = $filename;
         }
 
-        // Update Lampiran
+        // 3. Update Lampiran (Hapus fisik lama jika ada file baru)
         if ($request->hasFile('lampiran')) {
-            if ($khutbah->lampiran) Storage::delete('public/file/' . $khutbah->lampiran);
+            if ($khutbah->lampiran && Storage::disk('public')->exists('file/' . $khutbah->lampiran)) {
+                Storage::disk('public')->delete('file/' . $khutbah->lampiran);
+            }
             $filename = time() . '_' . $request->file('lampiran')->getClientOriginalName();
             $request->file('lampiran')->storeAs('file', $filename, 'public');
             $validated['lampiran'] = $filename;
         }
 
+        // 4. Simpan Perubahan ke Database
         $khutbah->update($validated);
 
         return redirect()->route('admin.khutbah.index')->with('success', 'Khutbah berhasil diperbarui.');
