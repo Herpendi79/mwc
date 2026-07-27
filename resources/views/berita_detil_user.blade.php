@@ -40,6 +40,19 @@
                                 <p class="excert">
                                     {!! $dataBerita->isi !!}
                                 </p>
+                                <hr>
+                                <p class="excert">
+                                    @if (!empty($dataBerita->lampiran) && Storage::disk('public')->exists('file/' . $dataBerita->lampiran))
+                                        <a href="{{ asset('storage/file/' . $dataBerita->lampiran) }}" target="_blank">
+                                            <button type="button"
+                                                class="inline-block px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-xl transition-all shadow-lg shadow-emerald-900/40">
+                                                Download File Lampiran
+                                            </button>
+                                        </a>
+                                    @else
+                                        <span class="text-gray-500 dark:text-gray-400 italic">Lampiran tidak tersedia</span>
+                                    @endif
+                                </p>
                             </div>
                         </div>
 
