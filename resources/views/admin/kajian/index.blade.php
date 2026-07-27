@@ -172,7 +172,7 @@
 
                                         <td class="p-4 text-center">
                                             <div class="flex justify-center gap-2">
-                                                @if ($item->status == 'draft')
+                                                @if ($item->status == 'draft' || $item->status == 'arsip')
                                                     <form action="{{ route('admin.kajian.updateStatus', $item->id) }}"
                                                         method="POST">
                                                         @csrf @method('PATCH')
@@ -194,7 +194,7 @@
                                                             <i class="ri-delete-bin-line text-xl"></i>
                                                         </button>
                                                     </form>
-                                                @elseif ($item->status == 'publish')
+                                                @else
                                                     <a href="{{ route('admin.kajian.edit', $item->id) }}"
                                                         class="text-blue-600 hover:text-blue-800"><i
                                                             class="ri-edit-line text-xl"></i></a>
@@ -206,7 +206,6 @@
                                                             title="Arsipkan"><i
                                                                 class="ri-archive-line text-xl"></i></button>
                                                     </form>
-                                                @else
                                                 @endif
 
                                             </div>
