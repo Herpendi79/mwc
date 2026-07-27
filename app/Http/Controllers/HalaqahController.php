@@ -21,9 +21,22 @@ use Illuminate\Http\RedirectResponse;
 class HalaqahController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $halaqah = HalaqahModel::with('peserta')->withCount('peserta')->latest()->get();
+        $query = HalaqahModel::with('peserta')->withCount('peserta');
+
+        // Filter pencarian live search
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('judul', 'like', '%' . $search . '%')
+                    ->orWhere('tema', 'like', '%' . $search . '%')
+                    ->orWhere('narsum', 'like', '%' . $search . '%')
+                    ->orWhere('moderator', 'like', '%' . $search . '%');
+            });
+        }
+
+        $halaqah = $query->latest()->paginate(10)->withQueryString();
 
         return view('admin.halaqah.index', compact('halaqah'));
     }

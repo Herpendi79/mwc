@@ -16,10 +16,19 @@
                             <h2 class="text-3xl font-bold dark:text-white">Berita</h2>
                             <p class="text-gray-500">Kelola artikel berita publik</p>
                         </div>
-                        <a href="{{ route('admin.berita.tambah') }}"
-                            class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition">
-                            + Tambah Data
-                        </a>
+                        <div class="flex items-center gap-3">
+                            <a href="{{ route('admin.berita.tambah') }}"
+                                class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition whitespace-nowrap">
+                                + Tambah Data
+                            </a>
+
+                            <!-- Form Pencarian Realtime -->
+                            <form id="filterForm" action="{{ route('admin.berita.index') }}" method="GET" class="flex gap-2">
+                                <input type="text" name="search" id="searchBox" placeholder="Cari judul berita..."
+                                    value="{{ request('search') }}"
+                                    class="p-2 rounded-xl border border-gray-300 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none">
+                            </form>
+                        </div>
                     </div>
 
                     @if (session('success'))
@@ -44,9 +53,9 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200 dark:divide-gray-800">
-                                @foreach ($berita as $index => $item)
+                                @forelse ($berita as $index => $item)
                                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
-                                        <td class="p-4 dark:text-gray-300">{{ $index + 1 }}</td>
+                                        <td class="p-4 dark:text-gray-300">{{ $berita->firstItem() + $index }}</td>
                                         <td class="p-4 dark:text-gray-300">
                                             {{ \Carbon\Carbon::parse($item->created_at)->format('d M Y') }}
                                         </td>
@@ -110,9 +119,16 @@
                                             </div>
                                         </td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="8" class="p-4 text-center text-gray-500 dark:text-gray-400">Tidak ada data berita ditemukan.</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
+                    </div>
+                    <div class="mt-4">
+                        {{ $berita->appends(['search' => request('search')])->links() }}
                     </div>
                 </div>
             </main>
@@ -168,4 +184,37 @@
             </div>
         </div>
     </div>
+
+    <!-- Skrip Realtime dengan Penjagaan Fokus Input -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const searchBox = document.getElementById('searchBox');
+            const form = document.getElementById('filterForm');
+
+            if (searchBox && form) {
+                let timeout = null;
+
+                searchBox.addEventListener('input', function() {
+                    clearTimeout(timeout);
+
+                    // Simpan posisi kursor dan teks ke localStorage agar bisa dipulihkan setelah reload
+                    localStorage.setItem('search_focus_val', searchBox.value);
+
+                    timeout = setTimeout(function() {
+                        form.submit();
+                    }, 400); // Waktu jeda dipercepat sedikit jadi 400ms
+                });
+
+                // Mengembalikan kursor ke dalam kotak pencarian otomatis setelah halaman selesai dimuat ulang
+                if (localStorage.getItem('search_focus_val') !== null) {
+                    searchBox.focus();
+                    // Letakkan kursor di akhir teks
+                    let val = searchBox.value;
+                    searchBox.value = '';
+                    searchBox.value = val;
+                    localStorage.removeItem('search_focus_val');
+                }
+            }
+        });
+    </script>
 @endsection

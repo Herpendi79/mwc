@@ -11,10 +11,23 @@ use App\Mail\SampahTerkirimMail;
 
 class SampahController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Mengambil data sampah diurutkan dari yang terbaru
-        $sampahs = SampahModel::latest()->paginate(10);
+        $query = SampahModel::latest();
+
+        // Filter pencarian live search
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('penyetor', 'like', '%' . $search . '%')
+                    ->orWhere('jenis', 'like', '%' . $search . '%')
+                    ->orWhere('petugas', 'like', '%' . $search . '%')
+                    ->orWhere('ket', 'like', '%' . $search . '%');
+            });
+        }
+
+        $sampahs = $query->paginate(10)->withQueryString();
+
         return view('admin.sampah.index', compact('sampahs'));
     }
 

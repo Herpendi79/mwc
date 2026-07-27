@@ -11,9 +11,17 @@ use Illuminate\Support\Facades\Auth;
 
 class BeritaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $berita = BeritaModel::latest()->get();
+        $query = BeritaModel::with('komentar');
+
+        // Pencarian berdasarkan judul berita
+        if ($request->has('search') && $request->search != '') {
+            $query->where('judul', 'like', '%' . $request->search . '%');
+        }
+
+        $berita = $query->latest()->paginate(10)->withQueryString();
+
         return view('admin.berita.index', compact('berita'));
     }
 

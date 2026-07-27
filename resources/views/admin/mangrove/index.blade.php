@@ -11,45 +11,57 @@
 
             <main class="flex-1 overflow-y-auto p-8 bg-gray-50 dark:bg-black">
                 <div class="container mx-auto">
-                    <div class="flex justify-between items-center mb-8">
-                        <div>
-                            <h2 class="text-3xl font-bold dark:text-white">Data Infaq Mangrove</h2>
-                            <p class="text-gray-500">Kelola data para donatur infaq mangrove disini.</p>
-                        </div>
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+    <div>
+        <h2 class="text-3xl font-bold dark:text-white">Data Infaq Mangrove</h2>
+        <p class="text-gray-500">Kelola data para donatur infaq mangrove disini.</p>
+    </div>
 
-                        <div class="flex items-center gap-4">
-                            {{-- Form Update Harga --}}
-                            <form action="{{ route('admin.mangrove.update-harga') }}" method="POST"
-                                class="flex items-center gap-2" x-data="{
-                                    harga: '{{ $hargaMangrove }}',
-                                    formatRupiah(value) {
-                                        let number = value.replace(/[^0-9]/g, '');
-                                        return number ? 'Rp ' + number.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '';
-                                    }
-                                }">
-                                @csrf
+    <div class="flex flex-wrap items-center gap-4">
+        {{-- Live Search Input dengan Alpine.js --}}
+        <div class="relative w-full md:w-64" x-data="{ search: '{{ request('search') }}' }">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+                <i class="ri-search-line text-lg"></i>
+            </span>
+            <input type="text"
+                x-model="search"
+                @input.debounce.500ms="window.location.href = '{{ route('admin.mangrove.index') }}?search=' + encodeURIComponent(search)"
+                placeholder="Cari donatur, email..."
+                class="w-full pl-10 pr-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+        </div>
 
-                                {{-- Input Tersembunyi untuk dikirim ke Controller (angka murni) --}}
-                                <input type="hidden" name="harga" :value="harga.replace(/[^0-9]/g, '')">
+        {{-- Form Update Harga --}}
+        <form action="{{ route('admin.mangrove.update-harga') }}" method="POST"
+            class="flex items-center gap-2" x-data="{
+                harga: '{{ $hargaMangrove }}',
+                formatRupiah(value) {
+                    let number = value.replace(/[^0-9]/g, '');
+                    return number ? 'Rp ' + number.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '';
+                }
+            }">
+            @csrf
 
-                                {{-- Input Tampilan (Format Rp) --}}
-                                <input type="text" :value="formatRupiah(harga)" @input="harga = $event.target.value"
-                                    placeholder="Rp 0"
-                                    class="px-3 py-2 border rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-white w-40 focus:ring-2 focus:ring-blue-500 outline-none">
+            {{-- Input Tersembunyi untuk dikirim ke Controller (angka murni) --}}
+            <input type="hidden" name="harga" :value="harga.replace(/[^0-9]/g, '')">
 
-                                <button type="submit"
-                                    class="text-xs bg-gray-200 dark:bg-gray-700 px-3 py-2 rounded-lg hover:bg-gray-300 transition dark:text-white">
-                                    Set Harga
-                                </button>
-                            </form>
+            {{-- Input Tampilan (Format Rp) --}}
+            <input type="text" :value="formatRupiah(harga)" @input="harga = $event.target.value"
+                placeholder="Rp 0"
+                class="px-3 py-2 border rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:text-white w-40 focus:ring-2 focus:ring-blue-500 outline-none">
 
-                            {{-- Tombol Tambah --}}
-                            <a href="{{ route('admin.mangrove.tambah') }}"
-                                class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition">
-                                + Tambah Donatur
-                            </a>
-                        </div>
-                    </div>
+            <button type="submit"
+                class="text-xs bg-gray-200 dark:bg-gray-700 px-3 py-2 rounded-lg hover:bg-gray-300 transition dark:text-white whitespace-nowrap">
+                Set Harga
+            </button>
+        </form>
+
+        {{-- Tombol Tambah --}}
+        <a href="{{ route('admin.mangrove.tambah') }}"
+            class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition whitespace-nowrap">
+            + Tambah Donatur
+        </a>
+    </div>
+</div>
                     {{-- Notifikasi Sukses --}}
                     @if (session('success'))
                         <div class="bg-green-100 border border-green-200 text-green-700 p-4 rounded-xl mb-6 shadow-sm">

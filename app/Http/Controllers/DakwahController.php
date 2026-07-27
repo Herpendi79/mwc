@@ -8,9 +8,22 @@ use Illuminate\Support\Facades\Storage;
 
 class DakwahController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $dakwahs = DakwahModel::all();
+        $query = DakwahModel::latest();
+
+        // Filter live search
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('mubaligh', 'like', '%' . $search . '%')
+                    ->orWhere('tgl', 'like', '%' . $search . '%')
+                    ->orWhere('isi', 'like', '%' . $search . '%');
+            });
+        }
+
+        $dakwahs = $query->paginate(10)->withQueryString();
+
         return view('admin.dakwah.index', compact('dakwahs'));
     }
 

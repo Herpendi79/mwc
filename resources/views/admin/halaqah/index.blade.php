@@ -13,15 +13,30 @@
                 <div class="container mx-auto min-h-full flex flex-col">
 
                     {{-- Header & Aksi --}}
-                    <div class="flex justify-between items-center mb-8">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                         <div>
                             <h2 class="text-3xl font-bold dark:text-white">Halaqah</h2>
                             <p class="text-gray-500">Daftar kegiatan halaqah dan galeri foto</p>
                         </div>
-                        <a href="{{ route('admin.halaqah.tambah') }}"
-                            class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition">
-                            + Tambah Data
-                        </a>
+
+                        <div class="flex items-center gap-4 w-full md:w-auto">
+                            {{-- Live Search Input dengan Alpine.js --}}
+                            <div class="relative w-full md:w-72" x-data="{ search: '{{ request('search') }}' }">
+                                <span
+                                    class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+                                    <i class="ri-search-line text-lg"></i>
+                                </span>
+                                <input type="text" x-model="search"
+                                    @input.debounce.500ms="window.location.href = '{{ route('admin.halaqah.index') }}?search=' + encodeURIComponent(search)"
+                                    placeholder="Cari judul, tema, narsum..."
+                                    class="w-full pl-10 pr-4 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl text-sm dark:text-white focus:outline-none focus:border-blue-500 transition">
+                            </div>
+
+                            <a href="{{ route('admin.halaqah.tambah') }}"
+                                class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition whitespace-nowrap">
+                                + Tambah Data
+                            </a>
+                        </div>
                     </div>
 
                     {{-- Notifikasi Sukses --}}
@@ -195,8 +210,7 @@
                                                     <p class="font-bold">Link Youtube:</p>
                                                     <p class="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg mt-1">
                                                         @if ($item->link_yt)
-                                                            <a href="{{ $item->link_yt }}"
-                                                                target="_blank"
+                                                            <a href="{{ $item->link_yt }}" target="_blank"
                                                                 class="text-blue-600 hover:text-blue-800 underline font-medium">
                                                                 {{ $item->link_yt }}
                                                             </a>
@@ -249,7 +263,9 @@
                             </div>
                         </div>
                     </div>
-
+                    <div class="mt-4">
+                        {{ $halaqah->links() }}
+                    </div>
                 </div>
             </main>
         </div>

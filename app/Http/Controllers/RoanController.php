@@ -14,9 +14,24 @@ use App\Models\User; // Pastikan model User di-import
 class RoanController extends Controller
 {
     // 1. Menampilkan Daftar Data
-    public function index()
+    public function index(Request $request)
     {
-        $roans = RoanModel::withCount('peserta')->get();
+        $query = RoanModel::withCount('peserta')->with('peserta')->latest();
+
+        // Filter pencarian live search
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('judul', 'like', '%' . $search . '%')
+                    ->orWhere('lokasi', 'like', '%' . $search . '%')
+                    ->orWhere('pj', 'like', '%' . $search . '%')
+                    ->orWhere('tema', 'like', '%' . $search . '%')
+                    ->orWhere('deskripsi', 'like', '%' . $search . '%');
+            });
+        }
+
+        $roans = $query->paginate(10)->withQueryString();
+
         return view('admin.roan.index', compact('roans'));
     }
 

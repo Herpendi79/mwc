@@ -8,9 +8,24 @@ use Illuminate\Support\Facades\Storage;
 
 class KhutbahController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $khutbahs = KhutbahModel::latest()->get();
+        $query = KhutbahModel::latest();
+
+        // Filter live search
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('judul', 'like', '%' . $search . '%')
+                    ->orWhere('khatib', 'like', '%' . $search . '%')
+                    ->orWhere('masjid', 'like', '%' . $search . '%')
+                    ->orWhere('ringkasan', 'like', '%' . $search . '%')
+                    ->orWhere('tgl', 'like', '%' . $search . '%');
+            });
+        }
+
+        $khutbahs = $query->paginate(10)->withQueryString();
+
         return view('admin.khutbah.index', compact('khutbahs'));
     }
 

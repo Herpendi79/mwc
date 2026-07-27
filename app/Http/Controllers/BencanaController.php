@@ -14,9 +14,25 @@ use Illuminate\Support\Facades\Mail;
 
 class BencanaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $bencana = BencanaModel::orderBy('tgl', 'desc')->get();
+        $query = BencanaModel::latest('tgl');
+
+        // Filter pencarian live search
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('pelapor', 'like', '%' . $search . '%')
+                    ->orWhere('jenis_bencana', 'like', '%' . $search . '%')
+                    ->orWhere('lokasi', 'like', '%' . $search . '%')
+                    ->orWhere('kebutuhan', 'like', '%' . $search . '%')
+                    ->orWhere('deskripsi', 'like', '%' . $search . '%')
+                    ->orWhere('status', 'like', '%' . $search . '%');
+            });
+        }
+
+        $bencana = $query->paginate(10)->withQueryString();
+
         return view('admin.bencana.index', compact('bencana'));
     }
     public function index_anggota()

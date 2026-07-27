@@ -12,11 +12,23 @@ use Illuminate\Support\Facades\File;
 
 class MangroveController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Mengambil data terbaru dan melakukan pagination
-        $mangroves = MangroveModel::latest()->paginate(10);
+        $query = MangroveModel::latest();
+
+        // Filter pencarian live search
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('donatur', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%')
+                    ->orWhere('pembayaran', 'like', '%' . $search . '%');
+            });
+        }
+
+        $mangroves = $query->paginate(10)->withQueryString();
         $hargaMangrove = Storage::exists('harga_mangrove.txt') ? Storage::get('harga_mangrove.txt') : 0;
+
         return view('admin.mangrove.index', compact('mangroves', 'hargaMangrove'));
     }
 

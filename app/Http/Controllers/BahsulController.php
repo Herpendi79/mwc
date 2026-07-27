@@ -22,9 +22,20 @@ use Illuminate\Support\Facades\Log;
 class BahsulController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $bahsul = BahsulModel::withCount('peserta')->get();
+        $query = BahsulModel::withCount('peserta');
+
+        // Pencarian berdasarkan judul atau kategori
+        if ($request->has('search') && $request->search != '') {
+            $query->where(function ($q) use ($request) {
+                $q->where('judul', 'like', '%' . $request->search . '%')
+                    ->orWhere('kategori', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $bahsul = $query->latest()->paginate(10)->withQueryString();
+
         return view('admin.bahsul.index', compact('bahsul'));
     }
 

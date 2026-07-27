@@ -15,10 +15,23 @@ use App\Mail\PendaftaranRelawanMail; // Gunakan mail baru untuk relawan
 
 class RelawanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Ambil semua relawan, sertakan relasi 'peserta', dan hitung jumlahnya
-        $relawans = RelawanModel::with('peserta')->withCount('peserta')->get();
+        $query = RelawanModel::with('peserta')->withCount('peserta')->latest();
+
+        // Filter pencarian live search
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('judul', 'like', '%' . $search . '%')
+                    ->orWhere('lokasi', 'like', '%' . $search . '%')
+                    ->orWhere('bantuan', 'like', '%' . $search . '%')
+                    ->orWhere('koordinator', 'like', '%' . $search . '%')
+                    ->orWhere('deskripsi', 'like', '%' . $search . '%');
+            });
+        }
+
+        $relawans = $query->paginate(10)->withQueryString();
 
         return view('admin.relawan.index', compact('relawans'));
     }

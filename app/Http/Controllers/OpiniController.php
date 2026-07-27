@@ -13,9 +13,24 @@ use Illuminate\Support\Facades\Storage;
 
 class OpiniController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $opinis = OpiniModel::latest()->get();
+        $query = OpiniModel::latest();
+
+        // Filter live search
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('judul', 'like', '%' . $search . '%')
+                    ->orWhere('penulis', 'like', '%' . $search . '%')
+                    ->orWhere('ringkasan', 'like', '%' . $search . '%')
+                    ->orWhere('status', 'like', '%' . $search . '%')
+                    ->orWhere('created_at', 'like', '%' . $search . '%');
+            });
+        }
+
+        $opinis = $query->paginate(10)->withQueryString();
+
         return view('admin.opini.index', compact('opinis'));
     }
 
