@@ -88,6 +88,9 @@
                                                     ),
                                                 )
                                                 : [];
+
+                                            // Mengurutkan array secara ascending (A - Z)
+                                            sort($kategoris);
                                         @endphp
 
                                         @foreach ($kategoris as $kat)
