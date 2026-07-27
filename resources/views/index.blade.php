@@ -24,26 +24,34 @@
                                 @forelse ($dataBerita as $item)
                                     <!-- Single Slider Item -->
                                     <div class="single-slider">
-                                        <div class="trending-top mb-30">
-                                            <div class="trend-top-img img-large">
+                                        <div class="trending-top mb-30"
+                                            style="width: 100% !important; max-width: 100% !important; overflow: hidden !important; height: auto !important;">
+                                            <div class="trend-top-img img-large"
+                                                style="position: relative !important; width: 100% !important; max-width: 100% !important; height: auto !important; min-height: 0 !important; overflow: hidden !important;">
                                                 <img src="{{ !empty($item->foto) && Storage::disk('public')->exists('foto_berita/' . $item->foto) ? asset('storage/foto_berita/' . $item->foto) : asset('storage/foto_berita/berita-default.jpeg') }}"
-                                                    alt="{{ $item->judul }}">
+                                                    alt="{{ $item->judul }}"
+                                                    style="width: 100% !important; height: auto !important; display: block !important;">
 
-                                                <div class="trend-top-cap">
+                                                <div class="trend-top-cap"
+                                                    style="position: absolute !important; bottom: 0 !important; left: 0 !important; right: 0 !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; padding: 12px 15px !important; overflow: hidden !important; background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%) !important;">
                                                     <span class="bgr" data-animation="fadeInUp" data-delay=".2s"
-                                                        data-duration="1000ms">
+                                                        data-duration="1000ms"
+                                                        style="display: inline-block !important; max-width: 100% !important; white-space: normal !important; margin-bottom: 5px !important;">
                                                         {{ $item->penulis }}
                                                     </span>
 
-                                                    <h2>
+                                                    <h2
+                                                        style="width: 100% !important; max-width: 100% !important; word-break: break-word !important; overflow-wrap: break-word !important; white-space: normal !important; margin-bottom: 5px !important;">
                                                         <a href="{{ route('berita.detil', $item->id_br) }}"
                                                             data-animation="fadeInUp" data-delay=".4s"
-                                                            data-duration="1000ms" target="_blank">
+                                                            data-duration="1000ms" target="_blank"
+                                                            style="display: block !important; width: 100% !important; max-width: 100% !important; word-break: break-word !important; overflow-wrap: break-word !important; white-space: normal !important; font-size: clamp(15px, 3.8vw, 22px) !important; line-height: 1.25 !important;">
                                                             {{ $item->judul }}
                                                         </a>
                                                     </h2>
 
-                                                    <p data-animation="fadeInUp" data-delay=".6s" data-duration="1000ms">
+                                                    <p data-animation="fadeInUp" data-delay=".6s" data-duration="1000ms"
+                                                        style="word-break: break-word !important; margin: 0 !important; font-size: 12px !important;">
                                                         by Admin - {{ $item->created_at->format('M d, Y') }}
                                                     </p>
                                                 </div>
@@ -53,16 +61,21 @@
                                 @empty
                                     <!-- Jika data kosong -->
                                     <div class="single-slider">
-                                        <div class="trending-top mb-30">
-                                            <div class="trend-top-img img-large">
-                                                <!-- Pastikan file 'kajian-default.jpeg' ada di public/assets/img/ -->
+                                        <div class="trending-top mb-30"
+                                            style="width: 100% !important; max-width: 100% !important; overflow: hidden !important; height: auto !important;">
+                                            <div class="trend-top-img img-large"
+                                                style="position: relative !important; width: 100% !important; max-width: 100% !important; height: auto !important; min-height: 0 !important; overflow: hidden !important;">
                                                 <img src="{{ asset('storage/foto_berita/berita-default.jpeg') }}"
-                                                    alt="Data belum tersedia">
+                                                    alt="Data belum tersedia"
+                                                    style="width: 100% !important; height: auto !important; display: block !important;">
 
-                                                <div class="trend-top-cap">
-                                                    <h2>
-                                                        <a href="#" style="color: #ffffff !important;">Data Kegiatan
-                                                            belum tersedia</a>
+                                                <div class="trend-top-cap"
+                                                    style="position: absolute !important; bottom: 0 !important; left: 0 !important; right: 0 !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; padding: 15px !important; overflow: hidden !important;">
+                                                    <h2
+                                                        style="width: 100% !important; max-width: 100% !important; word-break: break-word !important; overflow-wrap: break-word !important; white-space: normal !important;">
+                                                        <a href="#"
+                                                            style="color: #ffffff !important; display: block !important; width: 100% !important; max-width: 100% !important; word-break: break-word !important; overflow-wrap: break-word !important; white-space: normal !important;">Data
+                                                            Kegiatan belum tersedia</a>
                                                     </h2>
                                                 </div>
                                             </div>
@@ -87,7 +100,8 @@
                                                     <span class="bgb">Halaqah</span>
 
                                                     <h2>
-                                                        <a href="{{ url('kajian-halaqah/detil/' . $dataHalaqah[0]->id) }}" target="_blank">
+                                                        <a href="{{ url('kajian-halaqah/detil/' . $dataHalaqah[0]->id) }}"
+                                                            target="_blank">
                                                             {{ $dataHalaqah[0]->judul }}
                                                         </a>
                                                     </h2>
@@ -813,7 +827,7 @@
 
                                             <h4>
                                                 <a href="{{ route('kajian.detil', $item->id) }}"
-                                                                target="_blank">{{ $item->judul }}</a>
+                                                    target="_blank">{{ $item->judul }}</a>
                                             </h4>
                                             <p>{{ \Carbon\Carbon::parse($item->tanggal)->format('M d, Y') }}</p>
 
@@ -960,7 +974,8 @@
                                                     </div>
                                                     <div class="weekly3-caption">
                                                         <h4>
-                                                            <a href="{{ route('opini.detil', $opini->id_op) }}" target="_blank">
+                                                            <a href="{{ route('opini.detil', $opini->id_op) }}"
+                                                                target="_blank">
                                                                 {{ $opini->judul }}
                                                             </a>
                                                         </h4>
@@ -987,7 +1002,7 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-10 col-md-10">
                         <div class="banner-one">
-                            <a  "{{ route('register') }}" target="_blank">
+                            <a "{{ route('register') }}" target="_blank">
                                 <img src="{{ asset('storage/foto/gabung3.jpeg') }}" alt="Gabung Sekarang">
                             </a>
                         </div>
