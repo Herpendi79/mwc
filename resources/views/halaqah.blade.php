@@ -243,7 +243,7 @@
                                                 alt="post" style="width: 80px; height: 80px; object-fit: cover;">
 
                                             <div class="media-body">
-                                                <a href="{{ route('halaqah.detil', $halaqah->id) }}" target="_blank">
+                                                <a href="{{ route('halaqah.detil', $post->id) }}" target="_blank">
                                                     <!-- Hapus margin pada h3 agar tidak mendorong teks ke bawah -->
                                                     <h3 style="margin: 0; font-size: 16px; line-height: 1.2;">
                                                         {{ Str::limit($post->judul, 70) }}

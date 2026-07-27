@@ -67,7 +67,7 @@
                     <div class="col-lg-4">
                         <div class="blog_right_sidebar">
                             <aside class="single_sidebar_widget search_widget">
-                                <form action="{{ route('berita') }}" method="GET">
+                                <form action="{{ route('kajian') }}" method="GET">
                                     <div class="form-group">
                                         <div class="input-group mb-3">
                                             <input type="text" class="form-control" name="keyword"
@@ -105,7 +105,7 @@
                                     @foreach ($archives as $arc)
                                         <li>
                                             {{-- Link ke route berita dengan filter bulan dan tahun --}}
-                                            <a href="{{ route('berita', ['bulan' => $arc->month, 'tahun' => $arc->year]) }}"
+                                            <a href="{{ route('kajian', ['bulan' => $arc->month, 'tahun' => $arc->year]) }}"
                                                 class="d-flex">
                                                 <p>
                                                     {{ \Carbon\Carbon::create($arc->year, $arc->month)->format('F Y') }}
@@ -185,7 +185,7 @@
                                     @foreach ($tags as $kata => $jumlah)
                                         <li>
                                             {{-- Menggunakan route pencarian yang sudah Anda buat --}}
-                                            <a href="{{ route('berita', ['keyword' => $kata]) }}">
+                                            <a href="{{ route('kajian', ['keyword' => $kata]) }}">
                                                 {{ $kata }}
                                             </a>
                                         </li>

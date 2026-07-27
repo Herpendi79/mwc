@@ -64,10 +64,22 @@
                                         @endphp
 
                                         @foreach ($listFoto as $foto)
-                                            @if (trim($foto) !== '')
+                                            @php
+                                                $namaFoto = trim($foto);
+                                            @endphp
+
+                                            @if ($namaFoto !== '')
                                                 @php
-                                                    $urlFoto = asset('storage/foto_halaqah/' . trim($foto));
+                                                    // Periksa keberadaan fisik file di disk public
+                                                    $pathFisik = 'foto_halaqah/' . $namaFoto;
+                                                    $adaFisik = Storage::disk('public')->exists($pathFisik);
+
+                                                    // Tentukan URL berdasarkan ketersediaan file fisik
+                                                    $urlFoto = $adaFisik
+                                                        ? asset('storage/' . $pathFisik)
+                                                        : asset('storage/foto_halaqah/default-halaqah.jpeg');
                                                 @endphp
+
                                                 <div style="width: 200px; height: 200px;">
                                                     <a href="{{ $urlFoto }}" target="_blank" rel="noopener noreferrer">
                                                         <img src="{{ $urlFoto }}" alt="Foto Galeri"
@@ -128,7 +140,7 @@
                     <div class="col-lg-4">
                         <div class="blog_right_sidebar">
                             <aside class="single_sidebar_widget search_widget">
-                                <form action="{{ route('berita') }}" method="GET">
+                                <form action="{{ route('halaqah') }}" method="GET">
                                     <div class="form-group">
                                         <div class="input-group mb-3">
                                             <input type="text" class="form-control" name="keyword"

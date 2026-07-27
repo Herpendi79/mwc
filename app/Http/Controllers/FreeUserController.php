@@ -310,16 +310,21 @@ class FreeUserController extends Controller
                     ->orWhere('tema', 'LIKE', "%{$keyword}%")
                     ->orWhere('pemateri', 'LIKE', "%{$keyword}%")
                     ->orWhere('lokasi', 'LIKE', "%{$keyword}%")
-                    ->orWhere('created_at', 'LIKE', "%{$keyword}%"); // Pencarian tanggal
+                    ->orWhere('created_at', 'LIKE', "%{$keyword}%");
             });
+        }
+
+        // === TAMBAHKAN FILTER BULAN DAN TAHUN DI SINI (sesuaikan kolom tanggal, misal: tanggal atau created_at) ===
+        if ($request->has('bulan') && $request->has('tahun')) {
+            $query->whereMonth('tanggal', $request->bulan)
+                ->whereYear('tanggal', $request->tahun);
         }
 
         $dataKajian = $query->latest()->paginate(5);
 
-        // Mempertahankan query string saat berpindah halaman pagination
-        $dataKajian->appends(['keyword' => $request->keyword]);
+        // Mempertahankan query string (keyword, bulan, tahun) saat berpindah halaman pagination
+        $dataKajian->appends($request->only(['keyword', 'bulan', 'tahun']));
 
-        // Di dalam method controller yang memuat view 'berita'
         $kategoriList = KajianModel::select('judul', DB::raw('count(*) as total'))
             ->where('status', 'publish')
             ->groupBy('judul')
@@ -334,11 +339,9 @@ class FreeUserController extends Controller
 
         $tags = [];
         foreach ($semuaJudul as $judul) {
-            // Pecah judul menjadi array kata dan bersihkan karakter khusus
             $kataKata = explode(' ', strtolower(preg_replace('/[^a-zA-Z0-9\s]/', '', $judul)));
 
             foreach ($kataKata as $kata) {
-                // Abaikan kata sambung atau kata yang terlalu pendek (<= 3 huruf)
                 if (!in_array($kata, $kataSambung) && strlen($kata) > 3) {
                     if (!isset($tags[$kata])) {
                         $tags[$kata] = 0;
@@ -348,9 +351,7 @@ class FreeUserController extends Controller
             }
         }
 
-        // Urutkan berdasarkan yang paling sering muncul
         arsort($tags);
-        // Batasi hanya ambil 10-15 tag teratas
         $tags = array_slice($tags, 0, 15);
 
         $archives = KajianModel::selectRaw('YEAR(tanggal) as year, MONTH(tanggal) as month, COUNT(*) as total')
@@ -359,7 +360,6 @@ class FreeUserController extends Controller
             ->orderBy('year', 'desc')
             ->orderBy('month', 'desc')
             ->get();
-
 
         $listKajian = KajianModel::latest()->take(6)->get();
 
@@ -380,14 +380,20 @@ class FreeUserController extends Controller
                 $q->where('judul', 'LIKE', "%{$keyword}%")
                     ->orWhere('kategori', 'LIKE', "%{$keyword}%")
                     ->orWhere('penulis', 'LIKE', "%{$keyword}%")
-                    ->orWhere('isi', 'LIKE', "%{$keyword}%"); // Pencarian tanggal
+                    ->orWhere('isi', 'LIKE', "%{$keyword}%");
             });
+        }
+
+        // === TAMBAHKAN FILTER BULAN DAN TAHUN DI SINI ===
+        if ($request->has('bulan') && $request->has('tahun')) {
+            $query->whereMonth('created_at', $request->bulan)
+                ->whereYear('created_at', $request->tahun);
         }
 
         $dataBerita = $query->latest()->paginate(5);
 
-        // Mempertahankan query string saat berpindah halaman pagination
-        $dataBerita->appends(['keyword' => $request->keyword]);
+        // Mempertahankan query string (keyword, bulan, tahun) saat berpindah halaman pagination
+        $dataBerita->appends($request->only(['keyword', 'bulan', 'tahun']));
 
         // Di dalam method controller yang memuat view 'berita'
         $kategoriList = BeritaModel::select('kategori', DB::raw('count(*) as total'))
@@ -415,7 +421,6 @@ class FreeUserController extends Controller
             ->countBy()
             ->sortDesc()
             ->take(10);
-
 
         $listBerita = BeritaModel::latest()->take(6)->get();
 
@@ -565,7 +570,6 @@ class FreeUserController extends Controller
         // Kembali ke halaman sebelumnya dengan pesan sukses
         return redirect()->back()->with('success', 'Komentar berhasil ditambahkan!');
     }
-
     public function opiniWarga(Request $request)
     {
         $query = OpiniModel::where('status', 'publish');
@@ -579,23 +583,27 @@ class FreeUserController extends Controller
                     ->orWhere('kategori', 'LIKE', "%{$keyword}%")
                     ->orWhere('penulis', 'LIKE', "%{$keyword}%")
                     ->orWhere('ringkasan', 'LIKE', "%{$keyword}%")
-                    ->orWhere('created_at', 'LIKE', "%{$keyword}%"); // Pencarian tanggal
+                    ->orWhere('created_at', 'LIKE', "%{$keyword}%");
             });
+        }
+
+        // === TAMBAHKAN FILTER BULAN DAN TAHUN DI SINI ===
+        if ($request->has('bulan') && $request->has('tahun')) {
+            $query->whereMonth('created_at', $request->bulan)
+                ->whereYear('created_at', $request->tahun);
         }
 
         $dataOpini = $query->latest()->paginate(4);
 
-        // Mempertahankan query string saat berpindah halaman pagination
-        $dataOpini->appends(['keyword' => $request->keyword]);
+        // Mempertahankan query string (keyword, bulan, tahun) saat berpindah halaman pagination
+        $dataOpini->appends($request->only(['keyword', 'bulan', 'tahun']));
 
-        // Di dalam method controller yang memuat view 'berita'
         $kategoriList = OpiniModel::select('kategori', DB::raw('count(*) as total'))
             ->where('status', 'publish')
             ->groupBy('kategori')
             ->get();
 
         $recentPosts = OpiniModel::where('status', 'publish')->latest()->take(4)->get();
-
 
         $tags = OpiniModel::where('status', 'publish')
             ->pluck('ringkasan')
@@ -738,7 +746,7 @@ class FreeUserController extends Controller
 
     public function programRelawan(Request $request)
     {
-        $query = RelawanModel::latest();
+        $query = RelawanModel::query();
 
         // Jika ada keyword, filter berdasarkan kolom yang diinginkan
         if ($request->has('keyword') && $request->keyword != '') {
@@ -748,16 +756,21 @@ class FreeUserController extends Controller
                 $q->where('judul', 'LIKE', "%{$keyword}%")
                     ->orWhere('lokasi', 'LIKE', "%{$keyword}%")
                     ->orWhere('koordinator', 'LIKE', "%{$keyword}%")
-                    ->orWhere('deskripsi', 'LIKE', "%{$keyword}%"); // Pencarian tanggal
+                    ->orWhere('deskripsi', 'LIKE', "%{$keyword}%");
             });
+        }
+
+        // === TAMBAHKAN FILTER BULAN DAN TAHUN ===
+        if ($request->has('bulan') && $request->has('tahun')) {
+            $query->whereMonth('tgl', $request->bulan)
+                ->whereYear('tgl', $request->tahun);
         }
 
         $dataBahsul = $query->orderBy('tgl', 'desc')->paginate(5);
 
-        // Mempertahankan query string saat berpindah halaman pagination
-        $dataBahsul->appends(['keyword' => $request->keyword]);
+        // Mempertahankan query string (keyword, bulan, tahun) saat berpindah halaman pagination
+        $dataBahsul->appends($request->only(['keyword', 'bulan', 'tahun']));
 
-        // Di dalam method controller yang memuat view 'berita'
         $kategoriList = RelawanModel::select('judul', DB::raw('count(*) as total'))
             ->groupBy('judul')
             ->get();
@@ -771,11 +784,9 @@ class FreeUserController extends Controller
 
         $tags = [];
         foreach ($semuaJudul as $judul) {
-            // Pecah judul menjadi array kata dan bersihkan karakter khusus
             $kataKata = explode(' ', strtolower(preg_replace('/[^a-zA-Z0-9\s]/', '', $judul)));
 
             foreach ($kataKata as $kata) {
-                // Abaikan kata sambung atau kata yang terlalu pendek (<= 3 huruf)
                 if (!in_array($kata, $kataSambung) && strlen($kata) > 3) {
                     if (!isset($tags[$kata])) {
                         $tags[$kata] = 0;
@@ -785,9 +796,7 @@ class FreeUserController extends Controller
             }
         }
 
-        // Urutkan berdasarkan yang paling sering muncul
         arsort($tags);
-        // Batasi hanya ambil 10-15 tag teratas
         $tags = array_slice($tags, 0, 15);
 
         $archives = RelawanModel::selectRaw('YEAR(tgl) as year, MONTH(tgl) as month, COUNT(*) as total')
@@ -797,8 +806,6 @@ class FreeUserController extends Controller
             ->get();
 
         $listKajian = RelawanModel::latest()->take(6)->get();
-
-        // $materiPosts = RoanModel::whereNotNull('lampiran')->latest()->get();
 
         return view('relawan', compact('dataBahsul', 'recentPosts', 'kategoriList', 'archives', 'tags', 'listKajian'));
     }
@@ -892,7 +899,7 @@ class FreeUserController extends Controller
 
     public function programRoan(Request $request)
     {
-        $query = RoanModel::latest();
+        $query = RoanModel::query();
 
         // Jika ada keyword, filter berdasarkan kolom yang diinginkan
         if ($request->has('keyword') && $request->keyword != '') {
@@ -903,16 +910,21 @@ class FreeUserController extends Controller
                     ->orWhere('tema', 'LIKE', "%{$keyword}%")
                     ->orWhere('lokasi', 'LIKE', "%{$keyword}%")
                     ->orWhere('pj', 'LIKE', "%{$keyword}%")
-                    ->orWhere('deskripsi', 'LIKE', "%{$keyword}%"); // Pencarian tanggal
+                    ->orWhere('deskripsi', 'LIKE', "%{$keyword}%");
             });
+        }
+
+        // === TAMBAHKAN FILTER BULAN DAN TAHUN ===
+        if ($request->has('bulan') && $request->has('tahun')) {
+            $query->whereMonth('tgl', $request->bulan)
+                ->whereYear('tgl', $request->tahun);
         }
 
         $dataBahsul = $query->orderBy('tgl', 'desc')->paginate(5);
 
-        // Mempertahankan query string saat berpindah halaman pagination
-        $dataBahsul->appends(['keyword' => $request->keyword]);
+        // Mempertahankan query string (keyword, bulan, tahun) saat berpindah halaman pagination
+        $dataBahsul->appends($request->only(['keyword', 'bulan', 'tahun']));
 
-        // Di dalam method controller yang memuat view 'berita'
         $kategoriList = RoanModel::select('judul', DB::raw('count(*) as total'))
             ->groupBy('judul')
             ->get();
@@ -926,11 +938,9 @@ class FreeUserController extends Controller
 
         $tags = [];
         foreach ($semuaJudul as $judul) {
-            // Pecah judul menjadi array kata dan bersihkan karakter khusus
             $kataKata = explode(' ', strtolower(preg_replace('/[^a-zA-Z0-9\s]/', '', $judul)));
 
             foreach ($kataKata as $kata) {
-                // Abaikan kata sambung atau kata yang terlalu pendek (<= 3 huruf)
                 if (!in_array($kata, $kataSambung) && strlen($kata) > 3) {
                     if (!isset($tags[$kata])) {
                         $tags[$kata] = 0;
@@ -940,9 +950,7 @@ class FreeUserController extends Controller
             }
         }
 
-        // Urutkan berdasarkan yang paling sering muncul
         arsort($tags);
-        // Batasi hanya ambil 10-15 tag teratas
         $tags = array_slice($tags, 0, 15);
 
         $archives = RoanModel::selectRaw('YEAR(tgl) as year, MONTH(tgl) as month, COUNT(*) as total')
@@ -952,8 +960,6 @@ class FreeUserController extends Controller
             ->get();
 
         $listKajian = RoanModel::latest()->take(6)->get();
-
-        // $materiPosts = RoanModel::whereNotNull('lampiran')->latest()->get();
 
         return view('roan', compact('dataBahsul', 'recentPosts', 'kategoriList', 'archives', 'tags', 'listKajian'));
     }
@@ -1049,7 +1055,7 @@ class FreeUserController extends Controller
     {
         $query = HalaqahModel::where('status', 'publish');
 
-        // Jika ada keyword, filter berdasarkan kolom yang diinginkan
+        // Jika ada keyword pencarian
         if ($request->has('keyword') && $request->keyword != '') {
             $keyword = $request->keyword;
 
@@ -1058,16 +1064,21 @@ class FreeUserController extends Controller
                     ->orWhere('tema', 'LIKE', "%{$keyword}%")
                     ->orWhere('narsum', 'LIKE', "%{$keyword}%")
                     ->orWhere('deskripsi', 'LIKE', "%{$keyword}%")
-                    ->orWhere('tanggal', 'LIKE', "%{$keyword}%"); // Pencarian tanggal
+                    ->orWhere('tanggal', 'LIKE', "%{$keyword}%");
             });
+        }
+
+        // === TAMBAHKAN FILTER BULAN DAN TAHUN DI SINI ===
+        if ($request->has('bulan') && $request->has('tahun')) {
+            $query->whereMonth('tanggal', $request->bulan)
+                ->whereYear('tanggal', $request->tahun);
         }
 
         $dataHalaqah = $query->orderBy('tanggal', 'desc')->paginate(5);
 
-        // Mempertahankan query string saat berpindah halaman pagination
-        $dataHalaqah->appends(['keyword' => $request->keyword]);
+        // Mempertahankan query string (keyword, bulan, tahun) saat berpindah halaman pagination
+        $dataHalaqah->appends($request->only(['keyword', 'bulan', 'tahun']));
 
-        // Di dalam method controller yang memuat view 'berita'
         $kategoriList = HalaqahModel::select('judul', DB::raw('count(*) as total'))
             ->where('status', 'publish')
             ->groupBy('judul')
@@ -1082,11 +1093,9 @@ class FreeUserController extends Controller
 
         $tags = [];
         foreach ($semuaJudul as $judul) {
-            // Pecah judul menjadi array kata dan bersihkan karakter khusus
             $kataKata = explode(' ', strtolower(preg_replace('/[^a-zA-Z0-9\s]/', '', $judul)));
 
             foreach ($kataKata as $kata) {
-                // Abaikan kata sambung atau kata yang terlalu pendek (<= 3 huruf)
                 if (!in_array($kata, $kataSambung) && strlen($kata) > 3) {
                     if (!isset($tags[$kata])) {
                         $tags[$kata] = 0;
@@ -1096,9 +1105,7 @@ class FreeUserController extends Controller
             }
         }
 
-        // Urutkan berdasarkan yang paling sering muncul
         arsort($tags);
-        // Batasi hanya ambil 10-15 tag teratas
         $tags = array_slice($tags, 0, 15);
 
         $archives = HalaqahModel::selectRaw('YEAR(tanggal) as year, MONTH(tanggal) as month, COUNT(*) as total')
@@ -1109,8 +1116,6 @@ class FreeUserController extends Controller
             ->get();
 
         $listKajian = HalaqahModel::latest()->take(6)->get();
-
-        // $materiPosts = HalaqahModel::whereNotNull('lampiran')->latest()->get();
 
         return view('halaqah', compact('dataHalaqah', 'recentPosts', 'kategoriList', 'archives', 'tags', 'listKajian'));
     }
@@ -1174,16 +1179,21 @@ class FreeUserController extends Controller
                     ->orWhere('kategori', 'LIKE', "%{$keyword}%")
                     ->orWhere('pemohon', 'LIKE', "%{$keyword}%")
                     ->orWhere('lokasi', 'LIKE', "%{$keyword}%")
-                    ->orWhere('tanggal', 'LIKE', "%{$keyword}%"); // Pencarian tanggal
+                    ->orWhere('tanggal', 'LIKE', "%{$keyword}%");
             });
+        }
+
+        // === TAMBAHKAN FILTER BULAN DAN TAHUN DI SINI ===
+        if ($request->has('bulan') && $request->has('tahun')) {
+            $query->whereMonth('tanggal', $request->bulan)
+                ->whereYear('tanggal', $request->tahun);
         }
 
         $dataBahsul = $query->orderBy('tanggal', 'desc')->paginate(4);
 
-        // Mempertahankan query string saat berpindah halaman pagination
-        $dataBahsul->appends(['keyword' => $request->keyword]);
+        // Mempertahankan query string (keyword, bulan, tahun) saat berpindah halaman pagination
+        $dataBahsul->appends($request->only(['keyword', 'bulan', 'tahun']));
 
-        // Di dalam method controller yang memuat view 'berita'
         $kategoriList = BahsulModel::select('kategori', DB::raw('count(*) as total'))
             ->where('status', 'publish')
             ->groupBy('kategori')
@@ -1225,11 +1235,13 @@ class FreeUserController extends Controller
             ->get();
 
         $folderPath = public_path('storage/foto_bahsul');
-        $files = File::files($folderPath);
-        $bahsulPhotos = array_map(fn($file) => $file->getFilename(), $files);
+        $bahsulPhotos = [];
+        if (File::exists($folderPath)) {
+            $files = File::files($folderPath);
+            $bahsulPhotos = array_map(fn($file) => $file->getFilename(), $files);
+        }
 
         $materiPosts = BahsulModel::whereNotNull('lampiran')->latest()->get();
-
 
         return view('bahsul', compact('dataBahsul', 'recentPosts', 'kategoriList', 'archives', 'tags', 'materiPosts', 'bahsulPhotos'));
     }
@@ -1480,7 +1492,14 @@ class FreeUserController extends Controller
 
     public function khutbahJumat(Request $request)
     {
-        $query = KhutbahModel::latest();
+        $query = KhutbahModel::query();
+
+        // Terapkan filter wajib (bukan '-') terlebih dahulu agar konsisten
+        $query->where('judul', '!=', '-')
+            ->where('tema', '!=', '-')
+            ->where('khatib', '!=', '-')
+            ->where('masjid', '!=', '-')
+            ->where('ringkasan', '!=', '-');
 
         // Jika ada keyword, filter berdasarkan kolom yang diinginkan
         if ($request->has('keyword') && $request->keyword != '') {
@@ -1495,19 +1514,20 @@ class FreeUserController extends Controller
             });
         }
 
-        $dataHalaqah = $query->where('tema', '!=', '-')
-            ->where('khatib', '!=', '-')
-            ->where('masjid', '!=', '-')
-            ->where('ringkasan', '!=', '-')
-            ->orderBy('tgl', 'desc')
-            ->paginate(5);
+        // === TAMBAHKAN FILTER BULAN DAN TAHUN DI SINI ===
+        if ($request->has('bulan') && $request->has('tahun')) {
+            $query->whereMonth('tgl', $request->bulan)
+                ->whereYear('tgl', $request->tahun);
+        }
 
-        // Mempertahankan query string saat berpindah halaman pagination
-        $dataHalaqah->appends(['keyword' => $request->keyword]);
+        // Ambil data dengan pagination (menggunakan $query yang sudah difilter)
+        $dataHalaqah = $query->orderBy('tgl', 'desc')->paginate(5);
 
-        // Di dalam method controller yang memuat view 'berita'
-        $kategoriList = KhutbahModel::select('judul')
-            ->selectRaw('count(*) as total')
+        // Mempertahankan query string (keyword, bulan, tahun) saat berpindah halaman pagination
+        $dataHalaqah->appends($request->only(['keyword', 'bulan', 'tahun']));
+
+        // Kategori List (dirapikan sedikit selectnya)
+        $kategoriList = KhutbahModel::select('judul', DB::raw('count(*) as total'))
             ->where('judul', '!=', '-')
             ->groupBy('judul')
             ->get();
@@ -1541,7 +1561,7 @@ class FreeUserController extends Controller
         $tags = array_slice($tags, 0, 15);
 
         $archives = KhutbahModel::selectRaw('YEAR(tgl) as year, MONTH(tgl) as month, COUNT(*) as total')
-            ->where('judul', '!=', '-')
+            ->where('tema', '!=', '-')
             ->groupBy('year', 'month')
             ->orderBy('year', 'desc')
             ->orderBy('month', 'desc')
@@ -1590,7 +1610,7 @@ class FreeUserController extends Controller
 
 
         $kategoriList = KhutbahModel::select('judul', DB::raw('count(*) as total'))
-            ->where('judul', '!=', '-')
+            ->where('tema', '!=', '-')
             ->groupBy('judul')
             ->get();
 

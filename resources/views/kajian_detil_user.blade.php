@@ -55,10 +55,22 @@
                                         @endphp
 
                                         @foreach ($listFoto as $foto)
-                                            @if (trim($foto) !== '')
-                                                @php
-                                                    $urlFoto = asset('storage/foto_kajian/' . trim($foto));
-                                                @endphp
+                                            @php
+                                                $fotoName = trim($foto);
+                                                $pathFisik = 'foto_kajian/' . $fotoName;
+
+                                                // Validasi keberadaan file fisik di disk public
+                                                $fotoTersedia =
+                                                    !empty($fotoName) &&
+                                                    $fotoName !== 'none' &&
+                                                    Storage::disk('public')->exists($pathFisik);
+
+                                                $urlFoto = $fotoTersedia
+                                                    ? asset('storage/' . $pathFisik)
+                                                    : asset('storage/foto_kajian/kajian-default.jpeg');
+                                            @endphp
+
+                                            @if ($fotoName !== '')
                                                 <div style="width: 200px; height: 200px;">
                                                     <a href="{{ $urlFoto }}" target="_blank" rel="noopener noreferrer">
                                                         <img src="{{ $urlFoto }}" alt="Foto Galeri"
@@ -119,7 +131,7 @@
                     <div class="col-lg-4">
                         <div class="blog_right_sidebar">
                             <aside class="single_sidebar_widget search_widget">
-                                <form action="{{ route('berita') }}" method="GET">
+                                <form action="{{ route('kajian') }}" method="GET">
                                     <div class="form-group">
                                         <div class="input-group mb-3">
                                             <input type="text" class="form-control" name="keyword"
@@ -175,7 +187,7 @@
                                 </div>
                             </aside>
 
-                             <aside class="single_sidebar_widget popular_post_widget">
+                            <aside class="single_sidebar_widget popular_post_widget">
                                 <h3 class="widget_title">Download Materi</h3>
 
                                 <div class="materi-vertical-slider">

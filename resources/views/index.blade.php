@@ -87,7 +87,7 @@
                                                     <span class="bgb">Halaqah</span>
 
                                                     <h2>
-                                                        <a href="{{ url('halaqah/' . $dataHalaqah[0]->id) }}">
+                                                        <a href="{{ url('kajian-halaqah/detil/' . $dataHalaqah[0]->id) }}" target="_blank">
                                                             {{ $dataHalaqah[0]->judul }}
                                                         </a>
                                                     </h2>
@@ -111,40 +111,53 @@
                                     <div class="trending-top mb-30">
                                         <div class="trend-top-img img-small">
                                             @if (isset($dataDakwah) && $dataDakwah->count() > 0)
-                                                <!-- Gambar Dinamis -->
-                                                <img src="{{ asset('storage/foto_dakwah/dakwah_bg.png') }}"
+                                                @php
+                                                    // Periksa keberadaan fisik file gambar background dakwah
+                                                    $pathBgFisik = 'foto_dakwah/dakwah_bg.png';
+                                                    $bgTersedia = Storage::disk('public')->exists($pathBgFisik);
+
+                                                    $urlBgDakwah = $bgTersedia
+                                                        ? asset('storage/' . $pathBgFisik)
+                                                        : asset('storage/foto_dakwah/dakwah-default.jpeg');
+                                                @endphp
+
+                                                <!-- Gambar Dinamis dengan Validasi Fisik -->
+                                                <img src="{{ $urlBgDakwah }}"
                                                     alt="{{ $dataDakwah->judul ?? 'No Data' }}">
 
                                                 <div class="trend-top-cap trend-top-cap2">
 
                                                     <!-- Judul -->
                                                     <h2>
-                                                        <a href="{{ url('dakwah/' . $dataDakwah->id) }}"
+                                                        <a href="{{ url('pesan-dakwah/') }}" target="_blank"
                                                             style="display: inline-block;
-                                                            position: relative;
-                                                            padding: 12px 20px 12px 45px;
-                                                            background: rgba(0, 0, 0, 0.5);
-                                                            border-left: 4px solid #28a745;
-                                                            border-radius: 4px;
-                                                            color: #ffffff !important;
-                                                            text-decoration: none;">
+                           position: relative;
+                           padding: 14px 20px 14px 45px;
+                           background: rgba(0, 0, 0, 0.75);
+                           border-left: 5px solid #28a745;
+                           border-radius: 6px;
+                           color: #ffffff !important;
+                           text-decoration: none;">
 
-                                                            <!-- Background Quote Icon (dibuat lebih jelas) -->
+                                                            <!-- Background Quote Icon -->
                                                             <span
                                                                 style="position: absolute;
-                                                                left: 15px;
-                                                                top: 10px;
-                                                                font-size: 30px;
-                                                                color: rgba(10, 10, 10, 0.6);
-                                                                font-family: Georgia, serif;
-                                                                line-height: 1;
-                                                                pointer-events: none;">“</span>
+                               left: 15px;
+                               top: 12px;
+                               font-size: 30px;
+                               color: rgba(40, 167, 69, 0.8);
+                               font-family: Georgia, serif;
+                               line-height: 1;
+                               pointer-events: none;">“</span>
 
-                                                            <!-- Isi Dakwah (Stroke dan Bayangan dipertebal agar lebih jelas) -->
+                                                            <!-- Isi Dakwah -->
                                                             <span
                                                                 style="position: relative;
-                                                                -webkit-text-stroke: 1.5px rgb(246, 241, 241);
-                                                                font-weight: bold;">
+                               font-weight: 800;
+                               font-size: 1rem;
+                               color: #ffffff;
+                               text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
+                               letter-spacing: 0.3px;">
                                                                 {!! $dataDakwah->isi !!}
                                                             </span>
                                                         </a>
@@ -223,22 +236,41 @@
                                                     <!-- Left Details Caption: 1 Data Terbaru -->
                                                     <div class="col-xl-6 col-lg-12">
                                                         @php $latest = $roans->first(); @endphp
-                                                        <div class="whats-news-single mb-40">
-                                                            <div class="whates-img">
-                                                                {{-- Cek jika poster ada dan bukan 'none' --}}
-                                                                <img src="{{ $latest->poster && $latest->poster !== 'none' ? asset('storage/foto_roan/' . $latest->poster) : asset('storage/foto_roan/roan-default.jpeg') }}"
-                                                                    alt="{{ $latest->tema }}"
-                                                                    style="width: 360px; height: 245px; object-fit: cover;">
+                                                        @if ($latest)
+                                                            <div class="whats-news-single mb-40">
+                                                                <div class="whates-img">
+                                                                    @php
+                                                                        $posterName = $latest->poster;
+                                                                        $pathFisik = 'foto_roan/' . $posterName;
+
+                                                                        // Cek apakah poster ada di database, bukan 'none', dan file fisiknya benar-benar ada di storage disk public
+                                                                        $posterTersedia =
+                                                                            !empty($posterName) &&
+                                                                            $posterName !== 'none' &&
+                                                                            Storage::disk('public')->exists($pathFisik);
+
+                                                                        $urlPoster = $posterTersedia
+                                                                            ? asset('storage/' . $pathFisik)
+                                                                            : asset(
+                                                                                'storage/foto_roan/roan-default.jpeg',
+                                                                            );
+                                                                    @endphp
+
+                                                                    {{-- Gambar dengan Validasi Fisik Storage --}}
+                                                                    <img src="{{ $urlPoster }}"
+                                                                        alt="{{ $latest->tema }}"
+                                                                        style="width: 360px; height: 245px; object-fit: cover;">
+                                                                </div>
+                                                                <div class="whates-caption">
+                                                                    <h4><a href="{{ route('roan.detil', $latest->id_ro) }}"
+                                                                            target="_blank">Roan
+                                                                            {{ $latest->tema }}</a></h4>
+                                                                    <span>by {{ $latest->pj }} -
+                                                                        {{ \Carbon\Carbon::parse($latest->tgl)->format('M d, Y') }}</span>
+                                                                    <p>{{ Str::words($latest->deskripsi, 19, '...') }}</p>
+                                                                </div>
                                                             </div>
-                                                            <div class="whates-caption">
-                                                                <h4><a href="{{ route('roan.show', $latest->id) }}"
-                                                                        target="_blank">Roan
-                                                                        {{ $latest->tema }}</a></h4>
-                                                                <span>by {{ $latest->pj }} -
-                                                                    {{ \Carbon\Carbon::parse($latest->tgl)->format('M d, Y') }}</span>
-                                                                <p>{{ Str::words($latest->deskripsi, 19, '...') }}</p>
-                                                            </div>
-                                                        </div>
+                                                        @endif
                                                     </div>
 
                                                     <!-- Right Details Caption: 4 Data Berikutnya -->
@@ -247,15 +279,30 @@
                                                             <div id="roan-container" class="roan-vertical-active">
 
                                                                 @foreach ($roans->slice(1, 4) as $item)
+                                                                    @php
+                                                                        $posterName = $item->poster;
+                                                                        $pathFisik = 'foto_roan/' . $posterName;
+
+                                                                        // Validasi apakah poster terisi, bukan 'none', dan file fisiknya benar-benar ada di disk public
+                                                                        $posterTersedia =
+                                                                            !empty($posterName) &&
+                                                                            $posterName != 'none' &&
+                                                                            Storage::disk('public')->exists($pathFisik);
+
+                                                                        $urlPoster = $posterTersedia
+                                                                            ? asset('storage/' . $pathFisik)
+                                                                            : asset(
+                                                                                'storage/foto_roan/roan-default.jpeg',
+                                                                            );
+                                                                    @endphp
+
                                                                     <div class="whats-right-single d-flex"
                                                                         style="height:120px;align-items:center;">
 
                                                                         <div class="whats-right-img"
                                                                             style="min-width:120px">
 
-                                                                            <img src="{{ $item->poster && $item->poster != 'none'
-                                                                                ? asset('storage/foto_roan/' . $item->poster)
-                                                                                : asset('storage/foto_roan/roan-default.jpeg') }}"
+                                                                            <img src="{{ $urlPoster }}"
                                                                                 style="width:120px;height:100px;object-fit:cover;border-radius:4px;">
                                                                         </div>
 
@@ -266,7 +313,7 @@
                                                                             </span>
 
                                                                             <h4>
-                                                                                <a href="{{ route('roan.show', $item->id) }}"
+                                                                                <a href="{{ route('roan.detil', $item->id_ro) }}"
                                                                                     target="_blank">
                                                                                     {{ $item->tema }}
                                                                                 </a>
@@ -300,24 +347,39 @@
                                                     <!-- Left Details Caption -->
                                                     <div class="col-xl-6">
                                                         @php $latest = $relawans->first(); @endphp
-                                                        <div class="whats-news-single mb-40">
-                                                            <div class="whates-img">
-                                                                <img src="{{ $latest->poster &&
-                                                                $latest->poster !== 'none' &&
-                                                                file_exists(public_path('storage/foto_relawan/' . $latest->poster))
-                                                                    ? asset('storage/foto_relawan/' . $latest->poster)
-                                                                    : asset('assets/img/gallery/relawan-default.jpeg') }}"
-                                                                    alt="{{ $latest->judul }}"
-                                                                    style="width: 360px; height: 245px; object-fit: cover;">
+                                                        @if ($latest)
+                                                            <div class="whats-news-single mb-40">
+                                                                <div class="whates-img">
+                                                                    @php
+                                                                        $posterName = $latest->poster;
+                                                                        $pathFisik = 'foto_relawan/' . $posterName;
+
+                                                                        // Validasi menggunakan Storage facade disk public agar konsisten
+                                                                        $posterTersedia =
+                                                                            !empty($posterName) &&
+                                                                            $posterName !== 'none' &&
+                                                                            Storage::disk('public')->exists($pathFisik);
+
+                                                                        $urlPoster = $posterTersedia
+                                                                            ? asset('storage/' . $pathFisik)
+                                                                            : asset(
+                                                                                'storage/foto_relawan/relawan-default.jpeg',
+                                                                            );
+                                                                    @endphp
+
+                                                                    <img src="{{ $urlPoster }}"
+                                                                        alt="{{ $latest->judul }}"
+                                                                        style="width: 360px; height: 245px; object-fit: cover;">
+                                                                </div>
+                                                                <div class="whates-caption">
+                                                                    <h4><a href="{{ route('relawan.detil', $latest->id_re) }}"
+                                                                            target="_blank">{{ $latest->judul }}</a></h4>
+                                                                    <span>by {{ $latest->koordinator }} -
+                                                                        {{ \Carbon\Carbon::parse($latest->tgl)->format('M d, Y') }}</span>
+                                                                    <p>{{ Str::words($latest->deskripsi, 19, '...') }}</p>
+                                                                </div>
                                                             </div>
-                                                            <div class="whates-caption">
-                                                                <h4><a href="{{ route('relawan.show', $latest->id) }}"
-                                                                        target="_blank">{{ $latest->judul }}</a></h4>
-                                                                <span>by {{ $latest->koordinator }} -
-                                                                    {{ \Carbon\Carbon::parse($latest->tgl)->format('M d, Y') }}</span>
-                                                                <p>{{ Str::words($latest->deskripsi, 19, '...') }}</p>
-                                                            </div>
-                                                        </div>
+                                                        @endif
                                                     </div>
 
                                                     <!-- Right single caption -->
@@ -328,18 +390,39 @@
                                                             <div class="relawan-vertical-active">
                                                                 @foreach ($relawans->skip(1)->take(4) as $item)
                                                                     <!-- Berikan tinggi spesifik pada setiap item -->
+                                                                    @php
+                                                                        $posterName = $item->poster;
+                                                                        $pathFisik = 'foto_relawan/' . $posterName;
+
+                                                                        // Validasi menggunakan Storage disk public agar konsisten dengan modul lainnya
+                                                                        $posterTersedia =
+                                                                            !empty($posterName) &&
+                                                                            $posterName !== 'none' &&
+                                                                            Storage::disk('public')->exists($pathFisik);
+
+                                                                        $urlPoster = $posterTersedia
+                                                                            ? asset('storage/' . $pathFisik)
+                                                                            : asset(
+                                                                                'storage/foto_relawan/relawan-default.jpeg',
+                                                                            );
+                                                                    @endphp
+
                                                                     <div class="whats-right-single d-flex"
                                                                         style="height: 120px; align-items: center;">
                                                                         <div class="whats-right-img"
                                                                             style="min-width: 120px;">
-                                                                            <img src="{{ $item->poster && file_exists(public_path('storage/foto_relawan/' . $item->poster))
-                                                                                ? asset('storage/foto_relawan/' . $item->poster)
-                                                                                : asset('storage/foto_relawan/relawan-default.jpeg') }}"
-                                                                                style="width: 120px; height: 100px; object-fit: cover; border-radius: 4px;">
+                                                                            <img src="{{ $urlPoster }}"
+                                                                                style="width: 120px; height: 100px; object-fit: cover; border-radius: 4px;"
+                                                                                alt="{{ $item->judul }}">
                                                                         </div>
                                                                         <div class="whats-right-cap ml-15">
                                                                             <span class="colorb">Relawan</span>
-                                                                            <h4>{{ $item->judul }}</h4>
+                                                                            <h4>
+                                                                                <a href="{{ route('relawan.detil', $item->id_re) }}"
+                                                                                    target="_blank">
+                                                                                    {{ $item->judul }}
+                                                                                </a>
+                                                                            </h4>
                                                                             <p>{{ \Carbon\Carbon::parse($item->tgl)->format('M d, Y') }}
                                                                             </p>
                                                                         </div>
@@ -364,23 +447,42 @@
 
                                                     <!-- Left Details Caption -->
                                                     <div class="col-xl-6">
-                                                        <div class="whats-news-single mb-40">
-                                                            <div class="whates-img">
-                                                                <img src="{{ $latest->foto && file_exists(public_path('storage/foto_sampah/' . $latest->foto))
-                                                                    ? asset('storage/foto_sampah/' . $latest->foto)
-                                                                    : asset('storage/foto_sampah/sampah-default.jpeg') }}"
-                                                                    alt="{{ $latest->penyetor }}"
-                                                                    style="width: 360px; height: 245px; object-fit: cover;">
+                                                        @php $latest = $sampahs->first(); @endphp
+                                                        @if ($latest)
+                                                            <div class="whats-news-single mb-40">
+                                                                <div class="whates-img">
+                                                                    @php
+                                                                        $fotoName = $latest->foto;
+                                                                        $pathFisik = 'foto_sampah/' . $fotoName;
+
+                                                                        // Validasi menggunakan Storage disk public agar konsisten
+                                                                        $fotoTersedia =
+                                                                            !empty($fotoName) &&
+                                                                            $fotoName !== 'none' &&
+                                                                            Storage::disk('public')->exists($pathFisik);
+
+                                                                        $urlFoto = $fotoTersedia
+                                                                            ? asset('storage/' . $pathFisik)
+                                                                            : asset(
+                                                                                'storage/foto_sampah/sampah-default.jpeg',
+                                                                            );
+                                                                    @endphp
+
+                                                                    <img src="{{ $urlFoto }}"
+                                                                        alt="{{ $latest->penyetor }}"
+                                                                        style="width: 360px; height: 245px; object-fit: cover;">
+                                                                </div>
+                                                                <div class="whates-caption">
+                                                                    <h4><a href="{{ route('sampah') }}"
+                                                                            target="_blank">Penyetor:
+                                                                            {{ $latest->penyetor }}</a></h4>
+                                                                    <span>{{ \Carbon\Carbon::parse($latest->tgl)->format('M d, Y') }}</span>
+                                                                    <p>Nilai transaksi sampah ini adalah
+                                                                        <strong>Rp{{ number_format($latest->nilai, 0, ',', '.') }}</strong>.
+                                                                    </p>
+                                                                </div>
                                                             </div>
-                                                            <div class="whates-caption">
-                                                                <h4><a href="#">Penyetor:
-                                                                        {{ $latest->penyetor }}</a></h4>
-                                                                <span>{{ \Carbon\Carbon::parse($latest->tgl)->format('M d, Y') }}</span>
-                                                                <p>Nilai transaksi sampah ini adalah
-                                                                    <strong>Rp{{ number_format($latest->nilai, 0, ',', '.') }}</strong>.
-                                                                </p>
-                                                            </div>
-                                                        </div>
+                                                        @endif
                                                     </div>
 
                                                     <!-- Right single caption -->
@@ -389,20 +491,38 @@
                                                             <div class="sampah-vertical-active">
 
                                                                 @foreach ($sampahs->skip(1)->take(4) as $item)
+                                                                    @php
+                                                                        $fotoName = $item->foto;
+                                                                        $pathFisik = 'foto_sampah/' . $fotoName;
+
+                                                                        // Validasi menggunakan Storage disk public agar konsisten
+                                                                        $fotoTersedia =
+                                                                            !empty($fotoName) &&
+                                                                            $fotoName !== 'none' &&
+                                                                            Storage::disk('public')->exists($pathFisik);
+
+                                                                        $urlFoto = $fotoTersedia
+                                                                            ? asset('storage/' . $pathFisik)
+                                                                            : asset(
+                                                                                'storage/foto_sampah/sampah-default.jpeg',
+                                                                            );
+                                                                    @endphp
+
                                                                     <div class="whats-right-single d-flex"
                                                                         style="height:120px;align-items:center;">
 
                                                                         <div class="whats-right-img"
                                                                             style="min-width:120px;">
-                                                                            <img src="{{ $item->foto && file_exists(public_path('storage/foto_sampah/' . $item->foto))
-                                                                                ? asset('storage/foto_sampah/' . $item->foto)
-                                                                                : asset('storage/foto_sampah/sampah-default.jpeg') }}"
-                                                                                style="width:120px;height:100px;object-fit:cover;border-radius:4px;">
+                                                                            <img src="{{ $urlFoto }}"
+                                                                                style="width:120px;height:100px;object-fit:cover;border-radius:4px;"
+                                                                                alt="{{ $item->penyetor }}">
                                                                         </div>
 
                                                                         <div class="whats-right-cap ml-15">
                                                                             <span class="colorb">Sedekah Sampah</span>
-                                                                            <h4>{{ $item->penyetor }}</h4>
+                                                                            <h4><a href="{{ route('sampah') }}"
+                                                                                    target="_blank">Penyetor:
+                                                                                    {{ $latest->penyetor }}</a></h4>
                                                                             <p>
                                                                                 {{ \Carbon\Carbon::parse($item->tgl)->format('M d, Y') }}
                                                                                 |
@@ -430,22 +550,32 @@
                                                 @if (isset($mangroves) && $mangroves->isNotEmpty())
                                                     @php
                                                         $latest = $mangroves->first();
-                                                        $fotoFolder = public_path('storage/foto_mangrove');
-                                                        $files = file_exists($fotoFolder)
-                                                            ? array_diff(scandir($fotoFolder), ['.', '..'])
-                                                            : [];
+
+                                                        // Validasi foto untuk item pertama ($latest)
+                                                        $latestFotoName = $latest->foto ?? null; // Sesuaikan nama kolom jika berbeda, misal $latest->poster
+                                                        $latestPathFisik = 'foto_mangrove/' . $latestFotoName;
+                                                        $latestFotoTersedia =
+                                                            !empty($latestFotoName) &&
+                                                            $latestFotoName !== 'none' &&
+                                                            Storage::disk('public')->exists($latestPathFisik);
+
+                                                        $latestUrlFoto = $latestFotoTersedia
+                                                            ? asset('storage/' . $latestPathFisik)
+                                                            : asset('storage/foto_mangrove/mangrove-default.jpeg');
                                                     @endphp
 
                                                     <!-- Left Details Caption -->
                                                     <div class="col-xl-6">
                                                         <div class="whats-news-single mb-40">
                                                             <div class="whates-img">
-                                                                <img src="{{ asset('storage/foto_mangrove/mangrove-default.jpeg') }}"
+                                                                <img src="{{ $latestUrlFoto }}"
                                                                     alt="{{ $latest->donatur }}"
                                                                     style="width: 360px; height: 245px; object-fit: cover;">
                                                             </div>
                                                             <div class="whates-caption">
-                                                                <h4><a href="#">Donatur: {{ $latest->donatur }}</a>
+                                                                <h4><a href="{{ route('mangrove') }}"
+                                                                        target="_blank">Donatur:
+                                                                        {{ $latest->donatur }}</a>
                                                                 </h4>
                                                                 <span>{{ \Carbon\Carbon::parse($latest->tanggal)->format('M d, Y') }}</span>
                                                                 <p>Telah berinfaq sebesar
@@ -462,31 +592,41 @@
                                                             <div class="mangrove-vertical-active">
 
                                                                 @foreach ($mangroves->skip(1)->take(4) as $item)
+                                                                    @php
+                                                                        // Validasi foto untuk item loop ($item)
+                                                                        $itemFotoName = $item->foto ?? null; // Sesuaikan nama kolom jika berbeda, misal $item->poster
+                                                                        $itemPathFisik =
+                                                                            'foto_mangrove/' . $itemFotoName;
+                                                                        $itemFotoTersedia =
+                                                                            !empty($itemFotoName) &&
+                                                                            $itemFotoName !== 'none' &&
+                                                                            Storage::disk('public')->exists(
+                                                                                $itemPathFisik,
+                                                                            );
+
+                                                                        $itemUrlFoto = $itemFotoTersedia
+                                                                            ? asset('storage/' . $itemPathFisik)
+                                                                            : asset(
+                                                                                'storage/foto_mangrove/mangrove-default.jpeg',
+                                                                            );
+                                                                    @endphp
+
                                                                     <div class="whats-right-single d-flex"
                                                                         style="height:120px;align-items:center;">
 
                                                                         <div class="whats-right-img"
                                                                             style="min-width:120px;">
-                                                                            @php
-                                                                                // Ganti variabel $filename dengan nama variabel gambar yang Anda gunakan di controller
-                                                                                $imageName = $filename ?? 'model1.jpeg';
-                                                                            @endphp
-
-                                                                            @if (!empty($imageName) && Storage::disk('public')->exists('foto_mangrove/' . $imageName))
-                                                                                <img src="{{ asset('storage/foto_mangrove/' . $imageName) }}"
-                                                                                    style="width:120px;height:100px;object-fit:cover;border-radius:4px;">
-                                                                            @else
-                                                                                <div
-                                                                                    style="width:120px;height:100px;display:flex;align-items:center;justify-content:center;background:#f0f0f0;color:#666;font-size:11px;border-radius:4px;text-align:center;padding:5px;">
-                                                                                    Gambar tidak tersedia
-                                                                                </div>
-                                                                            @endif
+                                                                            <img src="{{ $itemUrlFoto }}"
+                                                                                style="width:120px;height:100px;object-fit:cover;border-radius:4px;"
+                                                                                alt="{{ $item->donatur }}">
                                                                         </div>
 
                                                                         <div class="whats-right-cap ml-15">
                                                                             <span class="colorb">Infaq Mangrove</span>
 
-                                                                            <h4>{{ $item->donatur }}</h4>
+                                                                            <h4><a href="{{ route('mangrove') }}"
+                                                                                    target="_blank">Donatur:
+                                                                                    {{ $item->donatur }}</a></h4>
 
                                                                             <p>
                                                                                 {{ \Carbon\Carbon::parse($item->tanggal)->format('M d, Y') }}
@@ -527,13 +667,27 @@
                                 @php $utama = $opinis->first(); @endphp
                                 <div class="most-recent mb-40">
                                     <div class="most-recent-img">
-                                        <img src="{{ $utama->foto && $utama->foto !== 'none' ? asset('storage/foto_opini/' . $utama->foto) : asset('storage/foto_opini/opini-default.jpeg') }}"
-                                            alt="{{ $utama->judul }}"
+                                        @php
+                                            $fotoName = $utama->foto ?? null;
+                                            $pathFisik = 'foto_opini/' . $fotoName;
+
+                                            // Validasi menggunakan Storage disk public secara konsisten
+                                            $fotoTersedia =
+                                                !empty($fotoName) &&
+                                                $fotoName !== 'none' &&
+                                                Storage::disk('public')->exists($pathFisik);
+
+                                            $urlFoto = $fotoTersedia
+                                                ? asset('storage/' . $pathFisik)
+                                                : asset('storage/foto_opini/opini-default.jpeg');
+                                        @endphp
+
+                                        <img src="{{ $urlFoto }}" alt="{{ $utama->judul }}"
                                             style="width: 333px !important; height: 229px !important; object-fit: cover;">
 
                                         <div class="most-recent-cap">
                                             <span class="bgbeg">Opini</span>
-                                            <h4><a href="{{ route('opini.show', $utama->id) }}"
+                                            <h4><a href="{{ route('opini.detil', $utama->id_op) }}"
                                                     target="_blank">{{ $utama->judul }}</a>
                                             </h4>
                                             <p>{{ $utama->penulis }} |
@@ -551,7 +705,7 @@
                                                 style="width: 85px !important; height: 79px !important; object-fit: cover;">
                                         </div>
                                         <div class="most-recent-capt" style="padding-left: 15px;">
-                                            <h4><a href="{{ route('opini.show', $item->id) }}"
+                                            <h4><a href="{{ route('opini.detil', $item->id_op) }}"
                                                     target="_blank">{{ $item->judul }}</a>
                                             </h4>
                                             <p>{{ $item->penulis }} |
@@ -602,7 +756,7 @@
                                                     </div>
                                                     <div class="weekly2-caption">
                                                         <h4>
-                                                            <a href="{{ route('khutbah.show', $item->id) }}"
+                                                            <a href="{{ route('khutbah.detil', $item->id_kj) }}"
                                                                 target="_blank">{{ $item->judul }}</a>
                                                         </h4>
                                                         <p>{{ $item->khatib }} |
@@ -658,8 +812,8 @@
                                         z-index: 1;">
 
                                             <h4>
-                                                <a href="{{ route('dakwah.show', $item->id) }}"
-                                                    target="_blank">{{ $item->judul }}</a>
+                                                <a href="{{ route('kajian.detil', $item->id) }}"
+                                                                target="_blank">{{ $item->judul }}</a>
                                             </h4>
                                             <p>{{ \Carbon\Carbon::parse($item->tanggal)->format('M d, Y') }}</p>
 
@@ -806,7 +960,7 @@
                                                     </div>
                                                     <div class="weekly3-caption">
                                                         <h4>
-                                                            <a href="{{ route('opini.detail_opini', $opini->id) }}">
+                                                            <a href="{{ route('opini.detil', $opini->id_op) }}" target="_blank">
                                                                 {{ $opini->judul }}
                                                             </a>
                                                         </h4>
@@ -833,7 +987,7 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-10 col-md-10">
                         <div class="banner-one">
-                            <a href="{{ route('register') }}" target="_blank">
+                            <a  "{{ route('register') }}" target="_blank">
                                 <img src="{{ asset('storage/foto/gabung3.jpeg') }}" alt="Gabung Sekarang">
                             </a>
                         </div>

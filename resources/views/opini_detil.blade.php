@@ -12,7 +12,7 @@
     </div>
     <!-- Preloader Start -->
     @include('partials.header')
-    <main>
+    <main> 
         <!--================Blog Area =================-->
         <section class="blog_area single-post-area section-padding">
             <div class="container">
@@ -38,7 +38,34 @@
                                 </ul>
 
                                 <p class="excert">
+                                    @php
+                                        $pisah = explode(',', $dataBerita->ringkasan);
+                                    @endphp
+
+                                    @foreach ($pisah as $pisahkan)
+                                        @if (trim($pisahkan) !== '')
+                                            #{{ trim($pisahkan) }}@if (!$loop->last)
+                                                ,
+                                            @endif
+                                        @endif
+                                    @endforeach
+                                </p>
+                                <hr>
+                                <p class="excert">
                                     {!! $dataBerita->isi !!}
+                                </p>
+                                <hr>
+                                <p class="excert">
+                                    @if (!empty($dataBerita->lampiran) && Storage::disk('public')->exists('file/' . $dataBerita->lampiran))
+                                        <a href="{{ asset('storage/file/' . $dataBerita->lampiran) }}" target="_blank">
+                                            <button type="button"
+                                                class="inline-block px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-xl transition-all shadow-lg shadow-emerald-900/40">
+                                                Download File Lampiran
+                                            </button>
+                                        </a>
+                                    @else
+                                        <span class="text-gray-500 dark:text-gray-400 italic">Lampiran tidak tersedia</span>
+                                    @endif
                                 </p>
                             </div>
                         </div>
@@ -72,7 +99,7 @@
                     <div class="col-lg-4">
                         <div class="blog_right_sidebar">
                             <aside class="single_sidebar_widget search_widget">
-                                <form action="{{ route('berita') }}" method="GET">
+                                <form action="{{ route('opini_warga') }}" method="GET">
                                     <div class="form-group">
                                         <div class="input-group mb-3">
                                             <input type="text" class="form-control" name="keyword"
@@ -93,7 +120,7 @@
                                 <ul class="list cat-list">
                                     @foreach ($archives as $arc)
                                         <li>
-                                            <a href="{{ route('berita', ['bulan' => $arc->month, 'tahun' => $arc->year]) }}"
+                                            <a href="{{ route('opini_warga', ['bulan' => $arc->month, 'tahun' => $arc->year]) }}"
                                                 class="d-flex">
                                                 <p>
                                                     {{ \Carbon\Carbon::create($arc->year, $arc->month)->format('F Y') }}
@@ -157,7 +184,7 @@
                                     @if (isset($tags) && $tags->count() > 0)
                                         @foreach ($tags as $kata => $jumlah)
                                             <li>
-                                                <a href="{{ route('berita', ['keyword' => $kata]) }}">
+                                                <a href="{{ route('opini_warga', ['keyword' => $kata]) }}">
                                                     {{ $kata }}
                                                 </a>
                                             </li>

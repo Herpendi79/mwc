@@ -83,7 +83,7 @@
                     <div class="col-lg-4">
                         <div class="blog_right_sidebar">
                             <aside class="single_sidebar_widget search_widget">
-                                <form action="{{ route('berita') }}" method="GET">
+                                <form action="{{ route('bahsul') }}" method="GET">
                                     <div class="form-group">
                                         <div class="input-group mb-3">
                                             <input type="text" class="form-control" name="keyword"

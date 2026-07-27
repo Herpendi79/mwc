@@ -69,23 +69,27 @@
                                                 alt="{{ $bahsul->tema }}"
                                                 style="width: 100%; height: 375px; object-fit: cover; display: block;">
 
-                                            <a href="{{ route('roan.detil' , $bahsul->id_ro) }}" target="_blank" class="blog_item_date">
+                                            <a href="{{ route('roan.detil', $bahsul->id_ro) }}" target="_blank"
+                                                class="blog_item_date">
                                                 <h3>{{ date('d', strtotime($bahsul->tgl)) }}</h3>
                                                 <p>{{ date('M', strtotime($bahsul->tgl)) }}</p>
                                             </a>
                                         </div>
 
                                         <div class="blog_details">
-                                            <a class="d-inline-block" href="{{ route('roan.detil' , $bahsul->id_ro) }}" target="_blank">
+                                            <a class="d-inline-block" href="{{ route('roan.detil', $bahsul->id_ro) }}"
+                                                target="_blank">
                                                 <h2>{{ $bahsul->judul }}</h2>
                                             </a>
                                             <p>{{ Str::words(strip_tags($bahsul->deskripsi), 35, '...') }}...</p>
 
                                             <div class="flex flex-wrap items-center justify-between gap-4 mt-4">
                                                 <ul class="blog-info-link mb-0">
-                                                    <li><a href="{{ route('roan.detil' , $bahsul->id_ro) }}" target="_blank"><i class="fa fa-user"></i>
+                                                    <li><a href="{{ route('roan.detil', $bahsul->id_ro) }}"
+                                                            target="_blank"><i class="fa fa-user"></i>
                                                             {{ $bahsul->pj }}</a></li>
-                                                    <li><a href="{{ route('roan.detil' , $bahsul->id_ro) }}" target="_blank"><i class="fa fa-map-marker"></i>
+                                                    <li><a href="{{ route('roan.detil', $bahsul->id_ro) }}"
+                                                            target="_blank"><i class="fa fa-map-marker"></i>
                                                             {{ $bahsul->lokasi }}</a></li>
                                                 </ul>
 
@@ -241,18 +245,26 @@
                                         <div class="media post_item"
                                             style="display: flex; align-items: center; margin-bottom: 15px;">
                                             @php
-                                                $photoToDisplay =
-                                                    $totalPhotos > 0
-                                                        ? $bahsulPhotos[$index % $totalPhotos]
-                                                        : 'roan-default.jpeg';
+                                                $photoName =
+                                                    $totalPhotos > 0 ? $bahsulPhotos[$index % $totalPhotos] : null;
+                                                $pathFisik = 'foto_roan/' . $photoName;
+
+                                                // Validasi menggunakan Storage disk public agar konsisten
+                                                $photoTersedia =
+                                                    !empty($photoName) &&
+                                                    $photoName !== 'none' &&
+                                                    Storage::disk('public')->exists($pathFisik);
+
+                                                $urlPhoto = $photoTersedia
+                                                    ? asset('storage/' . $pathFisik)
+                                                    : asset('storage/foto_roan/roan-default.jpeg');
                                             @endphp
 
-                                            <img src="{{ asset('storage/foto_roan/' . $photoToDisplay) }}"
-                                                alt="post"
+                                            <img src="{{ $urlPhoto }}" alt="post"
                                                 style="width: 80px; height: 80px; object-fit: cover; margin-right: 15px; border-radius: 4px;">
 
                                             <div class="media-body">
-                                                <a href="{{ route('roan.detil' , $bahsul->id_ro) }}" target="_blank">
+                                                <a href="{{ route('roan.detil', $bahsul->id_ro) }}" target="_blank">
                                                     <h3 style="margin: 0; font-size: 16px; line-height: 1.2;">
                                                         {{ Str::limit($post->judul, 70) }}
                                                     </h3>
@@ -296,18 +308,33 @@
 
                                     @foreach ($dataBahsul as $item)
                                         @php
-                                            $photos = !empty($item->foto)
-                                                ? explode(';', $item->foto)
-                                                : ['roan-default.jpeg'];
+                                            $photos =
+                                                !empty($item->foto) && $item->foto !== 'none'
+                                                    ? explode(';', $item->foto)
+                                                    : ['roan-default.jpeg'];
                                         @endphp
 
                                         @foreach ($photos as $foto)
                                             @if ($count < $maxPhotos)
+                                                @php
+                                                    $fotoName = trim($foto);
+                                                    $pathFisik = 'foto_roan/' . $fotoName;
+
+                                                    // Validasi menggunakan Storage disk public agar konsisten
+                                                    $fotoTersedia =
+                                                        !empty($fotoName) &&
+                                                        $fotoName !== 'none' &&
+                                                        Storage::disk('public')->exists($pathFisik);
+
+                                                    $urlFoto = $fotoTersedia
+                                                        ? asset('storage/' . $pathFisik)
+                                                        : asset('storage/foto_roan/roan-default.jpeg');
+                                                @endphp
+
                                                 <li style="width: 90px; height: 90px;">
-                                                    <a href="{{ route('roan.detil' , $bahsul->id_ro) }}" target="_blank">
-                                                        <img class="img-fluid"
-                                                            src="{{ asset('storage/foto_roan/' . trim($foto)) }}"
-                                                            alt="Foto Roan"
+                                                    <a href="{{ route('roan.detil', $item->id ?? ($bahsul->id_ro ?? 1)) }}"
+                                                        target="_blank">
+                                                        <img class="img-fluid" src="{{ $urlFoto }}" alt="Foto Roan"
                                                             style="width: 90px; height: 90px; object-fit: cover; border-radius: 4px; display: block;">
                                                     </a>
                                                 </li>

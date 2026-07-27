@@ -57,10 +57,22 @@
                                         @endphp
 
                                         @foreach ($listFoto as $foto)
-                                            @if (trim($foto) !== '')
-                                                @php
-                                                    $urlFoto = asset('storage/foto_roan/' . trim($foto));
-                                                @endphp
+                                            @php
+                                                $fotoName = trim($foto);
+                                                $pathFisik = 'foto_roan/' . $fotoName;
+
+                                                // Validasi keberadaan file fisik di disk public
+                                                $fotoTersedia =
+                                                    !empty($fotoName) &&
+                                                    $fotoName !== 'none' &&
+                                                    Storage::disk('public')->exists($pathFisik);
+
+                                                $urlFoto = $fotoTersedia
+                                                    ? asset('storage/' . $pathFisik)
+                                                    : asset('storage/foto_roan/roan-default.jpeg');
+                                            @endphp
+
+                                            @if ($fotoName !== '')
                                                 <div style="width: 200px; height: 200px;">
                                                     <a href="{{ $urlFoto }}" target="_blank" rel="noopener noreferrer">
                                                         <img src="{{ $urlFoto }}" alt="Foto Galeri"
