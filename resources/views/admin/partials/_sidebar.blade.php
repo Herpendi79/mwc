@@ -65,7 +65,7 @@
                 class="flex items-center justify-between w-full px-4 py-3 rounded-xl font-semibold transition-all {{ request()->routeIs('admin.bahsul.index', 'admin.bahsul.tambah', 'admin.bahsul.edit', 'admin.halaqah.index', 'admin.halaqah.tambah', 'admin.halaqah.edit', 'admin.kajian.index', 'admin.kajian.tambah', 'admin.kajian.edit') ? 'bg-black text-white dark:bg-white dark:text-black' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800' }}">
                 <div class="flex items-center gap-3">
                     <i class="ri-calendar-event-line text-xl"></i>
-                    <span>Kegiatan</span>
+                    <span>Kajian</span>
                 </div>
                 <svg class="w-4 h-4 transition-transform duration-300" :class="{ 'rotate-180': open }" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor">
