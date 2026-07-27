@@ -85,6 +85,7 @@
                                     <th class="p-4 dark:text-gray-300">Infaq</th>
                                     <th class="p-4 dark:text-gray-300">Pohon</th>
                                     <th class="p-4 dark:text-gray-300">Pembayaran</th>
+                                    <th class="p-4 dark:text-gray-300">Bukti TF</th>
                                     <th class="p-4 dark:text-gray-300">Tanggal</th>
                                     <th class="p-4 dark:text-gray-300 text-center">Sertifikat</th>
                                     <th class="p-4 dark:text-gray-300 text-center">Aksi</th>
@@ -101,6 +102,17 @@
                                         <td class="p-4">Rp {{ number_format($item->jumlah_infaq, 0, ',', '.') }}</td>
                                         <td class="p-4">{{ $item->jumlah_pohon }}</td>
                                         <td class="p-4 uppercase">{{ $item->pembayaran }}</td>
+                                        <td class="p-4">
+                                            @if (!empty($item->bukti_tf) && Storage::disk('public')->exists('bukti_tf/' . $item->bukti_tf))
+                                                <a href="{{ asset('storage/bukti_tf/' . $item->bukti_tf) }}"
+                                                    target="_blank" rel="noopener noreferrer">
+                                                    <img src="{{ asset('storage/bukti_tf/' . $item->bukti_tf) }}"
+                                                        class="w-12 h-12 object-cover rounded-lg border border-gray-200 hover:opacity-80 transition-opacity">
+                                                </a>
+                                            @else
+                                                <span class="text-gray-400 text-xs">-</span>
+                                            @endif
+                                        </td>
                                         <td class="p-4">{{ $item->tanggal->format('d M Y') }}</td>
                                         <td class="p-4 align-middle text-center">
                                             <div class="flex items-center justify-center gap-2">
