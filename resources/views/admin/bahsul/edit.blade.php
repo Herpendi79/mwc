@@ -47,6 +47,9 @@
                                                 array_map('trim', explode("\n", Storage::get('kategori.txt'))),
                                             )
                                             : [];
+
+                                        // Mengurutkan kategori secara ascending (A - Z)
+                                        sort($kategoris);
                                     @endphp
 
                                     @foreach ($kategoris as $kat)
