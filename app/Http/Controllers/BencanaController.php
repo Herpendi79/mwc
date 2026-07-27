@@ -16,7 +16,7 @@ class BencanaController extends Controller
 {
     public function index()
     {
-        $bencana = BencanaModel::all();
+        $bencana = BencanaModel::orderBy('tgl', 'desc')->get();
         return view('admin.bencana.index', compact('bencana'));
     }
     public function index_anggota()
@@ -111,7 +111,11 @@ class BencanaController extends Controller
             $validated['foto'] = implode(';', $fotoNames);
         }
 
-        // 3. Simpan ke database
+        // 3. Tambahkan status publish
+        // Menggunakan $request->status jika inputnya ada dari form, atau 'publish' secara default
+        $validated['status'] = $request->input('status', 'publish');
+
+        // 4. Simpan ke database
         \App\Models\BencanaModel::create($validated);
 
         return redirect()->route('admin.bencana.index')->with('success', 'Data bencana berhasil ditambah');
