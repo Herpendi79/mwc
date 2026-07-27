@@ -158,7 +158,7 @@
                                                 alt="post" style="width: 80px; height: 80px; object-fit: cover;">
 
                                             <div class="media-body">
-                                                <a href="{{ route('khutbah.detil', $dataBerita->id_kj) }}" target="_blank">
+                                                <a href="{{ route('khutbah.detil', $post->id_kj) }}" target="_blank">
                                                     <!-- Hapus margin pada h3 agar tidak mendorong teks ke bawah -->
                                                     <h3 style="margin: 0; font-size: 16px; line-height: 1.2;">
                                                         {{ Str::limit($post->judul, 70) }}

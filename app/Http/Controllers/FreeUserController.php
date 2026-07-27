@@ -1579,7 +1579,7 @@ class FreeUserController extends Controller
         $dataBerita = KhutbahModel::where('id_kj', $id)->firstOrFail();
 
         $archives = KhutbahModel::selectRaw('YEAR(tgl) as year, MONTH(tgl) as month, COUNT(*) as total')
-            ->where('judul', '!=', '-')
+            ->where('tema', '!=', '-')
             ->where('khatib', '!=', '-')
             ->where('masjid', '!=', '-')
             ->where('ringkasan', '!=', '-')
@@ -1614,7 +1614,7 @@ class FreeUserController extends Controller
             ->groupBy('judul')
             ->get();
 
-        $recentPosts = KhutbahModel::where('judul', '!=', '-')->latest()->take(4)->get();
+        $recentPosts = KhutbahModel::where('tema', '!=', '-')->latest()->take(4)->get();
         $beritaPosts = KhutbahModel::whereNotNull('judul')->latest()->get();
         $materiPosts = KhutbahModel::whereNotNull('lampiran')->latest()->get();
 

@@ -174,7 +174,7 @@
                                                 : asset('storage/foto_kajian/kajian-default.jpeg') }}"
                                                 alt="post" style="width: 80px; height: 80px; object-fit: cover;">
                                             <div class="media-body">
-                                                <a href="#">
+                                                <a href="{{ route('kajian.detil', $post->id) }}">
                                                     <h3 style="margin: 0; font-size: 16px; line-height: 1.2;">
                                                         {{ Str::limit($post->judul, 70) }}
                                                     </h3>
@@ -226,7 +226,7 @@
                                 <ul class="list">
                                     @foreach ($tags as $kata => $jumlah)
                                         <li>
-                                            <a href="{{ route('halaqah', ['keyword' => $kata]) }}">
+                                            <a href="{{ route('kajian', ['keyword' => $kata]) }}">
                                                 {{ $kata }}
                                             </a>
                                         </li>

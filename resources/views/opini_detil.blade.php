@@ -12,7 +12,7 @@
     </div>
     <!-- Preloader Start -->
     @include('partials.header')
-    <main> 
+    <main>
         <!--================Blog Area =================-->
         <section class="blog_area single-post-area section-padding">
             <div class="container">
@@ -142,7 +142,7 @@
                                                 : asset('storage/foto_opini/opini-default-sm.jpeg') }}"
                                                 alt="post" style="width: 80px; height: 80px; object-fit: cover;">
                                             <div class="media-body">
-                                                <a href="#">
+                                                <a href="{{ route('opini.detil', $post->id_op) }}">
                                                     <h3 style="margin: 0; font-size: 16px; line-height: 1.2;">
                                                         {{ Str::limit($post->judul, 70) }}
                                                     </h3>
