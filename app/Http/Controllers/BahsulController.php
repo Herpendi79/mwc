@@ -149,7 +149,7 @@ class BahsulController extends Controller
             'lampiran' => 'nullable|file|mimes:pdf,doc,docx|max:2048'
         ]);
 
-        $data['pemohon'] = $request->filled('pemohon') ? $request->pemohon : '-';
+        $data['pemohon'] = $request->filled('pemohon') ? $request->pemohon : 'Masyarakat Umum';
         $data['putusan'] = $request->filled('putusan') ? $request->putusan : '-';
         $data['dasar_hukum'] = $request->filled('dasar_hukum') ? $request->dasar_hukum : '-';
 
