@@ -81,14 +81,14 @@
                                 </div>
 
                                 <div class="mb-5">
-                                    <label class="block text-sm font-bold mb-2 dark:text-gray-300">Foto Profil</label>
+                                    <label class="block text-sm font-bold mb-2 dark:text-gray-300">Foto Profil (Boleh Dikosongkan Dulu)</label>
                                     <input type="file" name="foto" accept="image/*"
                                         class="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-xl dark:bg-gray-800 dark:text-white">
                                 </div>
                             </div>
 
                             <div class="mb-8">
-                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Keterangan</label>
+                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Keterangan (Boleh Kosong)</label>
                                 <textarea name="keterangan" rows="2"
                                     class="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none">{{ old('keterangan') }}</textarea>
                             </div>

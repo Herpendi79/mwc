@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Mail\AktivasiPesertaByAdminMail;
 use App\Models\AnggotaModel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -28,6 +29,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
@@ -269,30 +271,43 @@ class AdminController extends Controller
             'telpon' => 'required',
             'keterangan' => 'nullable|string',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ], [
+            'email.unique' => 'Email sudah terdaftar, silakan gunakan email lain.',
         ]);
 
-        DB::transaction(function () use ($request) {
-            // 1. Simpan ke User
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'role' => 'anggota', // Asumsi role untuk anggota
-            ]);
+        try {
+            DB::transaction(function () use ($request) {
+                // 1. Simpan ke User
+                $user = User::create([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'role' => 'anggota', // Asumsi role untuk anggota
+                ]);
 
-            // 2. Simpan ke Anggota
-            AnggotaModel::create([
-                'user_id' => $user->id,
-                'no_anggota' => $request->no_anggota,
-                'alamat' => $request->alamat,
-                'telpon' => $request->telpon,
-                'status' => 'aktif',
-                'keterangan' => $request->keterangan,
-                'foto' => $request->hasFile('foto') ? basename($request->file('foto')->store('foto', 'public')) : null,
-            ]);
-        });
+                // 2. Simpan ke Anggota dengan status langsung aktif
+                AnggotaModel::create([
+                    'user_id' => $user->id,
+                    'no_anggota' => $request->no_anggota,
+                    'alamat' => $request->alamat,
+                    'telpon' => $request->telpon,
+                    'status' => 'aktif',
+                    'keterangan' => $request->keterangan,
+                    'foto' => $request->hasFile('foto') ? basename($request->file('foto')->store('foto', 'public')) : null,
+                ]);
 
-        return redirect()->route('admin.anggota.index')->with('success', 'Anggota berhasil ditambahkan.');
+                // 3. Kirim Email Notifikasi Akun Aktif
+                Mail::to($user->email)->send(new AktivasiPesertaByAdminMail($user->name));
+            });
+
+            return redirect()->route('admin.anggota.index')
+                ->with('success', 'Anggota berhasil ditambahkan dan email notifikasi akun aktif telah dikirim.');
+        } catch (\Exception $e) {
+            Log::error('Store Anggota Error: ' . $e->getMessage());
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan saat menyimpan data.')
+                ->withInput();
+        }
     }
 
 
@@ -342,6 +357,4 @@ class AdminController extends Controller
 
         return back()->with('success', 'Template KTA berhasil diperbarui.');
     }
-
-
 }
