@@ -24,6 +24,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'google_id',
         'role', // Tambahkan kolom role
+        'email_verified_at',
     ];
 
     protected $hidden = [
@@ -44,5 +45,5 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(AnggotaModel::class, 'user_id', 'id');
     }
 
-    
+
 }
