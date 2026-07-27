@@ -27,7 +27,7 @@
                                         <img class="card-img rounded-0"
                                             src="{{ !empty($kajian->foto) && Storage::disk('public')->exists('foto_berita/' . $kajian->foto)
                                                 ? asset('storage/foto_berita/' . $kajian->foto)
-                                                : asset('storage/foto_berita/berita-default.jpeg') }}"
+                                                : asset('storage/foto_berita/berita-default-pro.jpeg') }}"
                                             alt="{{ $kajian->judul ?? 'Default Title' }}"
                                             style="width: 750px; height: 375px; object-fit: cover; display: block;">
 

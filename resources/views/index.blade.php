@@ -28,7 +28,7 @@
                                             style="width: 100% !important; max-width: 100% !important; overflow: hidden !important; height: auto !important;">
                                             <div class="trend-top-img img-large"
                                                 style="position: relative !important; width: 100% !important; max-width: 100% !important; height: auto !important; min-height: 0 !important; overflow: hidden !important;">
-                                                <img src="{{ !empty($item->foto) && Storage::disk('public')->exists('foto_berita/' . $item->foto) ? asset('storage/foto_berita/' . $item->foto) : asset('storage/foto_berita/berita-default.jpeg') }}"
+                                                <img src="{{ !empty($item->foto) && Storage::disk('public')->exists('foto_berita/' . $item->foto) ? asset('storage/foto_berita/' . $item->foto) : asset('storage/foto_berita/berita-default-pro.jpeg') }}"
                                                     alt="{{ $item->judul }}"
                                                     style="width: 100% !important; height: auto !important; display: block !important;">
 
@@ -65,7 +65,7 @@
                                             style="width: 100% !important; max-width: 100% !important; overflow: hidden !important; height: auto !important;">
                                             <div class="trend-top-img img-large"
                                                 style="position: relative !important; width: 100% !important; max-width: 100% !important; height: auto !important; min-height: 0 !important; overflow: hidden !important;">
-                                                <img src="{{ asset('storage/foto_berita/berita-default.jpeg') }}"
+                                                <img src="{{ asset('storage/foto_berita/berita-default-pro.jpeg') }}"
                                                     alt="Data belum tersedia"
                                                     style="width: 100% !important; height: auto !important; display: block !important;">
 

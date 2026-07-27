@@ -23,7 +23,7 @@
                                 <img class="img-fluid"
                                     src="{{ !empty($dataBerita->foto) && file_exists(public_path('storage/foto_berita/' . $dataBerita->foto))
                                         ? asset('storage/foto_berita/' . $dataBerita->foto)
-                                        : asset('storage/foto_berita/berita-default.jpeg') }}"
+                                        : asset('storage/foto_berita/berita-default-pro.jpeg') }}"
                                     alt="{{ $dataBerita->judul ?? 'Berita' }}">
                             </div>
                             <div class="blog_details">

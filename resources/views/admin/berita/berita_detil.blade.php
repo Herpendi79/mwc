@@ -23,7 +23,7 @@
                                 <img class="img-fluid"
                                     src="{{ !empty($dataBerita->foto) && file_exists(public_path('storage/foto_berita/' . $dataBerita->foto))
                                         ? asset('storage/foto_berita/' . $dataBerita->foto)
-                                        : asset('storage/foto_berita/berita-default.jpeg') }}"
+                                        : asset('storage/foto_berita/berita-default-pro.jpeg') }}"
                                     alt="{{ $dataBerita->judul ?? 'Berita' }}">
                             </div>
                             <div class="blog_details">
@@ -314,7 +314,7 @@
                                 <div class="relawan-vertical-active">
                                     @foreach ($recentPosts as $post)
                                         <div class="media post_item">
-                                            <img src="{{ asset('storage/foto_berita/' . ($post->poster ?? 'berita-default.jpeg')) }}"
+                                            <img src="{{ asset('storage/foto_berita/' . ($post->poster ?? 'berita-default-pro.jpeg')) }}"
                                                 alt="post" style="width: 80px; height: 80px; object-fit: cover;">
 
                                             <div class="media-body">
