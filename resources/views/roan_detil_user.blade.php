@@ -138,7 +138,7 @@
                                                 : asset('storage/foto_roan/roan-default.jpeg') }}"
                                                 alt="post" style="width: 80px; height: 80px; object-fit: cover;">
                                             <div class="media-body">
-                                                <a href="#">
+                                                <a href="{{ route('roan.detil', $post->id_ro) }}">
                                                     <h3 style="margin: 0; font-size: 16px; line-height: 1.2;">
                                                         {{ Str::limit($post->judul, 70) }}
                                                     </h3>

@@ -11,7 +11,8 @@
                                 <div class="sticky-logo">
                                     <a href="{{ url('/') }}">
                                         <img src="{{ asset('assets/images/logo/logomwc_mobile.png') }}"
-                                            alt="Logo MWC NU Tugu" style="max-height: 50px; width: auto;">
+                                            alt="Logo MWC NU Tugu"
+                                            style="max-height: 200px; width: 200px; filter: drop-shadow(0.5px 0px 0px white) drop-shadow(-0.5px 0px 0px white) drop-shadow(0px 0.5px 0px white) drop-shadow(0px -0.5px 0px white);">
                                     </a>
                                 </div>
                                 <!-- Main-menu -->
@@ -23,7 +24,7 @@
                                             </li>
                                             <li><a href="{{ route('opini_warga') }}" target="_blank">Opini</a>
                                             </li>
-                                            <li><a href="#">Kajian ></a>
+                                            <li><a href="#">Kajian</a>
                                                 <ul class="submenu">
                                                     <li><a href="{{ route('bahsul') }}" target="_blank">Bahtsul
                                                             Masail</a></li>
@@ -33,7 +34,7 @@
                                                     </li>
                                                 </ul>
                                             </li>
-                                            <li><a href="#">Program > </a>
+                                            <li><a href="#">Program</a>
                                                 <ul class="submenu">
                                                     <li><a href="{{ route('mangrove') }}" target="_blank">Infaq
                                                             Mangrove</a></li>
@@ -47,7 +48,7 @@
                                                             Bencana</a></li>
                                                 </ul>
                                             </li>
-                                            <li><a href="#">Download > </a>
+                                            <li><a href="#">Download</a>
                                                 <ul class="submenu">
                                                     <li><a href="{{ route('khutbah') }}" target="_blank">Khutbah
                                                             Jumat</a></li>

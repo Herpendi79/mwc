@@ -52,10 +52,10 @@
                                     Tanam Mangrove untuk Masa Depan Ummat
                                 </h2>
                                 <ul class="blog-info-link mt-3 mb-4">
-                                    <li><a href="#"><i class="fa fa-user"></i>
-                                            Admin</a></li>
-                                    <li><a href="#"><i class="fa fa-map-marker"></i>
-                                            Semarang</a></li>
+                                    <li><i class="fa fa-user"></i>
+                                            Admin</li>
+                                    <li><i class="fa fa-map-marker"></i>
+                                            Semarang</li>
                                 </ul>
                                 <p class="excert" style="text-align: justify; line-height: 1.6;">
                                     <strong>Mangrove adalah benteng alami yang menjaga keseimbangan lingkungan
@@ -224,11 +224,11 @@
                                             <img src="{{ $fotoPoster }}" alt="post"
                                                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px;">
                                             <div class="media-body">
-                                                <a href="#">
+
                                                     <h3 style="margin: 0; font-size: 16px; line-height: 1.2;">
                                                         {{ Str::limit($post->donatur, 70) }}
                                                     </h3>
-                                                </a>
+
                                                 <p style="margin: 0; font-size: 12px;">
                                                     {{ $post->jumlah_pohon }} Pohon
                                                 </p>
@@ -246,7 +246,7 @@
                                 <ul class="list">
                                     @foreach ($tags as $kata => $jumlah)
                                         <li>
-                                            <a href="{{ route('mangrove', ['keyword' => $kata]) }}">
+                                            <a href="#">
                                                 {{ $kata }}
                                             </a>
                                         </li>

@@ -52,8 +52,8 @@
                                     Sedekah Sampah untuk Lingkungan yang Sehat & Bumi Panjang Umur
                                 </h2>
                                 <ul class="blog-info-link mt-3 mb-4">
-                                    <li><a href="#"><i class="fa fa-user"></i> Admin</a></li>
-                                    <li><a href="#"><i class="fa fa-map-marker"></i> Semarang</a></li>
+                                    <li><i class="fa fa-user"></i> Admin</li>
+                                    <li><i class="fa fa-map-marker"></i> Semarang</li>
                                 </ul>
 
                                 <p class="excert" style="text-align: justify; line-height: 1.6;">
@@ -270,11 +270,11 @@
                                             <img src="{{ $fotoPoster }}" alt="post"
                                                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px;">
                                             <div class="media-body">
-                                                <a href="#">
+
                                                     <h3 style="margin: 0; font-size: 16px; line-height: 1.2;">
                                                         {{ Str::limit($post->penyetor, 70) }}
                                                     </h3>
-                                                </a>
+
                                                 <p style="margin: 0; font-size: 12px; font-weight: bold; color: #059669;">
                                                     {{-- Format nilai menjadi Rupiah menggunakan NumberFormatter / helper bawaan --}}
                                                     Rp {{ number_format($post->nilai, 0, ',', '.') }}
@@ -293,7 +293,7 @@
                                 <ul class="list">
                                     @foreach ($tags as $kata => $jumlah)
                                         <li>
-                                            <a href="{{ route('sampah', ['keyword' => $kata]) }}">
+                                            <a href="#">
                                                 {{ $kata }}
                                             </a>
                                         </li>

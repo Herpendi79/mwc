@@ -148,7 +148,7 @@
                                                 : asset('storage/foto_relawan/relawan-default.jpeg') }}"
                                                 alt="post" style="width: 80px; height: 80px; object-fit: cover;">
                                             <div class="media-body">
-                                                <a href="#">
+                                                <a href="{{ route('relawan.detil', $post->id_re) }}">
                                                     <h3 style="margin: 0; font-size: 16px; line-height: 1.2;">
                                                         {{ Str::limit($post->judul, 70) }}
                                                     </h3>
