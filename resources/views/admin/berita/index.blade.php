@@ -76,7 +76,7 @@
                                         </td>
                                         <td class="p-4 text-center">
                                             <div class="flex justify-center gap-2">
-                                                @if ($item->status == 'draft')
+                                                @if ($item->status == 'draft' || $item->status == 'arsip')
                                                     <form action="{{ route('admin.berita.updateStatus', $item->id_br) }}"
                                                         method="POST">
                                                         @csrf @method('PATCH')

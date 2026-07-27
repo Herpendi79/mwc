@@ -400,6 +400,31 @@
                                         type="submit">Subscribe</button>
                                 </form>
                             </aside>
+                             <!-- Banner Widget -->
+                            <aside class="single_sidebar_widget">
+                                <div class="banner_img">
+                                    <a href="{{ route('register') }}" target="_blank">
+                                        <img class="img-fluid" src="{{ asset('storage/foto/gabung2.jpeg') }}"
+                                            alt="Banner Klik" style="width: 100%; border-radius: 4px; display: block;">
+                                    </a>
+                                </div>
+                            </aside>
+                             <aside class="single_sidebar_widget">
+                                <div class="banner_img">
+                                    <a href="{{ route('mangrove') }}" target="_blank">
+                                        <img class="img-fluid" src="{{ asset('storage/foto_mangrove/ayo.jpeg') }}"
+                                            alt="Banner Klik" style="width: 100%; border-radius: 4px; display: block;">
+                                    </a>
+                                </div>
+                            </aside>
+                            <aside class="single_sidebar_widget">
+                                <div class="banner_img">
+                                    <a href="{{ route('sampah') }}" target="_blank">
+                                        <img class="img-fluid" src="{{ asset('storage/foto_sampah/ayo.jpeg') }}"
+                                            alt="Banner Klik" style="width: 100%; border-radius: 4px; display: block;">
+                                    </a>
+                                </div>
+                            </aside>
                         </div>
                     </div>
                 </div>
