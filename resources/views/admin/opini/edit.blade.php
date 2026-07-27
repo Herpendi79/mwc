@@ -59,7 +59,7 @@
                                     class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-blue-500">
                             </div>
                             <div class="col-span-12 md:col-span-3">
-                                    <label class="block text-sm font-bold mb-2 dark:text-gray-300">Kategori</label>
+                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Kategori</label>
 
                                 <select name="kategori" required
                                     class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-green-500 transition">
@@ -103,12 +103,20 @@
                                 <label class="block text-sm font-bold mb-2 dark:text-gray-300">Ganti Foto</label>
                                 <input type="file" name="foto"
                                     class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none">
-                                @if ($opini->foto)
+                                @if (!empty($opini->foto) && Storage::disk('public')->exists('foto_opini/' . $opini->foto))
                                     <p class="text-xs text-blue-500 mt-1">File saat ini:</p>
                                     <a href="{{ asset('storage/foto_opini/' . $opini->foto) }}" target="_blank"
                                         rel="noopener noreferrer">
                                         <img src="{{ asset('storage/foto_opini/' . $opini->foto) }}"
                                             class="w-full h-auto max-h-96 object-cover rounded-xl border dark:border-gray-700 shadow-sm">
+                                    </a>
+                                @else
+                                    <p class="text-xs text-red-500 mt-1">File fisik saat ini tidak ditemukan, menggunakan
+                                        gambar default:</p>
+                                    <a href="{{ asset('storage/foto_opini/opini-default.jpeg') }}" target="_blank"
+                                        rel="noopener noreferrer">
+                                        <img src="{{ asset('storage/foto_opini/opini-default.jpeg') }}"
+                                            class="w-full h-auto max-h-96 object-cover rounded-xl border dark:border-gray-700 shadow-sm opacity-75">
                                     </a>
                                 @endif
 
@@ -118,11 +126,13 @@
                                 <input type="file" name="lampiran"
                                     class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none">
 
-                                @if ($opini->lampiran)
+                                @if (!empty($opini->lampiran) && Storage::disk('public')->exists('file/' . $opini->lampiran))
                                     <a href="{{ asset('storage/file/' . $opini->lampiran) }}" target="_blank"
                                         rel="noopener noreferrer">
                                         <p class="text-xs text-blue-500 mt-1">File saat ini: <u>Klik Disini!</u></p>
                                     </a>
+                                @else
+                                    <p class="text-xs text-gray-400 italic mt-1">Tidak ada lampiran.</p>
                                 @endif
                             </div>
                         </div>

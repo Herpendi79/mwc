@@ -3,8 +3,7 @@
 @section('title', 'Data Opini')
 
 @section('content')
-    <div class="flex h-screen bg-gray-50 dark:bg-black font-ibm overflow-hidden"
-         x-data="{ openModal: false, selectedOpini: null, showRejectModal: false, selectedRejectId: null, showPublishModal: false, selectedPublishId: null }">
+    <div class="flex h-screen bg-gray-50 dark:bg-black font-ibm overflow-hidden" x-data="{ openModal: false, selectedOpini: null, showRejectModal: false, selectedRejectId: null, showPublishModal: false, selectedPublishId: null }">
         @include('admin.partials._sidebar')
 
         <div class="flex-1 flex flex-col overflow-hidden">
@@ -203,10 +202,16 @@
                             </p>
 
                             <div class="space-y-6">
-                                @if ($item->foto)
+                                @if (!empty($item->foto) && Storage::disk('public')->exists('foto_opini/' . $item->foto))
                                     <a href="{{ asset('storage/foto_opini/' . $item->foto) }}" target="_blank"
                                         rel="noopener noreferrer">
                                         <img src="{{ asset('storage/foto_opini/' . $item->foto) }}"
+                                            class="w-full h-auto max-h-96 object-cover rounded-xl border dark:border-gray-700 shadow-sm">
+                                    </a>
+                                @else
+                                    <a href="{{ asset('storage/foto_opini/opini-default.jpeg') }}" target="_blank"
+                                        rel="noopener noreferrer">
+                                        <img src="{{ asset('storage/foto_opini/opini-default.jpeg') }}"
                                             class="w-full h-auto max-h-96 object-cover rounded-xl border dark:border-gray-700 shadow-sm">
                                     </a>
                                 @endif
@@ -216,11 +221,13 @@
                                     {!! $item->isi !!}
                                 </div>
 
-                                @if ($item->lampiran)
+                                @if (!empty($item->lampiran) && Storage::disk('public')->exists('file/' . $item->lampiran))
                                     <a href="{{ asset('storage/file/' . $item->lampiran) }}" target="_blank"
                                         class="inline-block bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition">
                                         <i class="ri-download-line mr-2"></i> Download Lampiran
                                     </a>
+                                @else
+                                    <p class="text-sm text-gray-400 italic">Tidak ada lampiran.</p>
                                 @endif
                             </div>
                         </div>
