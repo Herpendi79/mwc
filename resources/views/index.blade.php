@@ -596,7 +596,7 @@
                                             @foreach ($khutbahs as $item)
                                                 <div class="weekly2-single">
                                                     <div class="weekly2-img">
-                                                        <img src="{{ $item->poster && $item->poster !== 'none' ? asset('storage/foto_khutbah/' . $item->poster) : asset('storage/foto_khutbah/khutbah-default.jpeg') }}"
+                                                        <img src="{{ !empty($item->poster) && $item->poster !== 'none' && Storage::disk('public')->exists('foto_khutbah/' . $item->poster) ? asset('storage/foto_khutbah/' . $item->poster) : asset('storage/foto_khutbah/khutbah-default.jpeg') }}"
                                                             alt="{{ $item->judul }}"
                                                             style="width: 235px; height: 155px; object-fit: cover;">
                                                     </div>
