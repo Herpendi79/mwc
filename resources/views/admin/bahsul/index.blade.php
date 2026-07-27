@@ -165,6 +165,19 @@
                                                 <p><strong>Lokasi:</strong> {{ $item->lokasi }}</p>
                                                 <p><strong>Masalah:</strong> {{ $item->masalah }}</p>
                                                 <p><strong>Putusan:</strong> {{ $item->putusan }}</p>
+                                                <p><strong>Dasar Hukum:</strong> {{ $item->dasar_hukum }}</p>
+                                                <p>
+                                                    <strong>Lampiran:</strong>
+                                                    @if ($item->lampiran)
+                                                        <a href="{{ asset('storage/file/' . $item->lampiran) }}"
+                                                            target="_blank"
+                                                            class="text-blue-600 hover:text-blue-800 underline font-medium">
+                                                            {{ $item->lampiran }}
+                                                        </a>
+                                                    @else
+                                                        <span class="text-gray-400">Tidak ada lampiran</span>
+                                                    @endif
+                                                </p>
                                             </div>
 
                                             <h4 class="font-bold mb-3 dark:text-white">Daftar Peserta
