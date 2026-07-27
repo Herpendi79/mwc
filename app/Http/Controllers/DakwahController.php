@@ -50,21 +50,23 @@ class DakwahController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'judul'    => 'required',
-            'kategori' => 'required',
             'mubaligh' => 'required',
             'isi'      => 'required',
             'tgl'      => 'required|date',
             'status'   => 'nullable|in:draft,publish,arsip',
-            'poster'   => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'poster'   => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'link_yt'  => 'nullable|url'
         ]);
 
         $dakwah = DakwahModel::findOrFail($id);
 
+        // Berikan nilai default otomatis untuk kolom yang tidak ada di form edit
+        $validated['judul']    = '-';
+        $validated['kategori'] = '-';
+
         if ($request->hasFile('poster')) {
             // Hapus poster lama
-            if ($dakwah->poster) {
+            if ($dakwah->poster && $dakwah->poster !== '-') {
                 Storage::disk('public')->delete('foto_dakwah/' . $dakwah->poster);
             }
             // Upload baru

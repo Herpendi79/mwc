@@ -63,13 +63,13 @@
                                                     class="text-blue-600 hover:text-blue-800" title="Edit">
                                                     <i class="ri-edit-line text-xl"></i>
                                                 </a>
-                                                <form action="{{ route('admin.dakwah.updateStatus', $item->id_pd) }}"
-                                                    method="POST">
-                                                    @csrf @method('PATCH')
-                                                    <input type="hidden" name="status" value="arsip">
-                                                    <button type="submit" class="text-yellow-600 hover:text-yellow-800"
-                                                        title="Arsipkan">
-                                                        <i class="ri-archive-line text-xl"></i>
+                                                <form action="{{ route('admin.dakwah.hapus', $item->id_pd) }}"
+                                                    method="POST"
+                                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                                                    @csrf @method('DELETE')
+                                                    <button type="submit" class="text-red-600 hover:text-red-800"
+                                                        title="Hapus">
+                                                        <i class="ri-delete-bin-line text-xl"></i>
                                                     </button>
                                                 </form>
                                             </div>

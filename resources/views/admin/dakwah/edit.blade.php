@@ -45,71 +45,49 @@
                         </div>
                     @endif
 
-                    {{-- Form menggunakan flex-grow untuk mengisi sisa ruang --}}
+                    {{-- Form dibuat flex-grow agar mengisi sisa halaman --}}
                     <form action="{{ route('admin.dakwah.update', $dakwah->id_pd) }}" method="POST"
                         enctype="multipart/form-data"
                         class="bg-white dark:bg-gray-900 p-8 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm flex flex-col flex-grow">
                         @csrf
                         @method('PUT')
 
-                        {{-- Baris Input Atas --}}
+                        {{-- Baris Input --}}
                         <div class="grid grid-cols-12 gap-4 mb-6">
-                            <div class="col-span-12 md:col-span-6">
-                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Judul Dakwah</label>
-                                <input type="text" name="judul" value="{{ old('judul', $dakwah->judul) }}" required
-                                    class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 transition">
-                            </div>
-                            <div class="col-span-12 md:col-span-3">
-                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Kategori</label>
-                                <input type="text" name="kategori" value="{{ old('kategori', $dakwah->kategori) }}"
-                                    required
-                                    class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 transition">
-                            </div>
-                            <div class="col-span-12 md:col-span-3">
-                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Mubaligh</label>
+                            {{-- Penulis / Mubaligh (Lebar: 4 Kolom) --}}
+                            <div class="col-span-12 md:col-span-4">
+                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Penulis</label>
                                 <input type="text" name="mubaligh" value="{{ old('mubaligh', $dakwah->mubaligh) }}"
                                     required
                                     class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 transition">
                             </div>
-                        </div>
 
-                        {{-- Baris Input Kedua --}}
-                        <div class="grid grid-cols-12 gap-4 mb-6">
-                            <div class="col-span-12 md:col-span-3">
+                            {{-- Tanggal (Lebar: 2 Kolom) --}}
+                            <div class="col-span-12 md:col-span-2">
                                 <label class="block text-sm font-bold mb-2 dark:text-gray-300">Tanggal</label>
                                 <input type="date" name="tgl"
                                     value="{{ old('tgl', $dakwah->tgl ? \Carbon\Carbon::parse($dakwah->tgl)->format('Y-m-d') : '') }}"
                                     class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 transition">
                             </div>
-                            <div class="col-span-12 md:col-span-4">
-                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Poster (Opsional)</label>
-                                <input type="file" name="poster"
-                                    class="w-full p-2.5 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-emerald-500 file:text-white hover:file:bg-emerald-600 transition">
-                            </div>
-                            <div class="col-span-12 md:col-span-5">
-                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Link Youtube</label>
-                                <input type="text" name="link_yt" value="{{ old('link_yt', $dakwah->link_yt) }}"
-                                    class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 transition">
-                            </div>
                         </div>
 
-                        {{-- Area Editor --}}
+                        {{-- Area Editor (Paling bawah & Full Sisa Halaman) --}}
                         <div class="flex flex-col flex-grow mb-6">
-                            <label class="block text-sm font-bold mb-2 dark:text-gray-300">Isi Dakwah</label>
+                            <label class="block text-sm font-bold mb-2 dark:text-gray-300">Isi Pesan Dakwah</label>
                             <div class="editor-container">
                                 <textarea name="isi" id="editor" class="w-full flex-grow">{{ old('isi', $dakwah->isi) }}</textarea>
                             </div>
                         </div>
 
                         <div class="flex gap-4 mt-6">
-                                <button type="submit" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold">
-                                    Simpan Data
-                                </button>
-                                <a href="{{ route('admin.dakwah.index') }}"
-                                    class="flex-1 text-center bg-gray-200 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all">
-                                    Batal
-                                </a>
-                            </div>
+                            <button type="submit" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold">
+                                Simpan Data
+                            </button>
+                            <a href="{{ route('admin.dakwah.index') }}"
+                                class="flex-1 text-center bg-gray-200 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all">
+                                Batal
+                            </a>
+                        </div>
                     </form>
                 </div>
             </main>
