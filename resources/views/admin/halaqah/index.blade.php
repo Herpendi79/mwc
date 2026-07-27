@@ -191,6 +191,20 @@
                                                     <p class="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg mt-1">
                                                         {{ $item->hasil }}</p>
                                                 </div>
+                                                <div class="text-sm dark:text-gray-300">
+                                                    <p class="font-bold">Link Youtube:</p>
+                                                    <p class="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg mt-1">
+                                                        @if ($item->link_yt)
+                                                            <a href="{{ $item->link_yt }}"
+                                                                target="_blank"
+                                                                class="text-blue-600 hover:text-blue-800 underline font-medium">
+                                                                {{ $item->link_yt }}
+                                                            </a>
+                                                        @else
+                                                            <span class="text-gray-400">Tidak ada Link</span>
+                                                        @endif
+                                                    </p>
+                                                </div>
                                             </div>
 
                                             <h4 class="font-bold mb-3 dark:text-white">Galeri Foto</h4>
