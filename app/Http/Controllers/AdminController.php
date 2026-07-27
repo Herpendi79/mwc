@@ -207,6 +207,7 @@ class AdminController extends Controller
     public function verifikasi(Request $request, $id)
     {
         $anggota = AnggotaModel::with('user')->findOrFail($id);
+        $user = $anggota->user;
         $email = $anggota->user->email ?? null;
         $action = $request->action;
         $name = $anggota->user->name ?? 'Anggota';
@@ -231,6 +232,11 @@ class AdminController extends Controller
             } else {
                 // Untuk aktivasi ulang (jika tidak butuh input baru)
                 $anggota->update(['status' => 'aktif']);
+            }
+            if ($user && empty($user->email_verified_at)) {
+                $user->update([
+                    'email_verified_at' => now(),
+                ]);
             }
 
             $message = ($action == 'setuju') ? "Anggota berhasil divalidasi dan disetujui." : "Anggota berhasil diaktifkan kembali.";
@@ -283,6 +289,7 @@ class AdminController extends Controller
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
                     'role' => 'anggota', // Asumsi role untuk anggota
+                    'email_verified_at' => now(),
                 ]);
 
                 // 2. Simpan ke Anggota dengan status langsung aktif
