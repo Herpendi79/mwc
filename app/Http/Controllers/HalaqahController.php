@@ -43,7 +43,9 @@ class HalaqahController extends Controller
 
     public function index_anggota()
     {
-        $halaqah = HalaqahModel::where('status', 'publish')->latest()->paginate(10);
+        $halaqah = HalaqahModel::where('status', 'publish')
+            ->orderBy('tanggal', 'desc') // Urutkan berdasarkan tanggal terbaru
+            ->paginate(10);
         return view('anggota.halaqah.index', compact('halaqah'));
     }
 

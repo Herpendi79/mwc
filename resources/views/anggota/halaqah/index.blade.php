@@ -3,7 +3,6 @@
 @section('title', 'Halaqah')
 
 @section('content')
-    {{-- Tambahkan x-data untuk menangani pencarian, status modal, dan ID yang sedang dipilih --}}
     <div class="flex h-screen bg-gray-50 dark:bg-black font-ibm overflow-hidden" x-data="{ search: '', openModal: false, selectedId: null }">
         @include('anggota.partials._sidebar')
 
@@ -34,6 +33,12 @@
                         </div>
                     @endif
 
+                    @if (session('error'))
+                        <div class="bg-red-100 border border-red-200 text-red-700 p-4 rounded-xl mb-6 shadow-sm">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+
                     {{-- Tabel Data --}}
                     <div
                         class="overflow-x-auto w-full bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
@@ -59,7 +64,8 @@
                                                 '{{ strtolower(addslashes($item->tema)) }}'.includes(search.toLowerCase()) ||
                                                 '{{ strtolower(addslashes($item->narsum)) }}'.includes(search.toLowerCase())">
 
-                                        <td class="p-4 dark:text-gray-300">{{ $index + 1 }}</td>
+                                        <td class="p-4 dark:text-gray-300">
+                                            {{ $halaqah->firstItem() ? $halaqah->firstItem() + $index : $index + 1 }}</td>
                                         <td class="p-4 dark:text-gray-300">
                                             {{ \Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') }}</td>
                                         <td class="p-4 dark:text-white font-medium">{{ $item->judul }}</td>
@@ -69,9 +75,16 @@
 
                                         <td class="p-4">
                                             @if (!empty($item->thumbnail))
-                                                <a href="{{ $item->thumbnail && Storage::disk('public')->exists('foto_halaqah/' . $item->thumbnail) ? asset('storage/foto_halaqah/' . $item->thumbnail) : asset('storage/foto_halaqah/default-halaqah-pro.jpeg') }}"
-                                                    target="_blank" rel="noopener noreferrer">
-                                                    <img src="{{ $item->thumbnail && Storage::disk('public')->exists('foto_halaqah/' . $item->thumbnail) ? asset('storage/foto_halaqah/' . $item->thumbnail) : asset('storage/foto_halaqah/default-halaqah-pro.jpeg') }}"
+                                                @php
+                                                    $thumbExists = Storage::disk('public')->exists(
+                                                        'foto_halaqah/' . $item->thumbnail,
+                                                    );
+                                                    $thumbUrl = $thumbExists
+                                                        ? asset('storage/foto_halaqah/' . $item->thumbnail)
+                                                        : asset('storage/foto_halaqah/default-halaqah-pro.jpeg');
+                                                @endphp
+                                                <a href="{{ $thumbUrl }}" target="_blank" rel="noopener noreferrer">
+                                                    <img src="{{ $thumbUrl }}"
                                                         class="w-12 h-12 object-cover rounded-lg border border-gray-200 hover:opacity-80 transition-opacity">
                                                 </a>
                                             @else
@@ -80,10 +93,8 @@
                                         </td>
 
                                         {{-- Tombol Pemicu Modal Detail (Jumlah Peserta) --}}
-                                        {{-- Catatan: Ganti $item->id_halaqah dengan primary key tabel halaqah Anda jika berbeda --}}
                                         <td class="p-4">
-                                            <button
-                                                @click="selectedId = {{ $item->id_halaqah ?? $item->id }}; openModal = true"
+                                            <button @click="selectedId = {{ $item->id }}; openModal = true"
                                                 class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full font-bold hover:bg-blue-200 transition">
                                                 {{ $item->peserta_count ?? (isset($item->peserta) ? $item->peserta->count() : 0) }}
                                                 Peserta
@@ -97,8 +108,9 @@
                                                     class="text-xs text-red-500 font-bold bg-red-100 px-2 py-1 rounded-full">Ditutup</span>
                                             @else
                                                 <button type="button"
-                                                    onclick="confirmDaftar('{{ route('anggota.halaqah.daftar', $item->id ?? $item->id) }}')"
-                                                    title="Daftar" class="text-blue-600 hover:text-blue-800 relative z-10">
+                                                    onclick="confirmDaftar('{{ route('anggota.halaqah.daftar', $item->id) }}')"
+                                                    title="Daftar"
+                                                    class="text-blue-600 hover:text-blue-800 relative z-10 p-2">
                                                     <i class="ri-add-line text-xl"></i>
                                                 </button>
                                             @endif
@@ -108,11 +120,11 @@
                             </tbody>
                         </table>
 
-                        {{-- MODAL TUNGGAL (Diletakkan di luar baris tabel, hanya merender data yang dipilih) --}}
+                        {{-- MODAL TUNGGAL (Diletakkan di luar baris tabel agar valid) --}}
                         <div x-show="openModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-                            x-cloak>
+                            x-cloak style="display: none;">
                             <div @click.away="openModal = false"
-                                class="bg-white dark:bg-gray-900 p-8 rounded-3xl w-full max-w-4xl shadow-2xl relative max-h-[90vh] overflow-y-auto">
+                                class="bg-white dark:bg-gray-900 p-8 rounded-3xl w-full max-w-4xl shadow-2xl relative max-h-[90vh] overflow-y-auto text-left">
 
                                 {{-- Tombol Tutup X --}}
                                 <button @click="openModal = false"
@@ -121,30 +133,34 @@
                                 </button>
 
                                 @foreach ($halaqah as $item)
-                                    @php $itemId = $item->id_halaqah ?? $item->id; @endphp
-                                    <div x-show="selectedId === {{ $itemId }}" class="space-y-6">
-                                        <h3 class="font-bold text-lg mb-4 dark:text-white border-b pb-2">Detail:
-                                            {{ $item->judul }}</h3>
+                                    <div x-show="selectedId === {{ $item->id }}" class="space-y-6"
+                                        style="display: none;">
+                                        <h3
+                                            class="font-bold text-lg mb-4 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2 pr-8">
+                                            Detail: {{ $item->judul }}
+                                        </h3>
 
                                         <div class="space-y-4 text-sm dark:text-gray-300">
                                             <div>
                                                 <strong class="block text-gray-700 dark:text-gray-300">Deskripsi:</strong>
                                                 <p
                                                     class="mt-1 bg-gray-50 dark:bg-gray-800 p-3 rounded-lg text-gray-600 dark:text-gray-400">
-                                                    {{ $item->deskripsi }}</p>
+                                                    {{ $item->deskripsi }}
+                                                </p>
                                             </div>
                                             <div>
                                                 <strong class="block text-gray-700 dark:text-gray-300">Hasil /
                                                     Ringkasan:</strong>
                                                 <p
                                                     class="mt-1 bg-gray-50 dark:bg-gray-800 p-3 rounded-lg text-gray-600 dark:text-gray-400">
-                                                    {{ $item->hasil }}</p>
+                                                    {{ $item->hasil }}
+                                                </p>
                                             </div>
                                             <div>
                                                 <p><strong>Youtube:</strong>
                                                     @if ($item->link_yt)
                                                         <a href="{{ $item->link_yt }}" target="_blank"
-                                                            class="text-blue-600 underline">{{ $item->link_yt }}</a>
+                                                            class="text-blue-600 underline break-all">{{ $item->link_yt }}</a>
                                                     @else
                                                         -
                                                     @endif
@@ -177,25 +193,43 @@
                                             </div>
 
                                             {{-- Galeri Foto --}}
-                                            <h4 class="font-bold mb-3 dark:text-white">Galeri Foto</h4>
+                                            <h4 class="font-bold mb-3 dark:text-white pt-2">Galeri Foto</h4>
                                             <div class="grid grid-cols-3 gap-3 mb-6">
-                                                @foreach (explode(';', $item->foto) as $f)
-                                                    @php $fileName = basename(trim($f)); @endphp
-                                                    @if (!empty($fileName))
-                                                        <a href="{{ $fileName && Storage::disk('public')->exists('foto_halaqah/' . $fileName) ? asset('storage/foto_halaqah/' . $fileName) : asset('storage/foto_halaqah/default-halaqah-pro.jpeg') }}"
-                                                            target="_blank" rel="noopener noreferrer">
-                                                            <img src="{{ $fileName && Storage::disk('public')->exists('foto_halaqah/' . $fileName) ? asset('storage/foto_halaqah/' . $fileName) : asset('storage/foto_halaqah/default-halaqah-pro.jpeg') }}"
-                                                                class="w-full h-24 object-cover rounded-lg border dark:border-gray-700 hover:opacity-80 transition-opacity">
-                                                        </a>
-                                                    @endif
-                                                @endforeach
+                                                @if (!empty($item->foto))
+                                                    @foreach (explode(';', $item->foto) as $f)
+                                                        @php
+                                                            $fileName = basename(trim($f));
+                                                            $fotoExists =
+                                                                !empty($fileName) &&
+                                                                Storage::disk('public')->exists(
+                                                                    'foto_halaqah/' . $fileName,
+                                                                );
+                                                            $fotoUrl = $fotoExists
+                                                                ? asset('storage/foto_halaqah/' . $fileName)
+                                                                : asset(
+                                                                    'storage/foto_halaqah/default-halaqah-pro.jpeg',
+                                                                );
+                                                        @endphp
+                                                        @if (!empty($fileName))
+                                                            <a href="{{ $fotoUrl }}" target="_blank"
+                                                                rel="noopener noreferrer">
+                                                                <img src="{{ $fotoUrl }}"
+                                                                    class="w-full h-24 object-cover rounded-lg border dark:border-gray-700 hover:opacity-80 transition-opacity">
+                                                            </a>
+                                                        @endif
+                                                    @endforeach
+                                                @else
+                                                    <p class="text-gray-400 text-xs col-span-3">Tidak ada galeri foto.</p>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
                                 @endforeach
+
                             </div>
                         </div>
                     </div>
+
                     <div class="mt-4">
                         {{ $halaqah->links() }}
                     </div>
