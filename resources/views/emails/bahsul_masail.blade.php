@@ -62,13 +62,13 @@
 <body>
     <div class="container">
         <div class="header">
-            <h2>Bahsul Masail</h2>
+            <h2>Bahtsul Masail</h2>
         </div>
 
         <div class="content">
             <p>Yth. <strong>{{ $data['name'] }}</strong>,</p>
 
-            <p>Alhamdulillah, kami telah menerima pertanyaan yang Anda sampaikan melalui kanal Bahsul Masail.</p>
+            <p>Alhamdulillah, kami telah menerima pertanyaan yang Anda sampaikan melalui kanal Bahtsul Masail.</p>
 
             <p>Detail Pertanyaan:</p>
             <ul class="box-info">

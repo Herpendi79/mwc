@@ -1334,7 +1334,7 @@ class FreeUserController extends Controller
             ->exists();
 
         if ($sudahDaftar) {
-            return redirect()->back()->with('error', 'Email ini sudah terdaftar di kegiatan Bahsul Masail ini.');
+            return redirect()->back()->with('error', 'Email ini sudah terdaftar di kegiatan Bahtsul Masail ini.');
         }
 
         // Simpan data pendaftaran peserta baru

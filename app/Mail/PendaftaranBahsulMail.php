@@ -23,7 +23,7 @@ class PendaftaranBahsulMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Konfirmasi Pendaftaran Bahsul Masail'
+            subject: 'Konfirmasi Pendaftaran Bahtsul Masail'
         );
     }
 

@@ -30,7 +30,7 @@ class BahsulMasailMail extends Mailable
      */
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'Konfirmasi Penerimaan Pertanyaan Bahsul Masail');
+        return new Envelope(subject: 'Konfirmasi Penerimaan Pertanyaan Bahtsul Masail');
     }
 
     public function content(): Content

@@ -251,11 +251,11 @@ class BahsulController extends Controller
 
             return redirect()
                 ->route('anggota.bahsul.index')
-                ->with('success', 'Data Bahsul Masail berhasil dihapus.');
+                ->with('success', 'Data Bahtsul Masail berhasil dihapus.');
         } catch (\Exception $e) {
             return redirect()
                 ->route('anggota.bahsul.index')
-                ->with('error', 'Data Bahsul Masail gagal dihapus.');
+                ->with('error', 'Data Bahtsul Masail gagal dihapus.');
         }
     }
     public function destroy($id): RedirectResponse
@@ -266,11 +266,11 @@ class BahsulController extends Controller
 
             return redirect()
                 ->route('admin.bahsul.index')
-                ->with('success', 'Data Bahsul Masail berhasil dihapus.');
+                ->with('success', 'Data Bahtsul Masail berhasil dihapus.');
         } catch (\Exception $e) {
             return redirect()
                 ->route('admin.bahsul.index')
-                ->with('error', 'Data Bahsul Masail gagal dihapus.');
+                ->with('error', 'Data Bahtsul Masail gagal dihapus.');
         }
     }
 
@@ -335,7 +335,7 @@ class BahsulController extends Controller
 
         $sudahDaftar = PesertaBahsulModel::where('id_bs', $id_bs)->where('email', $user->email)->exists();
         if ($sudahDaftar) {
-            return redirect()->back()->with('error', 'Anda sudah terdaftar di kegiatan Bahsul Masail ini.');
+            return redirect()->back()->with('error', 'Anda sudah terdaftar di kegiatan Bahtsul Masail ini.');
         }
 
         PesertaBahsulModel::create([

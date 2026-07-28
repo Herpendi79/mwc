@@ -50,7 +50,7 @@
                                     'color' => 'blue',
                                 ],
                                 [
-                                    'title' => 'Bahsul Masail',
+                                    'title' => 'Bahtsul Masail',
                                     'count' => $data['total_bahsul'],
                                     'icon' => 'ri-book-line',
                                     'color' => 'indigo',
