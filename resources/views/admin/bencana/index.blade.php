@@ -51,6 +51,7 @@
                             <thead class="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
                                 <tr>
                                     <th class="p-4 text-sm font-bold dark:text-gray-300">No</th>
+                                    <th class="p-4 text-left font-bold dark:text-gray-300">Waktu</th>
                                     <th class="p-4 text-sm font-bold dark:text-gray-300">Pelapor</th>
                                     <th class="p-4 text-sm font-bold dark:text-gray-300">Jenis</th>
                                     <th class="p-4 text-sm font-bold dark:text-gray-300">Lokasi</th>
@@ -64,6 +65,8 @@
                                 @foreach ($bencana as $index => $item)
                                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
                                         <td class="p-4 dark:text-gray-300">{{ $index + 1 }}</td>
+                                        <td class="p-4 dark:text-white font-medium">
+                                            {{ \Carbon\Carbon::parse($item->tgl)->format('d/m/Y H:i') }}</td>
                                         <td class="p-4 dark:text-white font-medium">{{ $item->pelapor }}</td>
                                         <td class="p-4 dark:text-gray-300">{{ $item->jenis_bencana }}</td>
                                         <td class="p-4 dark:text-gray-300">{{ $item->lokasi }}</td>

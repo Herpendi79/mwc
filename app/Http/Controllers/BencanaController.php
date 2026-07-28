@@ -38,7 +38,7 @@ class BencanaController extends Controller
     public function index_anggota()
     {
         // Menampilkan data kecuali yang berstatus 'arsip'
-        $bencana = BencanaModel::where('status', '!=', 'arsip')->paginate(10);
+        $bencana = BencanaModel::where('status', '!=', 'arsip')->orderBy('tgl', 'desc')->paginate(10);
 
         return view('anggota.bencana.index', compact('bencana'));
     }
