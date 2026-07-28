@@ -83,93 +83,102 @@
                                         penyelamatan banyak nyawa.</strong>
                                 </p>
                                 <hr>
-                                <div class="excert bg-emerald-800 dark:bg-emerald-950 border border-emerald-700 dark:border-emerald-900 p-6 rounded-2xl shadow-md"
+                                <div class="excert bg-emerald-800 dark:bg-emerald-950 border border-emerald-700 dark:border-emerald-900 p-3 sm:p-6 rounded-2xl shadow-md"
                                     style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 8px;">
 
                                     <form action="{{ route('bencana.simpan') }}" method="POST"
                                         enctype="multipart/form-data"
-                                        class="bg-white dark:bg-gray-900 p-8 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm w-full">
+                                        class="bg-white dark:bg-gray-900 p-4 sm:p-8 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm w-full">
                                         @csrf
 
                                         {{-- Baris Nama Pelapor & Email --}}
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 mb-4 sm:mb-5">
                                             <div>
-                                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Nama
+                                                <label
+                                                    class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 dark:text-gray-300">Nama
                                                     Pelapor</label>
                                                 <input type="text" name="pelapor" value="{{ old('pelapor') }}" required
-                                                    class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                                    class="w-full p-2.5 sm:p-3 text-sm rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 transition">
                                             </div>
                                             <div>
-                                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Email</label>
+                                                <label
+                                                    class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 dark:text-gray-300">Email</label>
                                                 <input type="email" name="email" value="{{ old('email') }}" required
-                                                    class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                                    class="w-full p-2.5 sm:p-3 text-sm rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 transition">
                                             </div>
                                         </div>
 
-                                        {{-- Pelapor, Jenis Bencana & Tanggal --}}
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                                        {{-- Jenis Bencana & Tanggal --}}
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 mb-4 sm:mb-5">
                                             <div>
-                                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Jenis
+                                                <label
+                                                    class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 dark:text-gray-300">Jenis
                                                     Bencana</label>
                                                 <input type="text" name="jenis_bencana"
                                                     value="{{ old('jenis_bencana') }}" required
-                                                    class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                                    class="w-full p-2.5 sm:p-3 text-sm rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 transition">
                                             </div>
                                             <div>
-                                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Tanggal
+                                                <label
+                                                    class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 dark:text-gray-300">Tanggal
                                                     Kejadian</label>
                                                 <input type="date" name="tgl"
                                                     value="{{ old('tgl', date('Y-m-d')) }}" required
-                                                    class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                                    class="w-full p-2.5 sm:p-3 text-sm rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 transition">
                                             </div>
                                         </div>
 
                                         {{-- Lokasi & Jumlah Korban --}}
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 mb-4 sm:mb-5">
                                             <div>
                                                 <label
-                                                    class="block text-sm font-bold mb-2 dark:text-gray-300">Lokasi</label>
+                                                    class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 dark:text-gray-300">Lokasi</label>
                                                 <input type="text" name="lokasi" value="{{ old('lokasi') }}" required
-                                                    class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                                    class="w-full p-2.5 sm:p-3 text-sm rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 transition">
                                             </div>
                                             <div>
-                                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Jumlah
+                                                <label
+                                                    class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 dark:text-gray-300">Jumlah
                                                     Korban</label>
                                                 <input type="number" name="jml_korban" value="{{ old('jml_korban') }}"
                                                     required
-                                                    class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                                    class="w-full p-2.5 sm:p-3 text-sm rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 transition">
                                             </div>
                                         </div>
 
-                                        {{-- Kebutuhan & Deskripsi --}}
-                                        <div class="mb-5">
-                                            <label class="block text-sm font-bold mb-2 dark:text-gray-300">Kebutuhan
+                                        {{-- Kebutuhan Mendesak --}}
+                                        <div class="mb-4 sm:mb-5">
+                                            <label
+                                                class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 dark:text-gray-300">Kebutuhan
                                                 Mendesak</label>
                                             <textarea name="kebutuhan" rows="2" required
-                                                class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 transition">{{ old('kebutuhan') }}</textarea>
+                                                class="w-full p-2.5 sm:p-3 text-sm rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 transition">{{ old('kebutuhan') }}</textarea>
                                         </div>
 
-                                        <div class="mb-5">
-                                            <label class="block text-sm font-bold mb-2 dark:text-gray-300">Deskripsi
+                                        {{-- Deskripsi Kejadian --}}
+                                        <div class="mb-4 sm:mb-5">
+                                            <label
+                                                class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 dark:text-gray-300">Deskripsi
                                                 Kejadian</label>
                                             <textarea name="deskripsi" rows="3" required
-                                                class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 transition">{{ old('deskripsi') }}</textarea>
+                                                class="w-full p-2.5 sm:p-3 text-sm rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 transition">{{ old('deskripsi') }}</textarea>
                                         </div>
 
                                         {{-- Foto --}}
-                                        <div class="mb-8">
-                                            <label class="block text-sm font-bold mb-2 dark:text-gray-300">Dokumentasi
+                                        <div class="mb-6 sm:mb-8">
+                                            <label
+                                                class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 dark:text-gray-300">Dokumentasi
                                                 Foto</label>
                                             <input type="file" name="foto[]" multiple accept="image/*" required
-                                                class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 transition">
-                                            <p class="text-xs text-gray-400 mt-1">Anda dapat memilih lebih dari satu foto.
-                                            </p>
+                                                class="w-full p-2 sm:p-3 text-xs sm:text-sm rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 transition">
+                                            <p class="text-[11px] sm:text-xs text-gray-400 mt-1">Anda dapat memilih lebih
+                                                dari satu foto.</p>
                                         </div>
 
                                         {{-- Tombol Aksi --}}
-                                        <div class="flex gap-4 mt-6">
+                                        <div class="flex gap-4 mt-4 sm:mt-6">
                                             <button type="submit"
-                                                class="flex-1 bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 transition">
+                                                class="flex-1 bg-emerald-600 text-white py-2.5 sm:py-3 text-sm sm:text-base rounded-xl font-bold hover:bg-emerald-700 transition">
                                                 Laporkan
                                             </button>
                                         </div>

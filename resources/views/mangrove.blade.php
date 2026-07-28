@@ -81,11 +81,11 @@
                                         umat.</strong>
                                 </p>
                                 <hr>
-                                <div class="excert bg-emerald-800 dark:bg-emerald-950 border border-emerald-700 dark:border-emerald-900 p-6 rounded-2xl shadow-md"
+                                <div class="excert bg-emerald-800 dark:bg-emerald-950 border border-emerald-700 dark:border-emerald-900 p-3 sm:p-6 rounded-2xl shadow-md"
                                     style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 8px;">
                                     <form action="{{ route('mangrove.simpan') }}" enctype="multipart/form-data"
                                         method="POST"
-                                        class="bg-white dark:bg-gray-900 p-8 rounded-2xl border border-emerald-100 dark:border-emerald-900/50 shadow-sm w-full"
+                                        class="bg-white dark:bg-gray-900 p-4 sm:p-8 rounded-2xl border border-emerald-100 dark:border-emerald-900/50 shadow-sm w-full"
                                         x-data="{
                                             harga: {{ $hargaMangrove ?? 0 }},
                                             jumlah: 0,
@@ -98,106 +98,112 @@
                                         @csrf
 
                                         {{-- Baris Nama & Email --}}
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 mb-4 sm:mb-5">
                                             <div>
                                                 <label
-                                                    class="block text-sm font-bold mb-2 text-gray-700 dark:text-gray-300">Nama
+                                                    class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 text-gray-700 dark:text-gray-300">Nama
                                                     Donatur</label>
                                                 <input type="text" name="donatur" required
-                                                    class="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:text-white outline-none transition">
+                                                    class="w-full p-2.5 sm:p-3 text-sm rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:text-white outline-none transition">
                                             </div>
                                             <div>
                                                 <label
-                                                    class="block text-sm font-bold mb-2 text-gray-700 dark:text-gray-300">Email</label>
+                                                    class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 text-gray-700 dark:text-gray-300">Email</label>
                                                 <input type="email" name="email" required
-                                                    class="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:text-white outline-none transition">
+                                                    class="w-full p-2.5 sm:p-3 text-sm rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:text-white outline-none transition">
                                             </div>
                                         </div>
 
                                         {{-- Baris Harga, Jumlah, Total --}}
-                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
+                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 mb-4 sm:mb-5">
                                             <div>
                                                 <label
-                                                    class="block text-sm font-bold mb-2 text-gray-700 dark:text-gray-300">Jumlah
+                                                    class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 text-gray-700 dark:text-gray-300">Jumlah
                                                     Pohon</label>
                                                 <input type="number" name="jumlah_pohon" x-model.number="jumlah" required
-                                                    class="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:text-white outline-none transition">
+                                                    class="w-full p-2.5 sm:p-3 text-sm rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:text-white outline-none transition">
                                             </div>
                                             <div>
                                                 <label
-                                                    class="block text-sm font-bold mb-2 text-gray-700 dark:text-gray-300">Harga
+                                                    class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 text-gray-700 dark:text-gray-300">Harga
                                                     Per Pohon</label>
                                                 <div
-                                                    class="p-3 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium">
+                                                    class="p-2.5 sm:p-3 text-sm bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium">
                                                     Rp {{ number_format($hargaMangrove ?? 0, 0, ',', '.') }}
                                                 </div>
                                             </div>
                                             <div>
                                                 <label
-                                                    class="block text-sm font-bold mb-2 text-gray-700 dark:text-gray-300">Total
+                                                    class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 text-gray-700 dark:text-gray-300">Total
                                                     Infaq (Rp)</label>
                                                 <input type="text" :value="formatRupiah(harga * jumlah)" readonly
-                                                    class="w-full p-3 rounded-xl border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 outline-none">
+                                                    class="w-full p-2.5 sm:p-3 text-sm rounded-xl border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 outline-none">
                                                 <input type="hidden" name="jumlah_infaq" :value="harga * jumlah">
                                             </div>
                                         </div>
 
                                         {{-- Baris Pembayaran --}}
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 mb-4 sm:mb-5">
                                             <div>
                                                 <label
-                                                    class="block text-sm font-bold mb-2 text-gray-700 dark:text-gray-300">Metode
+                                                    class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 text-gray-700 dark:text-gray-300">Metode
                                                     Pembayaran</label>
                                                 <select name="pembayaran" x-model="metode" required
-                                                    class="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:text-white outline-none transition">
+                                                    class="w-full p-2.5 sm:p-3 text-sm rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:text-white outline-none transition">
                                                     <option value="tunai">Tunai</option>
                                                     <option value="transfer">Transfer</option>
                                                 </select>
                                             </div>
                                             <div>
                                                 <label
-                                                    class="block text-sm font-bold mb-2 text-gray-700 dark:text-gray-300">Tanggal</label>
+                                                    class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 text-gray-700 dark:text-gray-300">Tanggal</label>
                                                 <input type="date" name="tanggal" value="{{ date('Y-m-d') }}" readonly
-                                                    class="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 text-gray-600 dark:text-gray-400 cursor-not-allowed outline-none transition">
+                                                    class="w-full p-2.5 sm:p-3 text-sm rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 text-gray-600 dark:text-gray-400 cursor-not-allowed outline-none transition">
                                             </div>
                                         </div>
 
                                         {{-- Info Rekening & Upload Bukti --}}
                                         <div x-show="metode === 'transfer'" x-cloak
-                                            class="mb-5 p-4 bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 rounded-xl space-y-4">
+                                            class="mb-4 sm:mb-5 p-3.5 sm:p-4 bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 rounded-xl space-y-3 sm:space-y-4">
 
                                             <div x-data="{ rekening: @js(json_decode(Storage::get('rekening.txt'), true)) }">
                                                 <div>
-                                                    <h4 class="font-bold text-emerald-800 dark:text-emerald-300 mb-2">
+                                                    <h4
+                                                        class="font-bold text-xs sm:text-sm text-emerald-800 dark:text-emerald-300 mb-1.5 sm:mb-2">
                                                         Informasi Rekening Tujuan:</h4>
-                                                    <div class="text-sm text-emerald-700 dark:text-emerald-400"
+                                                    <div class="text-xs sm:text-sm text-emerald-700 dark:text-emerald-400"
                                                         x-show="rekening && rekening.bank">
-                                                        <label>Bank: <span class="font-bold" x-text="rekening.bank"></span></label><br>
+                                                        <label>Bank: <span class="font-bold"
+                                                                x-text="rekening.bank"></span></label><br>
                                                         <label>No. Rekening: <span class="font-bold"
                                                                 x-text="rekening.no_rek"></span></label><br>
-                                                        <label>Atas Nama: <span class="font-bold" x-text="rekening.an"></span>
+                                                        <label>Atas Nama: <span class="font-bold"
+                                                                x-text="rekening.an"></span>
                                                         </label>
                                                     </div>
-                                                    <p x-show="!rekening || !rekening.bank" class="text-red-500 text-sm">
+                                                    <p x-show="!rekening || !rekening.bank"
+                                                        class="text-red-500 text-xs sm:text-sm">
                                                         Data rekening tidak tersedia.</p>
                                                 </div>
                                             </div>
 
                                             <div>
                                                 <label
-                                                    class="block text-sm font-bold mb-2 text-emerald-900 dark:text-emerald-300">
+                                                    class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 text-emerald-900 dark:text-emerald-300">
                                                     Upload Bukti Transfer Disini (Max 2MB):
                                                 </label>
                                                 <input type="file" name="bukti_tf" accept="image/*"
                                                     :required="metode === 'transfer'"
-                                                    class="w-full p-2 text-sm rounded-xl border border-emerald-200 dark:border-emerald-700 bg-white dark:bg-gray-800 dark:text-white outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
-                                                <p class="text-xs text-emerald-600 dark:text-emerald-400 mt-1">* Wajib
+                                                    class="w-full p-2 text-xs sm:text-sm rounded-xl border border-emerald-200 dark:border-emerald-700 bg-white dark:bg-gray-800 dark:text-white outline-none file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
+                                                <p
+                                                    class="text-[11px] sm:text-xs text-emerald-600 dark:text-emerald-400 mt-1">
+                                                    * Wajib
                                                     melampirkan bukti transfer.</p>
                                             </div>
                                         </div>
 
                                         <button type="submit"
-                                            class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 active:bg-emerald-800 transition shadow-lg shadow-emerald-600/20">
+                                            class="w-full bg-emerald-600 text-white py-2.5 sm:py-3 text-sm sm:text-base rounded-xl font-bold hover:bg-emerald-700 active:bg-emerald-800 transition shadow-lg shadow-emerald-600/20">
                                             Bismillah Infaq
                                         </button>
                                     </form>

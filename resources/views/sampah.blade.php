@@ -80,11 +80,11 @@
                                         lingkungan semakin bersih, dan keberkahan terus mengalir untuk umat.</strong>
                                 </p>
                                 <hr>
-                                <div class="excert bg-emerald-800 dark:bg-emerald-950 border border-emerald-700 dark:border-emerald-900 p-6 rounded-2xl shadow-md"
+                                <div class="excert bg-emerald-800 dark:bg-emerald-950 border border-emerald-700 dark:border-emerald-900 p-3 sm:p-6 rounded-2xl shadow-md"
                                     style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 8px;">
 
                                     <form action="{{ route('sampah.simpan') }}" method="POST" enctype="multipart/form-data"
-                                        class="bg-white dark:bg-gray-900 p-8 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm w-full"
+                                        class="bg-white dark:bg-gray-900 p-4 sm:p-8 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm w-full"
                                         x-data="{
                                             jenisSedekah: 'sampah',
                                             berat: {{ old('berat', 0) }},
@@ -103,10 +103,8 @@
                                                 return 'Rp ' + (split[1] !== undefined ? rupiah + ',' + split[1] : rupiah);
                                             },
                                             updateHarga(e) {
-                                                // Ambil angka saja untuk disimpan ke variabel state
                                                 let angkaBersih = e.target.value.replace(/[^0-9]/g, '');
                                                 this.hargaPerKg = angkaBersih ? parseInt(angkaBersih) : 0;
-                                                // Tampilkan kembali format Rupiah ke input teks
                                                 e.target.value = this.formatRupiah(this.hargaPerKg);
                                             }
                                         }">
@@ -114,19 +112,21 @@
 
                                         {{-- Opsi Radio Button Jenis Sedekah --}}
                                         <div
-                                            class="mb-6 p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
-                                            <label class="block text-sm font-bold mb-3 dark:text-gray-300">Pilih Jenis
+                                            class="mb-4 sm:mb-6 p-3 sm:p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+                                            <label
+                                                class="block text-xs sm:text-sm font-bold mb-2.5 sm:mb-3 dark:text-gray-300">Pilih
+                                                Jenis
                                                 Sedekah</label>
-                                            <div class="flex gap-6">
+                                            <div class="flex gap-4 sm:gap-6">
                                                 <label
-                                                    class="flex items-center gap-2 cursor-pointer font-medium dark:text-gray-300">
+                                                    class="flex items-center gap-2 cursor-pointer text-xs sm:text-sm font-medium dark:text-gray-300">
                                                     <input type="radio" name="jenis_sedekah" value="sampah"
                                                         x-model="jenisSedekah"
                                                         class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
                                                     Sampah
                                                 </label>
                                                 <label
-                                                    class="flex items-center gap-2 cursor-pointer font-medium dark:text-gray-300">
+                                                    class="flex items-center gap-2 cursor-pointer text-xs sm:text-sm font-medium dark:text-gray-300">
                                                     <input type="radio" name="jenis_sedekah" value="pengelolaan"
                                                         x-model="jenisSedekah"
                                                         class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
@@ -136,44 +136,48 @@
                                         </div>
 
                                         {{-- Baris Penyetor & Jenis Sampah (Jenis Sampah hanya muncul jika opsi 'sampah') --}}
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 mb-4 sm:mb-5">
                                             <div>
-                                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Nama
+                                                <label
+                                                    class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 dark:text-gray-300">Nama
                                                     Penyetor</label>
                                                 <input type="text" name="penyetor" value="{{ old('penyetor') }}" required
-                                                    class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 transition">
+                                                    class="w-full p-2.5 sm:p-3 text-sm rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 transition">
                                             </div>
                                             <div x-show="jenisSedekah === 'sampah'">
-                                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Jenis
+                                                <label
+                                                    class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 dark:text-gray-300">Jenis
                                                     Sampah</label>
                                                 <input type="text" name="jenis" value="{{ old('jenis') }}"
                                                     :required="jenisSedekah === 'sampah'"
                                                     placeholder="Misal: Plastik, Kertas dll"
-                                                    class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 transition">
+                                                    class="w-full p-2.5 sm:p-3 text-sm rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 transition">
                                             </div>
                                         </div>
 
                                         {{-- Baris Berat, Harga/Kg, Total Nilai (Hanya muncul jika opsi 'sampah') --}}
-                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5"
+                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 mb-4 sm:mb-5"
                                             x-show="jenisSedekah === 'sampah'">
 
                                             {{-- Berat (Kg) --}}
                                             <div>
-                                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Berat
+                                                <label
+                                                    class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 dark:text-gray-300">Berat
                                                     (Kg)</label>
                                                 <input type="number" step="0.01" name="berat" x-model.number="berat"
                                                     :required="jenisSedekah === 'sampah'"
-                                                    class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 transition">
+                                                    class="w-full p-2.5 sm:p-3 text-sm rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 transition">
                                             </div>
 
                                             {{-- Harga/Kg (Rp) - Diinput Manual dengan Format Rupiah Otomatis --}}
                                             <div>
-                                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Harga/Kg
+                                                <label
+                                                    class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 dark:text-gray-300">Harga/Kg
                                                     (Rp)</label>
                                                 <input type="text" @input="updateHarga($event)"
                                                     :value="formatRupiah(hargaPerKg)"
                                                     :required="jenisSedekah === 'sampah'" placeholder="Rp 0"
-                                                    class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 transition">
+                                                    class="w-full p-2.5 sm:p-3 text-sm rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 transition">
 
                                                 {{-- Input tersembunyi untuk mengirim angka murni harga per kg ke controller --}}
                                                 <input type="hidden" name="harga_per_kg" :value="hargaPerKg">
@@ -181,10 +185,12 @@
 
                                             {{-- Setara Dengan (Rp) - Otomatis Menghitung Hasil Perkalian --}}
                                             <div>
-                                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Setara Dengan
+                                                <label
+                                                    class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 dark:text-gray-300">Setara
+                                                    Dengan
                                                     (Rp)</label>
                                                 <input type="text" :value="formatRupiah(berat * hargaPerKg)" readonly
-                                                    class="w-full p-3 rounded-xl border bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 outline-none">
+                                                    class="w-full p-2.5 sm:p-3 text-sm rounded-xl border bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 outline-none">
 
                                                 {{-- Input tersembunyi untuk mengirim total nilai ke controller --}}
                                                 <input type="hidden" name="nilai" :value="berat * hargaPerKg"
@@ -193,14 +199,16 @@
                                         </div>
 
                                         {{-- Total Nilai Manual (Hanya muncul jika opsi 'pengelolaan') --}}
-                                        <div class="mb-5" x-show="jenisSedekah === 'pengelolaan'">
-                                            <label class="block text-sm font-bold mb-2 dark:text-gray-300">Total Nilai
+                                        <div class="mb-4 sm:mb-5" x-show="jenisSedekah === 'pengelolaan'">
+                                            <label
+                                                class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 dark:text-gray-300">Total
+                                                Nilai
                                                 (Rp)</label>
 
                                             {{-- Input yang tampil ke pengguna dengan format Rupiah --}}
                                             <input type="text" id="display_nilai_manual"
                                                 :required="jenisSedekah === 'pengelolaan'" placeholder="Rp 0"
-                                                class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 transition">
+                                                class="w-full p-2.5 sm:p-3 text-sm rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 transition">
 
                                             {{-- Input tersembunyi untuk mengirim data angka asli ke controller --}}
                                             <input type="hidden" name="nilai" id="nilai_manual_hidden"
@@ -208,40 +216,42 @@
                                         </div>
 
                                         {{-- Baris Petugas & Tanggal --}}
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 mb-4 sm:mb-5">
                                             <div>
                                                 <label
-                                                    class="block text-sm font-bold mb-2 dark:text-gray-300">Petugas</label>
+                                                    class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 dark:text-gray-300">Petugas</label>
                                                 <input type="text" name="petugas" required
-                                                    class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 transition">
+                                                    class="w-full p-2.5 sm:p-3 text-sm rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 transition">
                                             </div>
                                             <div>
-                                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Email
+                                                <label
+                                                    class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 dark:text-gray-300">Email
                                                     Penyetor (Untuk Notifikasi)</label>
                                                 <input type="email" name="email" required
-                                                    class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 transition">
+                                                    class="w-full p-2.5 sm:p-3 text-sm rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 transition">
                                             </div>
                                         </div>
 
                                         {{-- Foto & Keterangan --}}
-                                        <div class="mb-5">
-                                            <label class="block text-sm font-bold mb-2 dark:text-gray-300">Foto
+                                        <div class="mb-4 sm:mb-5">
+                                            <label
+                                                class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 dark:text-gray-300">Foto
                                                 Bukti (Opsional)</label>
                                             <input type="file" name="foto" accept="image/*"
-                                                class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                                                class="w-full p-2 text-xs sm:text-sm rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                                         </div>
 
-                                        <div class="mb-8">
+                                        <div class="mb-6 sm:mb-8">
                                             <label
-                                                class="block text-sm font-bold mb-2 dark:text-gray-300">Keterangan</label>
+                                                class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2 dark:text-gray-300">Keterangan</label>
                                             <textarea name="ket" rows="3"
-                                                class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 transition"></textarea>
+                                                class="w-full p-2.5 sm:p-3 text-sm rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 transition"></textarea>
                                         </div>
 
                                         {{-- Tombol Aksi --}}
-                                        <div class="flex gap-4 mt-6">
+                                        <div class="flex gap-4 mt-4 sm:mt-6">
                                             <button type="submit"
-                                                class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 active:bg-emerald-800 transition shadow-lg shadow-emerald-600/20">
+                                                class="w-full bg-emerald-600 text-white py-2.5 sm:py-3 text-sm sm:text-base rounded-xl font-bold hover:bg-emerald-700 active:bg-emerald-800 transition shadow-lg shadow-emerald-600/20">
                                                 Bismillah Sedekah
                                             </button>
                                         </div>
@@ -271,9 +281,9 @@
                                                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px;">
                                             <div class="media-body">
 
-                                                    <h3 style="margin: 0; font-size: 16px; line-height: 1.2;">
-                                                        {{ Str::limit($post->penyetor, 70) }}
-                                                    </h3>
+                                                <h3 style="margin: 0; font-size: 16px; line-height: 1.2;">
+                                                    {{ Str::limit($post->penyetor, 70) }}
+                                                </h3>
 
                                                 <p style="margin: 0; font-size: 12px; font-weight: bold; color: #059669;">
                                                     {{-- Format nilai menjadi Rupiah menggunakan NumberFormatter / helper bawaan --}}

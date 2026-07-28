@@ -38,7 +38,7 @@
                         <div class="blog_left_sidebar">
                             <article class="blog_item">
                                 <div class="blog_item_img">
-                                    <a href="#" target="_blank" class="blog_item_date">
+                                    <a href="#" class="blog_item_date">
                                         <p>Peserta Bahtsul Masail</p>
                                     </a>
                                 </div>
@@ -51,7 +51,7 @@
 
                                     <ul class="blog-info-link">
                                         <li>
-                                            <a href="#" target="_blank">
+                                            <a href="#">
                                                 <i class="fa fa-book"></i>Data Update
                                                 {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
                                             </a>
@@ -63,7 +63,7 @@
                         <div class="blog_left_sidebar">
                             <article class="blog_item">
                                 <div class="blog_item_img">
-                                    <a href="#" target="_blank" class="blog_item_date">
+                                    <a href="#" class="blog_item_date">
                                         <p>Peserta Halaqah</p>
                                     </a>
                                 </div>
@@ -74,7 +74,7 @@
                                         </div>
                                     </div>
                                     <ul class="blog-info-link">
-                                        <li><a href="#" target="_blank"><i class="fa fa-book"></i> Update
+                                        <li><a href="#"><i class="fa fa-book"></i> Update
                                                 {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</a></li>
                                     </ul>
                                 </div>
@@ -83,7 +83,7 @@
                         <div class="blog_left_sidebar">
                             <article class="blog_item">
                                 <div class="blog_item_img">
-                                    <a href="#" target="_blank" class="blog_item_date">
+                                    <a href="#" class="blog_item_date">
                                         <p>Peserta Roan Bersih Pantai</p>
                                     </a>
                                 </div>
@@ -95,7 +95,7 @@
                                     </div>
 
                                     <ul class="blog-info-link">
-                                        <li><a href="#" target="_blank"><i class="fa fa-book"></i> Update
+                                        <li><a href="#"><i class="fa fa-book"></i> Update
                                                 {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</a></li>
                                     </ul>
                                 </div>
@@ -104,7 +104,7 @@
                         <div class="blog_left_sidebar">
                             <article class="blog_item">
                                 <div class="blog_item_img">
-                                    <a href="#" target="_blank" class="blog_item_date">
+                                    <a href="#" class="blog_item_date">
                                         <p>Relawan Banjir</p>
                                     </a>
                                 </div>
@@ -116,7 +116,7 @@
                                     </div>
 
                                     <ul class="blog-info-link">
-                                        <li><a href="#" target="_blank"><i class="fa fa-book"></i> Update
+                                        <li><a href="#"><i class="fa fa-book"></i> Update
                                                 {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</a></li>
                                     </ul>
                                 </div>
@@ -125,7 +125,7 @@
                         <div class="blog_left_sidebar">
                             <article class="blog_item">
                                 <div class="blog_item_img">
-                                    <a href="#" target="_blank" class="blog_item_date">
+                                    <a href="#" class="blog_item_date">
                                         <p>Lapor Bencana</p>
                                     </a>
                                 </div>
@@ -136,7 +136,7 @@
                                         </div>
                                     </div>
                                     <ul class="blog-info-link">
-                                        <li><a href="#" target="_blank"><i class="fa fa-book"></i> Update
+                                        <li><a href="#"><i class="fa fa-book"></i> Update
                                                 {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</a></li>
                                     </ul>
                                 </div>
@@ -145,7 +145,7 @@
                         <div class="blog_left_sidebar">
                             <article class="blog_item">
                                 <div class="blog_item_img">
-                                    <a href="#" target="_blank" class="blog_item_date">
+                                    <a href="#" class="blog_item_date">
                                         <p>Donatur Mangrove</p>
                                     </a>
                                 </div>
@@ -156,7 +156,7 @@
                                         </div>
                                     </div>
                                     <ul class="blog-info-link">
-                                        <li><a href="#" target="_blank"><i class="fa fa-book"></i> Update
+                                        <li><a href="#"><i class="fa fa-book"></i> Update
                                                 {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</a></li>
                                     </ul>
                                 </div>
@@ -165,7 +165,7 @@
                         <div class="blog_left_sidebar">
                             <article class="blog_item">
                                 <div class="blog_item_img">
-                                    <a href="#" target="_blank" class="blog_item_date">
+                                    <a href="#" class="blog_item_date">
                                         <p>Donatur Sampah</p>
                                     </a>
                                 </div>
@@ -176,7 +176,7 @@
                                         </div>
                                     </div>
                                     <ul class="blog-info-link">
-                                        <li><a href="#" target="_blank"><i class="fa fa-book"></i> Update
+                                        <li><a href="#"><i class="fa fa-book"></i> Update
                                                 {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</a></li>
                                     </ul>
                                 </div>

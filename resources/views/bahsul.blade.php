@@ -69,23 +69,27 @@
                                                 alt="{{ $bahsul->tema }}"
                                                 style="width: 100%; height: 375px; object-fit: cover; display: block;">
 
-                                            <a href="{{ route('bahsul.detil' , $bahsul->id_bs) }}" target="_blank" class="blog_item_date">
+                                            <a href="{{ route('bahsul.detil', $bahsul->id_bs) }}" target="_blank"
+                                                class="blog_item_date">
                                                 <h3>{{ date('d', strtotime($bahsul->tanggal)) }}</h3>
                                                 <p>{{ date('M', strtotime($bahsul->tanggal)) }}</p>
                                             </a>
                                         </div>
 
                                         <div class="blog_details">
-                                            <a class="d-inline-block" href="{{ route('bahsul.detil' , $bahsul->id_bs) }}" target="_blank">
+                                            <a class="d-inline-block" href="{{ route('bahsul.detil', $bahsul->id_bs) }}"
+                                                target="_blank">
                                                 <h2>{{ $bahsul->judul }}</h2>
                                             </a>
                                             <p>{{ Str::words(strip_tags($bahsul->masalah), 35, '...') }}...</p>
 
                                             <div class="flex flex-wrap items-center justify-between gap-4 mt-4">
                                                 <ul class="blog-info-link mb-0">
-                                                    <li><a href="{{ route('bahsul.detil' , $bahsul->id_bs) }}" target="_blank"><i class="fa fa-user"></i>
+                                                    <li><a href="{{ route('bahsul.detil', $bahsul->id_bs) }}"
+                                                            target="_blank"><i class="fa fa-user"></i>
                                                             {{ $bahsul->pemohon }}</a></li>
-                                                    <li><a href="{{ route('bahsul.detil' , $bahsul->id_bs) }}" target="_blank"><i class="fa fa-map-marker"></i>
+                                                    <li><a href="{{ route('bahsul.detil', $bahsul->id_bs) }}"
+                                                            target="_blank"><i class="fa fa-map-marker"></i>
                                                             {{ $bahsul->lokasi }}</a></li>
                                                 </ul>
 
@@ -161,7 +165,7 @@
 
                                                 <div class="flex justify-end gap-3">
                                                     <button type="button" @click="openModal = false"
-                                                        class="px-4 py-2 rounded-xl bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-300 transition">
+                                                        class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-medium transition">
                                                         Batal
                                                     </button>
                                                     <button type="submit"
@@ -252,7 +256,7 @@
                                                 style="width: 80px; height: 80px; object-fit: cover; margin-right: 15px; border-radius: 4px;">
 
                                             <div class="media-body">
-                                                <a href="{{ route('bahsul.detil' , $bahsul->id_bs) }}" target="_blank">
+                                                <a href="{{ route('bahsul.detil', $bahsul->id_bs) }}" target="_blank">
                                                     <h3 style="margin: 0; font-size: 16px; line-height: 1.2;">
                                                         {{ Str::limit($post->judul, 70) }}
                                                     </h3>
