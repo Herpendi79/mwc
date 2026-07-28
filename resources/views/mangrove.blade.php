@@ -126,7 +126,7 @@
                                             <div>
                                                 <label
                                                     class="block text-sm font-bold mb-2 text-gray-700 dark:text-gray-300">Harga
-                                                    Satuan</label>
+                                                    Per Pohon</label>
                                                 <div
                                                     class="p-3 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium">
                                                     Rp {{ number_format($hargaMangrove ?? 0, 0, ',', '.') }}

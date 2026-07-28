@@ -5,11 +5,16 @@
     <title>Sertifikat Infaq Mangrove</title>
     @php
         $sertifikatFiles = glob(public_path('assets/images/sertifikat/Sertifikat.*'));
-        $sertifikatPath = 'assets/images/sertifikat/SertifikatBU.png';
+        $sertifikatPath = public_path('assets/images/sertifikat/SertifikatBU.png');
 
         if (!empty($sertifikatFiles)) {
-            $sertifikatPath = 'assets/images/sertifikat/' . basename($sertifikatFiles[0]);
+            $sertifikatPath = $sertifikatFiles[0];
         }
+
+        // Konversi gambar ke Base64 agar dapat dibaca sempurna oleh Dompdf di hosting
+        $imageType = pathinfo($sertifikatPath, PATHINFO_EXTENSION);
+        $imageData = file_exists($sertifikatPath) ? file_get_contents($sertifikatPath) : '';
+        $sertifikatBase64 = 'data:image/' . $imageType . ';base64,' . base64_encode($imageData);
     @endphp
     <style>
         @page {
@@ -25,7 +30,7 @@
         .sertifikat-card {
             width: 842pt;
             height: 595pt;
-            background-image: url("{{ public_path($sertifikatPath) }}");
+            background-image: url("{{ $sertifikatBase64 }}");
             background-size: cover;
             background-position: center;
             position: relative;

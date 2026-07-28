@@ -289,7 +289,7 @@ class FreeUserController extends Controller
             }
         } catch (\Exception $e) {
             // Tangani error jika pengiriman email gagal, data infaq tetap tersimpan
-            // Log::error('Gagal kirim email sertifikat: ' . $e->getMessage());
+            Log::error('Gagal kirim email sertifikat: ' . $e->getMessage());
         }
 
         // 6. Redirect dengan Pesan Sukses

@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="UTF-8">
     <title>Cetak Sertifikat</title>
     @php
-        // Mencari file template sertifikat dengan ekstensi dinamis
         $sertifikatFiles = glob(public_path('assets/images/sertifikat/Sertifikat.*'));
-        $sertifikatPath = 'assets/images/sertifikat/SertifikatBU.png'; // Default fallback
+        $sertifikatPath = 'assets/images/sertifikat/SertifikatBU.png';
 
         if (!empty($sertifikatFiles)) {
             $sertifikatPath = 'assets/images/sertifikat/' . basename($sertifikatFiles[0]);
