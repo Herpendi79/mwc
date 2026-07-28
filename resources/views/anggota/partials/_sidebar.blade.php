@@ -60,7 +60,7 @@
                 {{ request()->routeIs('anggota.bahsul.index','anggota.bahsul.tambah', 'anggota.halaqah.index', 'anggota.kajian.index') ? 'bg-white text-black' : 'text-white hover:bg-emerald-800' }}">
                 <div class="flex items-center gap-3">
                     <i class="ri-calendar-event-line text-xl"></i>
-                    <span>Kegiatan</span>
+                    <span>Kajian</span>
                 </div>
                 <svg class="w-4 h-4 transition-transform duration-300" :class="{ 'rotate-180': open }" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor">
@@ -69,7 +69,7 @@
             </button>
             <div x-show="open" x-cloak x-collapse class="pl-8 mt-1 space-y-1">
                 <a href="{{ route('anggota.bahsul.index') }}"
-                    class="block px-4 py-2 rounded-xl {{ request()->routeIs('anggota.bahsul.index','anggota.bahsul.tambah') ? 'bg-white text-black font-semibold' : 'text-emerald-50 hover:bg-emerald-800 hover:text-black' }}">Bahsul
+                    class="block px-4 py-2 rounded-xl {{ request()->routeIs('anggota.bahsul.index','anggota.bahsul.tambah') ? 'bg-white text-black font-semibold' : 'text-emerald-50 hover:bg-emerald-800 hover:text-black' }}">Bahtsul
                     Masail</a>
                 <a href="{{ route('anggota.halaqah.index') }}"
                     class="block px-4 py-2 rounded-xl {{ request()->routeIs('anggota.halaqah.index') ? 'bg-white text-black font-semibold' : 'text-emerald-50 hover:bg-emerald-800 hover:text-black' }}">Halaqah</a>

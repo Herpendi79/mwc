@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', 'Tambah Bahsul Masail')
+@section('title', 'Tambah Bahtsul Masail')
 
 @section('content')
     <div class="flex h-screen bg-gray-50 dark:bg-black font-ibm overflow-hidden">
@@ -12,7 +12,7 @@
             <main class="flex-1 overflow-y-auto p-8">
                 <div class="container mx-auto max-w-3xl">
                     <div class="mb-8">
-                        <h2 class="text-3xl font-bold dark:text-white">Tambah Bahsul Masail</h2>
+                        <h2 class="text-3xl font-bold dark:text-white">Tambah Bahtsul Masail</h2>
                         <p class="text-gray-500">Isi formulir berikut untuk menambahkan data pembahasan.</p>
                     </div>
                     @if ($errors->any())

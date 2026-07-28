@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', 'Edit Bahsul Masail')
+@section('title', 'Edit Bahtsul Masail')
 
 @section('content')
     <div class="flex h-screen bg-gray-50 dark:bg-black font-ibm overflow-hidden">

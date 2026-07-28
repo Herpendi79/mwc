@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', 'Bahsul Masail')
+@section('title', 'Bahtsul Masail')
 
 @section('content')
     <div class="flex h-screen bg-gray-50 dark:bg-black font-ibm overflow-hidden" x-data="{ search: '' }">
@@ -15,8 +15,8 @@
                     {{-- Header --}}
                     <div class="flex justify-between items-center mb-8">
                         <div>
-                            <h2 class="text-3xl font-bold dark:text-white">Data Bahsul Masail</h2>
-                            <p class="text-gray-500">Daftar data Bahsul Masail yang telah publish dan dari Anda.</p>
+                            <h2 class="text-3xl font-bold dark:text-white">Data Bahtsul Masail</h2>
+                            <p class="text-gray-500">Daftar data Bahtsul Masail yang telah publish dan dari Anda.</p>
                         </div>
                     </div>
 
@@ -174,7 +174,7 @@
                                                     </div>
                                                 @else
                                                     <p class="text-gray-500 italic text-xs">Tidak ada data peserta untuk
-                                                        bahsul ini.</p>
+                                                        Bahtsul Masail ini.</p>
                                                 @endif
                                             </div>
 
