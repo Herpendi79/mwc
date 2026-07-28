@@ -99,13 +99,13 @@
 
                         {{-- Lokasi (Putih) --}}
                         <div class="mb-5">
-                            <label class="block text-sm font-bold mb-2 dark:text-gray-300">Foto (Wajib Ada)</label>
+                            <label class="block text-sm font-bold mb-2 dark:text-gray-300">Foto (Opsional)</label>
                             <input type="file" name="foto" accept="image/*" name="foto"
-                                value="{{ old('foto') }}" required
+                                value="{{ old('foto') }}"
                                 class="w-full p-3 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-white dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
                         </div>
                         <div class="mb-5">
-                            <label class="block text-sm font-bold mb-2 dark:text-gray-300">Lampiran</label>
+                            <label class="block text-sm font-bold mb-2 dark:text-gray-300">Lampiran (Opsional)</label>
                             <input type="file" name="lampiran" accept=".pdf,.doc,.docx" value="{{ old('lampiran') }}"
 
                                 class="w-full p-3 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-white dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
@@ -180,7 +180,7 @@
                         </button>
 
                         {{-- Tombol Batal (Biru) --}}
-                        <a href="{{ route('bahsul') }}"
+                        <a href="{{ route('opini_warga') }}"
                             style="flex: 1; display: block; background-color: #2563eb !important; color: white !important; padding: 12px; border-radius: 12px; text-align: center; font-weight: bold; text-decoration: none !important;"
                             onmouseover="this.style.backgroundColor='#1d4ed8 !important'"
                             onmouseout="this.style.backgroundColor='#2563eb !important'">
@@ -196,13 +196,16 @@
 @endsection
 @section('scripts')
     <script src="https://cdn.ckeditor.com/ckeditor5/41.0.0/classic/ckeditor.js"></script>
+    <style>
+        /* Mengunci tinggi area kerja utama CKEditor agar tidak menciut saat diklik */
+        .ck-editor__editable {
+            min-height: 400px !important;
+            max-height: 600px !important;
+        }
+    </style>
     <script>
         window.onload = function() {
             ClassicEditor.create(document.querySelector('#editor'))
-                .then(editor => {
-                    // Memaksa tinggi area ketik editor menjadi 400px secara langsung
-                    editor.ui.getEditableElement().style.minHeight = '400px';
-                })
                 .catch(error => {
                     console.error(error);
                 });
