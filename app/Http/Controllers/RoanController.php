@@ -37,7 +37,7 @@ class RoanController extends Controller
 
     public function index_anggota()
     {
-        $roans = RoanModel::withCount('peserta')->paginate(10);
+        $roans = RoanModel::withCount('peserta')->orderBy('tgl', 'desc')->paginate(10);
         return view('anggota.roan.index', compact('roans'));
     }
 
