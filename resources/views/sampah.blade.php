@@ -226,7 +226,7 @@
                                         {{-- Foto & Keterangan --}}
                                         <div class="mb-5">
                                             <label class="block text-sm font-bold mb-2 dark:text-gray-300">Foto
-                                                Bukti</label>
+                                                Bukti (Opsional)</label>
                                             <input type="file" name="foto" accept="image/*"
                                                 class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                                         </div>

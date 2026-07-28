@@ -1329,7 +1329,7 @@ class FreeUserController extends Controller
         $bahsul = BahsulModel::findOrFail($id);
 
         // Cek apakah email tersebut sudah terdaftar pada kegiatan ini
-        $sudahDaftar = PesertaHalaqahModel::where('id_bs', $id)
+        $sudahDaftar = PesertaBahsulModel::where('id_bs', $id)
             ->where('email', $validated['email'])
             ->exists();
 
