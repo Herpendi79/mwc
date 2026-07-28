@@ -88,45 +88,62 @@
                         <div class="col-lg-4">
                             <!-- Trending Top -->
                             <div class="row">
+                                <!-- Item 1: Halaqah -->
                                 <div class="col-lg-12 col-md-6 col-sm-6">
-                                    <div class="trending-top mb-30">
-                                        <div class="trend-top-img img-medium">
+                                    <div class="trending-top mb-30"
+                                        style="width: 100% !important; max-width: 100% !important; overflow: hidden !important; height: auto !important;">
+                                        <div class="trend-top-img img-medium"
+                                            style="position: relative !important; width: 100% !important; max-width: 100% !important; height: auto !important; min-height: 0 !important; overflow: hidden !important;">
                                             @if (isset($dataHalaqah) && $dataHalaqah->count() > 0)
                                                 <!-- Mengambil data halaqah terbaru (index 0) -->
-                                                <img src="{{ !empty($dataHalaqah[0]->thumbnail) && Storage::disk('public')->exists('foto_halaqah/' . $dataHalaqah[0]->thumbnail) ? asset('storage/foto_halaqah/' . $dataHalaqah[0]->thumbnail) : asset('storage/foto_halaqah/default-halaqah.jpeg') }}"
-                                                    alt="{{ $dataHalaqah[0]->judul ?? 'No Data' }}">
+                                                <img src="{{ !empty($dataHalaqah[0]->thumbnail) && Storage::disk('public')->exists('foto_halaqah/' . $dataHalaqah[0]->thumbnail) ? asset('storage/foto_halaqah/' . $dataHalaqah[0]->thumbnail) : asset('storage/foto_halaqah/default-halaqah-pro.jpeg') }}"
+                                                    alt="{{ $dataHalaqah[0]->judul ?? 'No Data' }}"
+                                                    style="width: 100% !important; height: auto !important; display: block !important;">
 
-                                                <div class="trend-top-cap trend-top-cap2">
-                                                    <span class="bgb">Halaqah</span>
+                                                <div class="trend-top-cap trend-top-cap2"
+                                                    style="position: absolute !important; bottom: 0 !important; left: 0 !important; right: 0 !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; padding: 12px 15px !important; overflow: hidden !important; background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%) !important;">
+                                                    <span class="bgb"
+                                                        style="display: inline-block !important; max-width: 100% !important; white-space: normal !important; margin-bottom: 5px !important;">Halaqah</span>
 
-                                                    <h2>
+                                                    <h2
+                                                        style="width: 100% !important; max-width: 100% !important; word-break: break-word !important; overflow-wrap: break-word !important; white-space: normal !important; margin-bottom: 5px !important;">
                                                         <a href="{{ url('kajian-halaqah/detil/' . $dataHalaqah[0]->id) }}"
-                                                            target="_blank">
+                                                            target="_blank"
+                                                            style="display: block !important; width: 100% !important; max-width: 100% !important; word-break: break-word !important; overflow-wrap: break-word !important; white-space: normal !important; font-size: clamp(15px, 3.8vw, 20px) !important; line-height: 1.25 !important;">
                                                             {{ $dataHalaqah[0]->judul }}
                                                         </a>
                                                     </h2>
 
-                                                    <p>by {{ $dataHalaqah[0]->moderator }} -
+                                                    <p
+                                                        style="word-break: break-word !important; margin: 0 !important; font-size: 12px !important;">
+                                                        by {{ $dataHalaqah[0]->moderator }} -
                                                         {{ $dataHalaqah[0]->tanggal->format('M d, Y') }}</p>
                                                 </div>
                                             @else
                                                 <!-- Fallback jika data kosong -->
-                                                <img src="{{ !empty($dataHalaqah[0]->thumbnail) && Storage::disk('public')->exists('foto_halaqah/' . $dataHalaqah[0]->thumbnail) ? asset('storage/foto_halaqah/' . $dataHalaqah[0]->thumbnail) : asset('storage/foto_halaqah/default-halaqah.jpeg') }}"
-                                                    alt="{{ $dataHalaqah[0]->judul ?? 'No Data' }}">
-                                                <div class="trend-top-cap trend-top-cap2">
+                                                <img src="{{ asset('storage/foto_halaqah/default-halaqah-pro.jpeg') }}"
+                                                    alt="No Data"
+                                                    style="width: 100% !important; height: auto !important; display: block !important;">
+                                                <div class="trend-top-cap trend-top-cap2"
+                                                    style="position: absolute !important; bottom: 0 !important; left: 0 !important; right: 0 !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; padding: 15px !important; overflow: hidden !important;">
                                                     <span class="bgb">Halaqah</span>
-                                                    <h2 style="color: #ffffff !important;">Data Halaqah belum tersedia</h2>
+                                                    <h2
+                                                        style="color: #ffffff !important; word-break: break-word !important; font-size: clamp(15px, 3.8vw, 20px) !important;">
+                                                        Data Halaqah belum tersedia</h2>
                                                 </div>
                                             @endif
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- Item 2: Dakwah -->
                                 <div class="col-lg-12 col-md-6 col-sm-6">
-                                    <div class="trending-top mb-30">
-                                        <div class="trend-top-img img-small">
+                                    <div class="trending-top mb-30"
+                                        style="width: 100% !important; max-width: 100% !important; overflow: hidden !important; height: auto !important;">
+                                        <div class="trend-top-img img-small"
+                                            style="position: relative !important; width: 100% !important; max-width: 100% !important; height: auto !important; min-height: 0 !important; overflow: hidden !important;">
                                             @if (isset($dataDakwah) && $dataDakwah->count() > 0)
                                                 @php
-                                                    // Periksa keberadaan fisik file gambar background dakwah
                                                     $pathBgFisik = 'foto_dakwah/dakwah_bg.png';
                                                     $bgTersedia = Storage::disk('public')->exists($pathBgFisik);
 
@@ -136,58 +153,72 @@
                                                 @endphp
 
                                                 <!-- Gambar Dinamis dengan Validasi Fisik -->
-                                                <img src="{{ $urlBgDakwah }}"
-                                                    alt="{{ $dataDakwah->judul ?? 'No Data' }}">
+                                                <img src="{{ $urlBgDakwah }}" alt="{{ $dataDakwah->judul ?? 'No Data' }}"
+                                                    style="width: 100% !important; height: auto !important; display: block !important;">
 
-                                                <div class="trend-top-cap trend-top-cap2">
+                                                <div class="trend-top-cap trend-top-cap2"
+                                                    style="position: absolute !important; bottom: 0 !important; left: 0 !important; right: 0 !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; padding: 12px 15px !important; overflow: hidden !important; background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%) !important;">
 
                                                     <!-- Judul -->
-                                                    <h2>
+                                                    <h2
+                                                        style="width: 100% !important; max-width: 100% !important; word-break: break-word !important; overflow-wrap: break-word !important; white-space: normal !important; margin-bottom: 5px !important;">
                                                         <a href="{{ url('pesan-dakwah/') }}" target="_blank"
-                                                            style="display: inline-block;
-                           position: relative;
-                           padding: 14px 20px 14px 45px;
-                           background: rgba(0, 0, 0, 0.75);
-                           border-left: 5px solid #28a745;
-                           border-radius: 6px;
-                           color: #ffffff !important;
-                           text-decoration: none;">
+                                                            style="display: block !important;
+                                    width: 100% !important;
+                                    max-width: 100% !important;
+                                    position: relative;
+                                    padding: 10px 15px 10px 35px !important;
+                                    background: rgba(0, 0, 0, 0.75);
+                                    border-left: 5px solid #28a745;
+                                    border-radius: 6px;
+                                    color: #ffffff !important;
+                                    text-decoration: none;
+                                    word-break: break-word !important;
+                                    overflow-wrap: break-word !important;
+                                    white-space: normal !important;
+                                    font-size: clamp(14px, 3.5vw, 16px) !important;
+                                    line-height: 1.4 !important;">
 
                                                             <!-- Background Quote Icon -->
                                                             <span
                                                                 style="position: absolute;
-                               left: 15px;
-                               top: 12px;
-                               font-size: 30px;
-                               color: rgba(40, 167, 69, 0.8);
-                               font-family: Georgia, serif;
-                               line-height: 1;
-                               pointer-events: none;">“</span>
+                                        left: 10px;
+                                        top: 8px;
+                                        font-size: 24px;
+                                        color: rgba(40, 167, 69, 0.8);
+                                        font-family: Georgia, serif;
+                                        line-height: 1;
+                                        pointer-events: none;">“</span>
 
                                                             <!-- Isi Dakwah -->
                                                             <span
                                                                 style="position: relative;
-                               font-weight: 800;
-                               font-size: 1rem;
-                               color: #ffffff;
-                               text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
-                               letter-spacing: 0.3px;">
+                                        font-weight: 800;
+                                        color: #ffffff;
+                                        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
+                                        letter-spacing: 0.3px;">
                                                                 {!! $dataDakwah->isi !!}
                                                             </span>
                                                         </a>
                                                     </h2>
 
                                                     <!-- Penulis dan Tanggal -->
-                                                    <p>by {{ $dataDakwah->mubaligh }} -
+                                                    <p
+                                                        style="word-break: break-word !important; margin: 0 !important; font-size: 12px !important;">
+                                                        by {{ $dataDakwah->mubaligh }} -
                                                         {{ $dataDakwah->created_at->format('M d, Y') }}</p>
                                                 </div>
                                             @else
                                                 <!-- Fallback jika data kosong -->
                                                 <img src="{{ asset('storage/foto_dakwah/dakwah-default.jpeg') }}"
-                                                    alt="No Data">
-                                                <div class="trend-top-cap trend-top-cap2">
+                                                    alt="No Data"
+                                                    style="width: 100% !important; height: auto !important; display: block !important;">
+                                                <div class="trend-top-cap trend-top-cap2"
+                                                    style="position: absolute !important; bottom: 0 !important; left: 0 !important; right: 0 !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; padding: 15px !important; overflow: hidden !important;">
                                                     <span class="bgg">Dakwah</span>
-                                                    <h2 style="color: #ffffff !important;">Data Dakwah belum tersedia</h2>
+                                                    <h2
+                                                        style="color: #ffffff !important; word-break: break-word !important; font-size: clamp(15px, 3.8vw, 20px) !important;">
+                                                        Data Dakwah belum tersedia</h2>
                                                 </div>
                                             @endif
                                         </div>

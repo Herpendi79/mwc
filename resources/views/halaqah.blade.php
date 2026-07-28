@@ -52,7 +52,7 @@
                                             <img class="card-img rounded-0"
                                                 src="{{ !empty($halaqah->thumbnail) && Storage::disk('public')->exists('foto_halaqah/' . $halaqah->thumbnail)
                                                     ? asset('storage/foto_halaqah/' . $halaqah->thumbnail)
-                                                    : asset('storage/foto_halaqah/default-halaqah.jpeg') }}"
+                                                    : asset('storage/foto_halaqah/default-halaqah-pro.jpeg') }}"
                                                 alt="{{ $halaqah->judul ?? 'Default Title' }}"
                                                 style="width: 750px; height: 375px; object-fit: cover; display: block;">
 
@@ -239,7 +239,7 @@
                                         <div class="media post_item">
                                             <img src="{{ !empty($post->thumbnail) && Storage::disk('public')->exists('foto_halaqah/' . $post->thumbnail)
                                                 ? asset('storage/foto_halaqah/' . $post->thumbnail)
-                                                : asset('storage/foto_halaqah/default-halaqah.jpeg') }}"
+                                                : asset('storage/foto_halaqah/default-halaqah-pro.jpeg') }}"
                                                 alt="post" style="width: 80px; height: 80px; object-fit: cover;">
 
                                             <div class="media-body">
@@ -286,7 +286,7 @@
                                         @php
                                             $photos = !empty($item->foto)
                                                 ? explode(';', $item->foto)
-                                                : ['default-halaqah.jpeg'];
+                                                : ['default-halaqah-pro.jpeg'];
                                         @endphp
 
                                         @foreach ($photos as $foto)

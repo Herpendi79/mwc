@@ -23,7 +23,7 @@
                                 <img class="img-fluid"
                                     src="{{ !empty($dataBerita->thumbnail) && file_exists(public_path('storage/foto_halaqah/' . $dataBerita->thumbnail))
                                         ? asset('storage/foto_halaqah/' . $dataBerita->thumbnail)
-                                        : asset('storage/foto_halaqah/default-halaqah.jpeg') }}"
+                                        : asset('storage/foto_halaqah/default-halaqah-pro.jpeg') }}"
                                     alt="{{ $dataBerita->judul ?? 'Berita' }}">
                             </div>
                             <div class="blog_details">
@@ -77,7 +77,7 @@
                                                     // Tentukan URL berdasarkan ketersediaan file fisik
                                                     $urlFoto = $adaFisik
                                                         ? asset('storage/' . $pathFisik)
-                                                        : asset('storage/foto_halaqah/default-halaqah.jpeg');
+                                                        : asset('storage/foto_halaqah/default-halaqah-pro.jpeg');
                                                 @endphp
 
                                                 <div style="width: 200px; height: 200px;">
@@ -180,7 +180,7 @@
                                         <div class="media post_item">
                                             <img src="{{ !empty($post->thumbnail) && file_exists(public_path('storage/foto_halaqah/' . $post->thumbnail))
                                                 ? asset('storage/foto_halaqah/' . $post->thumbnail)
-                                                : asset('storage/foto_halaqah/default-halaqah.jpeg') }}"
+                                                : asset('storage/foto_halaqah/default-halaqah-pro.jpeg') }}"
                                                 alt="post" style="width: 80px; height: 80px; object-fit: cover;">
                                             <div class="media-body">
                                                 <a href="#">
