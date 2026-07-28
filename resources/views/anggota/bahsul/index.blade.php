@@ -192,6 +192,9 @@
                             </div>
                         </div>
                     </div>
+                      <div class="mt-4">
+                        {{ $bahsul->links() }}
+                    </div>
                 </div>
             </main>
         </div>

@@ -81,46 +81,89 @@
                             </tbody>
                         </table>
                     </div>
+                     <div class="mt-4">
+                        {{ $relawans->links() }}
+                    </div>
                 </div>
             </main>
         </div>
 
-        {{-- Modal Detail --}}
+        {{-- MODAL DETAIL --}}
         <div x-show="openModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" x-cloak>
-            <div @click.away="openModal = false" class="bg-white dark:bg-gray-900 p-6 rounded-2xl w-full max-w-2xl shadow-xl max-h-[90vh] overflow-y-auto">
+            <div @click.away="openModal = false"
+                class="bg-white dark:bg-gray-900 p-6 rounded-2xl w-full max-w-2xl shadow-xl max-h-[90vh] overflow-y-auto">
                 @foreach ($relawans as $item)
                     <div x-show="selectedRelawan === {{ $item->id_re }}">
                         <h3 class="font-bold text-lg mb-4 dark:text-white border-b pb-2">Detail: {{ $item->judul }}</h3>
+
                         <div class="text-sm dark:text-gray-300 space-y-2 mb-6">
                             <p><strong>Koordinator:</strong> {{ $item->koordinator }}</p>
+                            <p><strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($item->tgl)->format('d/m/Y') }}</p>
                             <p><strong>Deskripsi:</strong> {{ $item->deskripsi }}</p>
                         </div>
-
+                        <h4 class="font-bold mb-3 dark:text-white">Poster</h4>
+                        <div class="grid grid-cols-3 gap-3 mb-6">
+                            @if (!empty($item->poster) && Storage::disk('public')->exists('foto_relawan/' . $item->poster))
+                                <a href="{{ asset('storage/foto_relawan/' . $item->poster) }}" target="_blank">
+                                    <img src="{{ asset('storage/foto_relawan/' . $item->poster) }}"
+                                        class="w-full h-24 object-cover rounded-lg border dark:border-gray-700 hover:opacity-75 transition">
+                                </a>
+                            @else
+                                <a href="{{ asset('storage/foto_relawan/relawan-default.jpeg') }}" target="_blank">
+                                    <img src="{{ asset('storage/foto_relawan/relawan-default.jpeg') }}"
+                                        class="w-full h-24 object-cover rounded-lg border dark:border-gray-700 hover:opacity-75 transition">
+                                </a>
+                            @endif
+                        </div>
                         <h4 class="font-bold mb-3 dark:text-white">Galeri Foto</h4>
                         <div class="grid grid-cols-3 gap-3 mb-6">
-                            @foreach (explode(';', $item->foto) as $f)
-                                @if (trim($f))
-                                    <a href="{{ asset('storage/foto_relawan/' . trim($f)) }}" target="_blank">
-                                        <img src="{{ asset('storage/foto_relawan/' . trim($f)) }}" class="w-full h-24 object-cover rounded-lg border dark:border-gray-700 hover:opacity-75 transition">
-                                    </a>
+                            @if (!empty($item->foto))
+                                @php
+                                    $fotoList = array_filter(explode(';', $item->foto), fn($f) => trim($f) !== '');
+                                @endphp
+
+                                @if (count($fotoList) > 0)
+                                    @foreach ($fotoList as $f)
+                                        @php
+                                            $fileName = trim($f);
+                                            $exists = Storage::disk('public')->exists('foto_relawan/' . $fileName);
+                                        @endphp
+
+                                        @if ($exists)
+                                            <a href="{{ asset('storage/foto_relawan/' . $fileName) }}" target="_blank">
+                                                <img src="{{ asset('storage/foto_relawan/' . $fileName) }}"
+                                                    class="w-full h-24 object-cover rounded-lg border dark:border-gray-700 hover:opacity-75 transition">
+                                            </a>
+                                        @else
+                                            <a href="{{ asset('storage/foto_relawan/relawan-default.jpeg') }}"
+                                                target="_blank">
+                                                <img src="{{ asset('storage/foto_relawan/relawan-default.jpeg') }}"
+                                                    class="w-full h-24 object-cover rounded-lg border dark:border-gray-700 hover:opacity-75 transition">
+                                            </a>
+                                        @endif
+                                    @endforeach
+                                @else
+                                    <p class="text-sm text-gray-400 italic col-span-3">Tidak ada foto.</p>
                                 @endif
-                            @endforeach
+                            @else
+                                <p class="text-sm text-gray-400 italic col-span-3">Tidak ada foto.</p>
+                            @endif
                         </div>
 
-                        <h4 class="font-bold mb-3 dark:text-white">Daftar Peserta ({{ $item->peserta_count ?? 0 }})</h4>
-                        <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 max-h-40 overflow-y-auto">
-                            @forelse($item->peserta as $p)
+                        <h4 class="font-bold mb-3 dark:text-white">Daftar Peserta</h4>
+                        <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-4">
+                            @foreach ($item->peserta as $p)
                                 <div class="flex justify-between border-b dark:border-gray-700 py-2">
                                     <span class="text-sm dark:text-gray-200">{{ $p->name }}</span>
-                                    <span class="text-xs text-gray-500">{{ $p->email }} | {{ $p->telpon }}</span>
+                                    <span class="text-xs text-gray-500">{{ $p->email }}</span>
+                                    <span class="text-xs text-gray-500">{{ $p->telpon }}</span>
                                 </div>
-                            @empty
-                                <p class="text-sm text-gray-400">Belum ada peserta.</p>
-                            @endforelse
+                            @endforeach
                         </div>
                     </div>
                 @endforeach
-                <button type="button" @click="openModal = false" class="mt-6 w-full bg-gray-100 dark:bg-gray-800 py-2 rounded-xl text-sm font-bold dark:text-white hover:bg-gray-200">Tutup</button>
+                <button @click="openModal = false"
+                    class="mt-6 w-full bg-gray-100 dark:bg-gray-800 py-2 rounded-xl text-sm font-bold dark:text-white hover:bg-gray-200">Tutup</button>
             </div>
         </div>
     </div>

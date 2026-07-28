@@ -83,6 +83,9 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="mt-4">
+                        {{ $bencana->links() }}
+                    </div>
                 </div>
             </main>
         </div>
@@ -102,14 +105,36 @@
                             <p><strong>Deskripsi:</strong> {{ $item->deskripsi }}</p>
                         </div>
                         <h4 class="font-bold mb-2 dark:text-white">Dokumentasi</h4>
-                        @foreach (explode(';', $item->foto) as $f)
-                            @if (trim($f))
-                                <a href="{{ asset('storage/foto_bencana/' . trim($f)) }}" target="_blank">
-                                    <img src="{{ asset('storage/foto_bencana/' . trim($f)) }}"
-                                        class="w-full h-24 object-cover rounded-lg border dark:border-gray-700 hover:opacity-75 transition">
-                                </a>
+                        @if (!empty($item->foto))
+                            @php
+                                $fotoList = array_filter(explode(';', $item->foto), fn($f) => trim($f) !== '');
+                            @endphp
+
+                            @if (count($fotoList) > 0)
+                                @foreach ($fotoList as $f)
+                                    @php
+                                        $fileName = trim($f);
+                                        $exists = Storage::disk('public')->exists('foto_bencana/' . $fileName);
+                                    @endphp
+
+                                    @if ($exists)
+                                        <a href="{{ asset('storage/foto_bencana/' . $fileName) }}" target="_blank">
+                                            <img src="{{ asset('storage/foto_bencana/' . $fileName) }}"
+                                                class="w-full h-24 object-cover rounded-lg border dark:border-gray-700 hover:opacity-75 transition mb-2">
+                                        </a>
+                                    @else
+                                        <a href="{{ asset('storage/foto_bencana/bencana-default.jpeg') }}" target="_blank">
+                                            <img src="{{ asset('storage/foto_bencana/bencana-default.jpeg') }}"
+                                                class="w-full h-24 object-cover rounded-lg border dark:border-gray-700 hover:opacity-75 transition mb-2">
+                                        </a>
+                                    @endif
+                                @endforeach
+                            @else
+                                <p class="text-sm text-gray-400 italic">Tidak ada foto.</p>
                             @endif
-                        @endforeach
+                        @else
+                            <p class="text-sm text-gray-400 italic">Tidak ada foto.</p>
+                        @endif
                         <button @click="openModal = false"
                             class="mt-6 w-full bg-gray-100 dark:bg-gray-800 py-2 rounded-xl text-sm font-bold dark:text-white hover:bg-gray-200">Tutup</button>
                     </div>

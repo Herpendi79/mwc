@@ -31,7 +31,7 @@ class KajianController extends Controller
 
     public function index_anggota()
     {
-        $kajian = KajianModel::where('status', 'publish')->latest()->get();
+        $kajian = KajianModel::where('status', 'publish')->latest()->paginate(10);
         return view('anggota.kajian.index', compact('kajian'));
     }
 

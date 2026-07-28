@@ -39,7 +39,7 @@ class RelawanController extends Controller
     public function index_anggota()
     {
         // Ambil semua relawan, sertakan relasi 'peserta', dan hitung jumlahnya
-        $relawans = RelawanModel::with('peserta')->withCount('peserta')->get();
+        $relawans = RelawanModel::with('peserta')->withCount('peserta')->paginate(10);
 
         return view('anggota.relawan.index', compact('relawans'));
     }

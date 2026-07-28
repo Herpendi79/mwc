@@ -50,7 +50,7 @@ class BahsulController extends Controller
                     ->orWhere('pemohon', $userName);
             })
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(10);
 
         return view('anggota.bahsul.index', compact('bahsul'));
     }

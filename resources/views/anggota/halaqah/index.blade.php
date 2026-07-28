@@ -69,10 +69,10 @@
 
                                         <td class="p-4">
                                             @if (!empty($item->thumbnail))
-                                                <a href="{{ asset('storage/foto_halaqah/' . $item->thumbnail) }}"
-                                                    target="_blank">
-                                                    <img src="{{ asset('storage/foto_halaqah/' . $item->thumbnail) }}"
-                                                        class="w-12 h-12 object-cover rounded-lg border hover:opacity-80">
+                                                <a href="{{ $item->thumbnail && Storage::disk('public')->exists('foto_halaqah/' . $item->thumbnail) ? asset('storage/foto_halaqah/' . $item->thumbnail) : asset('storage/foto_halaqah/default-halaqah-pro.jpeg') }}"
+                                                    target="_blank" rel="noopener noreferrer">
+                                                    <img src="{{ $item->thumbnail && Storage::disk('public')->exists('foto_halaqah/' . $item->thumbnail) ? asset('storage/foto_halaqah/' . $item->thumbnail) : asset('storage/foto_halaqah/default-halaqah-pro.jpeg') }}"
+                                                        class="w-12 h-12 object-cover rounded-lg border border-gray-200 hover:opacity-80 transition-opacity">
                                                 </a>
                                             @else
                                                 <span class="text-gray-400 text-xs">-</span>
@@ -82,16 +82,19 @@
                                         {{-- Tombol Pemicu Modal Detail (Jumlah Peserta) --}}
                                         {{-- Catatan: Ganti $item->id_halaqah dengan primary key tabel halaqah Anda jika berbeda --}}
                                         <td class="p-4">
-                                            <button @click="selectedId = {{ $item->id_halaqah ?? $item->id }}; openModal = true"
+                                            <button
+                                                @click="selectedId = {{ $item->id_halaqah ?? $item->id }}; openModal = true"
                                                 class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full font-bold hover:bg-blue-200 transition">
-                                                {{ $item->peserta_count ?? (isset($item->peserta) ? $item->peserta->count() : 0) }} Peserta
+                                                {{ $item->peserta_count ?? (isset($item->peserta) ? $item->peserta->count() : 0) }}
+                                                Peserta
                                             </button>
                                         </td>
 
                                         {{-- Tombol Daftar / Aksi Tambah Peserta --}}
                                         <td class="p-4 text-center">
                                             @if (\Carbon\Carbon::parse($item->tanggal)->isPast())
-                                                <span class="text-xs text-red-500 font-bold bg-red-100 px-2 py-1 rounded-full">Ditutup</span>
+                                                <span
+                                                    class="text-xs text-red-500 font-bold bg-red-100 px-2 py-1 rounded-full">Ditutup</span>
                                             @else
                                                 <button type="button"
                                                     onclick="confirmDaftar('{{ route('anggota.halaqah.daftar', $item->id ?? $item->id) }}')"
@@ -126,68 +129,75 @@
                                         <div class="space-y-4 text-sm dark:text-gray-300">
                                             <div>
                                                 <strong class="block text-gray-700 dark:text-gray-300">Deskripsi:</strong>
-                                                <p class="mt-1 bg-gray-50 dark:bg-gray-800 p-3 rounded-lg text-gray-600 dark:text-gray-400">
+                                                <p
+                                                    class="mt-1 bg-gray-50 dark:bg-gray-800 p-3 rounded-lg text-gray-600 dark:text-gray-400">
                                                     {{ $item->deskripsi }}</p>
                                             </div>
                                             <div>
-                                                <strong class="block text-gray-700 dark:text-gray-300">Hasil / Ringkasan:</strong>
-                                                <p class="mt-1 bg-gray-50 dark:bg-gray-800 p-3 rounded-lg text-gray-600 dark:text-gray-400">
+                                                <strong class="block text-gray-700 dark:text-gray-300">Hasil /
+                                                    Ringkasan:</strong>
+                                                <p
+                                                    class="mt-1 bg-gray-50 dark:bg-gray-800 p-3 rounded-lg text-gray-600 dark:text-gray-400">
                                                     {{ $item->hasil }}</p>
                                             </div>
                                             <div>
                                                 <p><strong>Youtube:</strong>
-                                                            @if ($item->link_yt)
-                                                                <a href="{{ $item->link_yt }}" target="_blank"
-                                                                    class="text-blue-600 underline">{{ $item->link_yt }}</a>
-                                                            @else
-                                                                -
-                                                            @endif
-                                                        </p>
+                                                    @if ($item->link_yt)
+                                                        <a href="{{ $item->link_yt }}" target="_blank"
+                                                            class="text-blue-600 underline">{{ $item->link_yt }}</a>
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </p>
                                             </div>
 
                                             {{-- Bagian Daftar Peserta Halaqah --}}
                                             <div class="pt-4 border-t border-gray-100 dark:border-gray-800">
-                                                <strong class="block text-gray-700 dark:text-gray-300 mb-2">Daftar Peserta:</strong>
+                                                <strong class="block text-gray-700 dark:text-gray-300 mb-2">Daftar
+                                                    Peserta:</strong>
 
                                                 @if (isset($item->peserta) && $item->peserta->count() > 0)
-                                                    <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-xl max-h-40 overflow-y-auto">
-                                                        <ul class="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400">
+                                                    <div
+                                                        class="bg-gray-50 dark:bg-gray-800 p-4 rounded-xl max-h-40 overflow-y-auto">
+                                                        <ul
+                                                            class="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400">
                                                             @foreach ($item->peserta as $peserta)
                                                                 <li>
                                                                     {{ $peserta->name ?? ($peserta->user->name ?? 'Peserta') }}
-                                                                    ({{ $peserta->telpon ?? '-' }} - {{ $peserta->email ?? '-' }})
+                                                                    ({{ $peserta->telpon ?? '-' }} -
+                                                                    {{ $peserta->email ?? '-' }})
                                                                 </li>
                                                             @endforeach
                                                         </ul>
                                                     </div>
                                                 @else
-                                                    <p class="text-gray-500 italic text-xs">Tidak ada data peserta untuk halaqah ini.</p>
+                                                    <p class="text-gray-500 italic text-xs">Tidak ada data peserta untuk
+                                                        halaqah ini.</p>
                                                 @endif
                                             </div>
 
                                             {{-- Galeri Foto --}}
-                                            @if (!empty($item->foto))
-                                                <div class="pt-4 border-t border-gray-100 dark:border-gray-800">
-                                                    <h4 class="font-bold mb-3 dark:text-white">Galeri Foto</h4>
-                                                    <div class="grid grid-cols-3 gap-3">
-                                                        @foreach (explode(';', $item->foto) as $f)
-                                                            @php $fileName = basename(trim($f)); @endphp
-                                                            @if (!empty($fileName))
-                                                                <a href="{{ asset('storage/foto_halaqah/' . $fileName) }}"
-                                                                    target="_blank">
-                                                                    <img src="{{ asset('storage/foto_halaqah/' . $fileName) }}"
-                                                                        class="w-full h-24 object-cover rounded-lg border dark:border-gray-700 hover:opacity-80">
-                                                                </a>
-                                                            @endif
-                                                        @endforeach
-                                                    </div>
-                                                </div>
-                                            @endif
+                                            <h4 class="font-bold mb-3 dark:text-white">Galeri Foto</h4>
+                                            <div class="grid grid-cols-3 gap-3 mb-6">
+                                                @foreach (explode(';', $item->foto) as $f)
+                                                    @php $fileName = basename(trim($f)); @endphp
+                                                    @if (!empty($fileName))
+                                                        <a href="{{ $fileName && Storage::disk('public')->exists('foto_halaqah/' . $fileName) ? asset('storage/foto_halaqah/' . $fileName) : asset('storage/foto_halaqah/default-halaqah-pro.jpeg') }}"
+                                                            target="_blank" rel="noopener noreferrer">
+                                                            <img src="{{ $fileName && Storage::disk('public')->exists('foto_halaqah/' . $fileName) ? asset('storage/foto_halaqah/' . $fileName) : asset('storage/foto_halaqah/default-halaqah-pro.jpeg') }}"
+                                                                class="w-full h-24 object-cover rounded-lg border dark:border-gray-700 hover:opacity-80 transition-opacity">
+                                                        </a>
+                                                    @endif
+                                                @endforeach
+                                            </div>
                                         </div>
                                     </div>
                                 @endforeach
                             </div>
                         </div>
+                    </div>
+                    <div class="mt-4">
+                        {{ $halaqah->links() }}
                     </div>
                 </div>
             </main>

@@ -44,7 +44,7 @@ class OpiniController extends Controller
                 $query->where('penulis', 'LIKE', $userName . ' (%)');
             })
             ->latest()
-            ->get();
+            ->paginate(10);
 
         return view('anggota.opini.index', compact('opinis'));
     }

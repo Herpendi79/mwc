@@ -62,10 +62,10 @@
                                         <td class="p-4 dark:text-white font-medium">{{ $item->judul }}</td>
                                         <td class="p-4">
                                             @if (!empty($item->poster))
-                                                <a href="{{ asset('storage/foto_kajian/' . $item->poster) }}"
-                                                    target="_blank">
-                                                    <img src="{{ asset('storage/foto_kajian/' . $item->poster) }}"
-                                                        class="w-12 h-12 object-cover rounded-lg border">
+                                                <a href="{{ $item->poster && Storage::disk('public')->exists('foto_kajian/' . $item->poster) ? asset('storage/foto_kajian/' . $item->poster) : asset('storage/foto_kajian/kajian-default.jpeg') }}"
+                                                    target="_blank" rel="noopener noreferrer">
+                                                    <img src="{{ $item->poster && Storage::disk('public')->exists('foto_kajian/' . $item->poster) ? asset('storage/foto_kajian/' . $item->poster) : asset('storage/foto_kajian/kajian-default.jpeg') }}"
+                                                        class="w-12 h-12 object-cover rounded-lg border border-gray-200 hover:opacity-80 transition-opacity">
                                                 </a>
                                             @else
                                                 <span class="text-gray-400 text-xs">-</span>
@@ -74,12 +74,12 @@
                                         <td class="p-4 dark:text-gray-300">{{ $item->tema }}</td>
                                         <td class="p-4 dark:text-gray-300">{{ $item->pemateri }}</td>
 
-                                        {{-- MODAL (Struktur Sama Persis dengan milik Anda) --}}
                                         <td class="p-4">
                                             <button @click="openModal = true" class="text-blue-600 hover:text-blue-800">
                                                 <i class="ri-eye-line text-xl"></i>
                                             </button>
 
+                                            {{-- MODAL LENGKAP --}}
                                             <div x-show="openModal"
                                                 class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
                                                 x-cloak>
@@ -88,16 +88,18 @@
                                                     <h3
                                                         class="font-bold text-xl mb-4 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2">
                                                         Detail: {{ $item->judul }}</h3>
+
                                                     <div class="space-y-4 text-sm dark:text-gray-300">
                                                         <p><strong>Lokasi:</strong> {{ $item->lokasi }}</p>
                                                         <p><strong>Deskripsi:</strong><br><span
                                                                 class="block bg-gray-50 dark:bg-gray-800 p-3 rounded-lg mt-1">{{ $item->deskripsi }}</span>
                                                         </p>
+
                                                         <p><strong>Materi:</strong>
                                                             @if ($item->materi)
                                                                 <a href="{{ asset('assets/file/' . $item->materi) }}"
-                                                                    target="_blank"
-                                                                    class="text-blue-600 underline">Unduh</a>
+                                                                    target="_blank" class="text-blue-600 underline">Unduh
+                                                                    File Materi</a>
                                                             @else
                                                                 -
                                                             @endif
@@ -110,16 +112,47 @@
                                                                 -
                                                             @endif
                                                         </p>
+
+                                                        <p class="font-bold">Galeri Foto:</p>
+                                                        <div class="grid grid-cols-3 gap-2">
+                                                            @if ($item->foto)
+                                                                @foreach (explode(';', $item->foto) as $f)
+                                                                    @php $fileName = trim($f); @endphp
+                                                                    @if (!empty($fileName))
+                                                                        @php
+                                                                            $exists = Storage::disk('public')->exists(
+                                                                                'foto_kajian/' . $fileName,
+                                                                            );
+                                                                            $fileUrl = $exists
+                                                                                ? asset(
+                                                                                    'storage/foto_kajian/' . $fileName,
+                                                                                )
+                                                                                : asset(
+                                                                                    'storage/foto_kajian/kajian-default.jpeg',
+                                                                                );
+                                                                        @endphp
+                                                                        <a href="{{ $fileUrl }}" target="_blank"
+                                                                            rel="noopener noreferrer">
+                                                                            <img src="{{ $fileUrl }}"
+                                                                                class="w-full h-20 object-cover rounded-lg border dark:border-gray-700 hover:opacity-80 transition-opacity">
+                                                                        </a>
+                                                                    @endif
+                                                                @endforeach
+                                                            @endif
+                                                        </div>
                                                     </div>
+
                                                     <button @click="openModal = false"
                                                         class="mt-6 w-full bg-gray-100 dark:bg-gray-800 py-2 rounded-xl font-bold dark:text-white hover:bg-gray-200">Tutup</button>
                                                 </div>
                                             </div>
                                         </td>
-                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
+                    </div>
+                    <div class="mt-4">
+                        {{ $kajian->links() }}
                     </div>
                 </div>
             </main>

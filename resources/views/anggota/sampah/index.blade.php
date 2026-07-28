@@ -76,11 +76,19 @@
                                         {{-- Preview File (Buka di tab baru) --}}
                                         <td class="p-4">
                                             @if (!empty($item->foto))
-                                                <a href="{{ asset('storage/foto_sampah/' . $item->foto) }}"
-                                                    target="_blank" rel="noopener noreferrer">
-                                                    <img src="{{ asset('storage/foto_sampah/' . $item->foto) }}"
-                                                        class="w-12 h-12 object-cover rounded-lg border border-gray-200 hover:opacity-80 transition-opacity">
-                                                </a>
+                                                @if ($item->foto && Storage::disk('public')->exists('foto_sampah/' . $item->foto))
+                                                    <a href="{{ asset('storage/foto_sampah/' . $item->foto) }}"
+                                                        target="_blank" rel="noopener noreferrer">
+                                                        <img src="{{ asset('storage/foto_sampah/' . $item->foto) }}"
+                                                            class="w-12 h-12 object-cover rounded-lg border border-gray-200 hover:opacity-80 transition-opacity">
+                                                    </a>
+                                                @else
+                                                    <a href="{{ asset('storage/foto_sampah/sampah-default.jpeg') }}"
+                                                        target="_blank" rel="noopener noreferrer">
+                                                        <img src="{{ asset('storage/foto_sampah/sampah-default.jpeg') }}"
+                                                            class="w-12 h-12 object-cover rounded-lg border border-gray-200 hover:opacity-80 transition-opacity">
+                                                    </a>
+                                                @endif
                                             @else
                                                 <span class="text-gray-400 text-xs">-</span>
                                             @endif
