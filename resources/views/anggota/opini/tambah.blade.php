@@ -59,32 +59,36 @@
                             </div>
                             {{-- Kategori --}}
                             <div class="col-span-12 md:col-span-3">
-                                    <div class="flex justify-between items-center mb-2">
-                                        <label class="block text-sm font-bold dark:text-gray-300">Kategori</label>
-                                    </div>
-
-                                    <select name="kategori" required
-                                        class="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-blue-500">
-                                        <option value="">-- Pilih Kategori --</option>
-                                        @php
-                                            $kategoris = Storage::exists('kategori_opini.txt')
-                                                ? array_filter(
-                                                    array_map(
-                                                        'trim',
-                                                        explode("\n", Storage::get('kategori_opini.txt')),
-                                                    ),
-                                                )
-                                                : [];
-                                        @endphp
-
-                                        @foreach ($kategoris as $kat)
-                                            <option value="{{ $kat }}"
-                                                {{ old('kategori') == $kat ? 'selected' : '' }}>
-                                                {{ $kat }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                <div class="flex justify-between items-center mb-2">
+                                    <label class="block text-sm font-bold dark:text-gray-300">Kategori</label>
                                 </div>
+
+                                <select name="kategori" required
+                                    class="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="">-- Pilih Kategori --</option>
+                                    @php
+                                        $kategoris = Storage::exists('kategori_opini.txt')
+                                            ? array_filter(
+                                                array_map('trim', explode("\n", Storage::get('kategori_opini.txt'))),
+                                            )
+                                            : [];
+
+                                        sort($kategoris);
+
+                                        // Pindahkan "Lainnya" ke urutan paling akhir jika ada
+                                        if (($key = array_search('Lainnya', $kategoris)) !== false) {
+                                            unset($kategoris[$key]);
+                                            $kategoris[] = 'Lainnya';
+                                        }
+                                    @endphp
+
+                                    @foreach ($kategoris as $kat)
+                                        <option value="{{ $kat }}" {{ old('kategori') == $kat ? 'selected' : '' }}>
+                                            {{ $kat }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
 
                         <div class="grid grid-cols-12 gap-4 mb-6">
@@ -111,50 +115,50 @@
                         </div>
 
                         {{-- Ringkasan --}}
-                            <div class="mb-6" x-data="{
-                                tags: [],
-                                textInput: '',
-                                addTag(event) {
-                                    let tag = this.textInput.trim().replace(/['$,]/g, '');
-                                    if (tag.length > 1 && !this.tags.includes(tag)) {
-                                        this.tags.push(tag);
-                                    }
-                                    this.textInput = '';
-                                },
-                                removeTag(index) {
-                                    this.tags.splice(index, 1);
+                        <div class="mb-6" x-data="{
+                            tags: [],
+                            textInput: '',
+                            addTag(event) {
+                                let tag = this.textInput.trim().replace(/['$,]/g, '');
+                                if (tag.length > 1 && !this.tags.includes(tag)) {
+                                    this.tags.push(tag);
                                 }
-                            }">
-                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Tags (Tulis lalu tekan spasi
-                                    atau Enter)</label>
+                                this.textInput = '';
+                            },
+                            removeTag(index) {
+                                this.tags.splice(index, 1);
+                            }
+                        }">
+                            <label class="block text-sm font-bold mb-2 dark:text-gray-300">Tags (Tulis lalu tekan spasi
+                                atau Enter)</label>
 
-                                {{-- Container Kotak Tag --}}
-                                <div
-                                    class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 flex flex-wrap items-center gap-2 focus-within:ring-2 focus-within:ring-green-500 transition">
+                            {{-- Container Kotak Tag --}}
+                            <div
+                                class="w-full p-3 rounded-xl border dark:border-gray-700 dark:bg-gray-800 flex flex-wrap items-center gap-2 focus-within:ring-2 focus-within:ring-green-500 transition">
 
-                                    {{-- List Tag yang sudah dibuat --}}
-                                    <template x-for="(tag, index) in tags" :key="index">
-                                        <span
-                                            class="bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300 px-3 py-1 rounded-lg text-sm font-medium flex items-center gap-1.5">
-                                            <span x-text="tag"></span>
-                                            <button type="button" @click="removeTag(index)"
-                                                class="hover:text-red-500 font-bold">&times;</button>
-                                        </span>
-                                    </template>
+                                {{-- List Tag yang sudah dibuat --}}
+                                <template x-for="(tag, index) in tags" :key="index">
+                                    <span
+                                        class="bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300 px-3 py-1 rounded-lg text-sm font-medium flex items-center gap-1.5">
+                                        <span x-text="tag"></span>
+                                        <button type="button" @click="removeTag(index)"
+                                            class="hover:text-red-500 font-bold">&times;</button>
+                                    </span>
+                                </template>
 
-                                    {{-- Input Text untuk Mengetik Tag --}}
-                                    <input type="text" x-model="textInput" @keydown.space.prevent="addTag($event)"
-                                        @keydown.enter.prevent="addTag($event)"
-                                        @keydown.backspace="if(textInput === '' && tags.length > 0) tags.pop()"
-                                        placeholder="Ketik lalu tekan spasi..."
-                                        class="flex-grow bg-transparent dark:text-white outline-none min-w-[150px]">
-                                </div>
-
-                                {{-- Hidden input agar data tags bisa terkirim ke Controller Laravel --}}
-                                <input type="hidden" name="ringkasan" :value="tags.join(',')">
-                                <p class="text-xs text-gray-400 mt-1">Contoh: Dakwah, Islam, Kajian (Tekan spasi atau Enter
-                                    untuk menambah)</p>
+                                {{-- Input Text untuk Mengetik Tag --}}
+                                <input type="text" x-model="textInput" @keydown.space.prevent="addTag($event)"
+                                    @keydown.enter.prevent="addTag($event)"
+                                    @keydown.backspace="if(textInput === '' && tags.length > 0) tags.pop()"
+                                    placeholder="Ketik lalu tekan spasi..."
+                                    class="flex-grow bg-transparent dark:text-white outline-none min-w-[150px]">
                             </div>
+
+                            {{-- Hidden input agar data tags bisa terkirim ke Controller Laravel --}}
+                            <input type="hidden" name="ringkasan" :value="tags.join(',')">
+                            <p class="text-xs text-gray-400 mt-1">Contoh: Dakwah, Islam, Kajian (Tekan spasi atau Enter
+                                untuk menambah)</p>
+                        </div>
 
                         {{-- Isi (CKEditor) --}}
                         <div class="flex flex-col flex-grow mb-6">

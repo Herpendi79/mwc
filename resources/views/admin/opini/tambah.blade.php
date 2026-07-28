@@ -86,6 +86,14 @@
                                                     ),
                                                 )
                                                 : [];
+
+                                            sort($kategoris);
+
+                                            // Pindahkan "Lainnya" ke urutan paling akhir jika ada
+                                            if (($key = array_search('Lainnya', $kategoris)) !== false) {
+                                                unset($kategoris[$key]);
+                                                $kategoris[] = 'Lainnya';
+                                            }
                                         @endphp
 
                                         @foreach ($kategoris as $kat)
