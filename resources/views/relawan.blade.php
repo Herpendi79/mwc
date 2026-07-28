@@ -164,7 +164,7 @@
 
                                                 <div class="flex justify-end gap-3">
                                                     <button type="button" @click="openModal = false"
-                                                        class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-medium transition">
+                                                        class="px-5 py-2 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition shadow-sm">
                                                         Batal
                                                     </button>
                                                     <button type="submit"
