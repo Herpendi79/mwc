@@ -978,7 +978,7 @@ class FreeUserController extends Controller
         $bahsul = RoanModel::findOrFail($id);
 
         // Cek apakah email tersebut sudah terdaftar pada kegiatan ini
-        $sudahDaftar = PesertaRoanModel::where('e', $id)
+        $sudahDaftar = PesertaRoanModel::where('id_ro', $id)
             ->where('email', $validated['email'])
             ->exists();
 
