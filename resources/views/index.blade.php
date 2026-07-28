@@ -790,28 +790,36 @@
                                 </div>
                                 <!-- Slider -->
                                 <div class="row">
-                                    <div class="col-lg-12">
-                                        <div class="weekly2-news-active d-flex">
-                                            @foreach ($khutbahs as $item)
-                                                <div class="weekly2-single">
-                                                    <div class="weekly2-img">
-                                                        <img src="{{ !empty($item->poster) && $item->poster !== 'none' && Storage::disk('public')->exists('foto_khutbah/' . $item->poster) ? asset('storage/foto_khutbah/' . $item->poster) : asset('storage/foto_khutbah/khutbah-default.jpeg') }}"
-                                                            alt="{{ $item->judul }}"
-                                                            style="width: 235px; height: 155px; object-fit: cover;">
-                                                    </div>
-                                                    <div class="weekly2-caption">
-                                                        <h4>
-                                                            <a href="{{ route('khutbah.detil', $item->id_kj) }}"
-                                                                target="_blank">{{ $item->judul }}</a>
-                                                        </h4>
-                                                        <p>{{ $item->khatib }} |
-                                                            {{ \Carbon\Carbon::parse($item->tgl)->format('M d, Y') }}</p>
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </div>
+    <div class="col-lg-12">
+        <div class="weekly2-news-active d-flex justify-content-center align-items-center" style="width: 100% !important; max-width: 100% !important;">
+            @forelse ($khutbahs as $item)
+                <div class="weekly2-single" style="box-sizing: border-box !important;">
+                    <div class="weekly2-img" style="overflow: hidden !important; width: 100% !important; max-width: 100% !important;">
+                        <img src="{{ !empty($item->poster) && $item->poster !== 'none' && Storage::disk('public')->exists('foto_khutbah/' . $item->poster) ? asset('storage/foto_khutbah/' . $item->poster) : asset('storage/foto_khutbah/khutbah-default.jpeg') }}"
+                            alt="{{ $item->judul }}"
+                            style="width: 100% !important; max-width: 235px; height: 155px; object-fit: cover; display: block; margin: 0 auto;">
+                    </div>
+                    <div class="weekly2-caption" style="width: 100% !important; word-break: break-word !important; overflow-wrap: break-word !important; text-align: center !important;">
+                        <h4 style="width: 100% !important; word-break: break-word !important; overflow-wrap: break-word !important; text-align: center !important;">
+                            <a href="{{ route('khutbah.detil', $item->id_kj) }}"
+                                target="_blank"
+                                style="display: block !important; width: 100% !important; word-break: break-word !important; overflow-wrap: break-word !important; white-space: normal !important; font-size: clamp(14px, 3.5vw, 18px) !important; line-height: 1.3 !important; text-align: center !important;">
+                                {{ $item->judul }}
+                            </a>
+                        </h4>
+                        <p style="word-break: break-word !important; font-size: 12px !important; text-align: center !important;">
+                            {{ $item->khatib }} | {{ \Carbon\Carbon::parse($item->tgl)->format('M d, Y') }}
+                        </p>
+                    </div>
+                </div>
+            @empty
+                <div class="weekly2-single text-center" style="width: 100% !important; padding: 20px;">
+                    <h4 style="color: #666 !important;">Data Khutbah belum tersedia</h4>
+                </div>
+            @endforelse
+        </div>
+    </div>
+</div>
                             </div>
                         </div>
                     </div>
@@ -826,8 +834,8 @@
                     <!-- section Tittle -->
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="section-tittle mb-30">
-                                <h3>Pengajian Terbaru</h3>
+                            <div class="section-tittle mb-30" style="margin-left: 15px !important;">
+                                <h3 style="position: relative !important;">Pengajian Terbaru!</h3>
                             </div>
                         </div>
                     </div>
@@ -986,43 +994,51 @@
         <!-- End Start Video area-->
         <!--   Weekly3-News start -->
         <div class="weekly3-news-area pt-80 pb-130">
-    <div class="container">
-        <div class="weekly3-wrapper">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="slider-wrapper">
-                        <!-- Slider -->
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="weekly3-news-active dot-style d-flex justify-content-center align-items-center" style="width: 100% !important; max-width: 100% !important;">
-                                    @forelse ($dataOpini as $opini)
-                                        <div class="weekly3-single" style="box-sizing: border-box !important;">
-                                            <div class="weekly3-img" style="overflow: hidden !important; width: 100% !important; max-width: 100% !important;">
-                                                {{-- Cek apakah foto ada, jika null/kosong gunakan default --}}
-                                                <img src="{{ !empty($opini->foto) && Storage::disk('public')->exists('foto_opini/' . $opini->foto) ? asset('storage/foto_opini/' . $opini->foto) : asset('storage/foto_opini/opini-default.jpeg') }}"
-                                                    alt="{{ $opini->judul }}"
-                                                    style="width: 100% !important; max-width: 235px; height: 155px; object-fit: cover; border-radius: 4px; display: block; margin: 0 auto;">
-                                            </div>
-                                            <div class="weekly3-caption" style="width: 100% !important; word-break: break-word !important; overflow-wrap: break-word !important; text-align: center !important;">
-    <h4 style="width: 100% !important; word-break: break-word !important; overflow-wrap: break-word !important; text-align: center !important;">
-        <a href="{{ route('opini.detil', $opini->id_op) }}"
-            target="_blank"
-            style="display: block !important; width: 100% !important; word-break: break-word !important; overflow-wrap: break-word !important; white-space: normal !important; font-size: clamp(14px, 3.5vw, 18px) !important; line-height: 1.3 !important; text-align: center !important;">
-            {{ $opini->judul }}
-        </a>
-    </h4>
-    {{-- Format tanggal menggunakan Carbon yang otomatis tersedia di Laravel --}}
-    <p style="word-break: break-word !important; font-size: 12px !important; text-align: center !important;">
-        {{ $opini->updated_at ? $opini->updated_at->format('d M Y') : '' }}
-        || Opini Oleh {{ $opini->penulis }}
-    </p>
-</div>
+            <div class="container">
+                <div class="weekly3-wrapper">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="slider-wrapper">
+                                <!-- Slider -->
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="weekly3-news-active dot-style d-flex justify-content-center align-items-center"
+                                            style="width: 100% !important; max-width: 100% !important;">
+                                            @forelse ($dataOpini as $opini)
+                                                <div class="weekly3-single" style="box-sizing: border-box !important;">
+                                                    <div class="weekly3-img"
+                                                        style="overflow: hidden !important; width: 100% !important; max-width: 100% !important;">
+                                                        {{-- Cek apakah foto ada, jika null/kosong gunakan default --}}
+                                                        <img src="{{ !empty($opini->foto) && Storage::disk('public')->exists('foto_opini/' . $opini->foto) ? asset('storage/foto_opini/' . $opini->foto) : asset('storage/foto_opini/opini-default.jpeg') }}"
+                                                            alt="{{ $opini->judul }}"
+                                                            style="width: 100% !important; max-width: 235px; height: 155px; object-fit: cover; border-radius: 4px; display: block; margin: 0 auto;">
+                                                    </div>
+                                                    <div class="weekly3-caption"
+                                                        style="width: 100% !important; word-break: break-word !important; overflow-wrap: break-word !important; text-align: center !important;">
+                                                        <h4
+                                                            style="width: 100% !important; word-break: break-word !important; overflow-wrap: break-word !important; text-align: center !important;">
+                                                            <a href="{{ route('opini.detil', $opini->id_op) }}"
+                                                                target="_blank"
+                                                                style="display: block !important; width: 100% !important; word-break: break-word !important; overflow-wrap: break-word !important; white-space: normal !important; font-size: clamp(14px, 3.5vw, 18px) !important; line-height: 1.3 !important; text-align: center !important;">
+                                                                {{ $opini->judul }}
+                                                            </a>
+                                                        </h4>
+                                                        {{-- Format tanggal menggunakan Carbon yang otomatis tersedia di Laravel --}}
+                                                        <p
+                                                            style="word-break: break-word !important; font-size: 12px !important; text-align: center !important;">
+                                                            {{ $opini->updated_at ? $opini->updated_at->format('d M Y') : '' }}
+                                                            || Opini Oleh {{ $opini->penulis }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            @empty
+                                                <div class="weekly3-single text-center"
+                                                    style="width: 100% !important; padding: 20px;">
+                                                    <h4 style="color: #666 !important;">Data Opini belum tersedia</h4>
+                                                </div>
+                                            @endforelse
                                         </div>
-                                    @empty
-                                        <div class="weekly3-single text-center" style="width: 100% !important; padding: 20px;">
-                                            <h4 style="color: #666 !important;">Data Opini belum tersedia</h4>
-                                        </div>
-                                    @endforelse
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1030,8 +1046,6 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
         <!-- End Weekly-News -->
         <!-- banner-last Start -->
         <div class="banner-area gray-bg pt-90 pb-90">
