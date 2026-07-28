@@ -144,12 +144,12 @@
                                             style="position: relative !important; width: 100% !important; max-width: 100% !important; height: auto !important; min-height: 0 !important; overflow: hidden !important;">
                                             @if (isset($dataDakwah) && $dataDakwah->count() > 0)
                                                 @php
-                                                    $pathBgFisik = 'foto_dakwah/dakwah_bg.png';
+                                                    $pathBgFisik = 'foto_dakwah/dakwah_bg_pro.png';
                                                     $bgTersedia = Storage::disk('public')->exists($pathBgFisik);
 
                                                     $urlBgDakwah = $bgTersedia
                                                         ? asset('storage/' . $pathBgFisik)
-                                                        : asset('storage/foto_dakwah/dakwah-default.jpeg');
+                                                        : asset('storage/foto_dakwah/dakwah_bg_pro.png');
                                                 @endphp
 
                                                 <!-- Gambar Dinamis dengan Validasi Fisik -->
