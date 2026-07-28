@@ -102,13 +102,13 @@
                             </div>
                             {{-- Foto --}}
                             <div class="col-span-12 md:col-span-3">
-                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Foto</label>
+                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Foto (Tidak Wajib)</label>
                                 <input type="file" name="foto" accept="image/*"
                                     class="w-full p-2.5 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white">
                             </div>
                             {{-- Lampiran --}}
                             <div class="col-span-12 md:col-span-3">
-                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Lampiran</label>
+                                <label class="block text-sm font-bold mb-2 dark:text-gray-300">Lampiran (Tidak Wajib)</label>
                                 <input type="file" name="lampiran" accept=".pdf,.doc,.docx"
                                     class="w-full p-2.5 rounded-xl border dark:border-gray-700 dark:bg-gray-800 dark:text-white">
                             </div>
