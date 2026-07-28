@@ -43,6 +43,18 @@ class LoginController extends Controller
             })
             ->first();
 
+        if ($user->anggota && $user->anggota->status === 'menunggu validasi') {
+            return redirect()->back()
+                ->with('error', 'Akun Anda sedang menunggu verifikasi dari Admin. Mohon tunggu informasi selanjutnya.')
+                ->withInput($request->only('email'));
+        }
+
+        if ($user->anggota && $user->anggota->status === 'non aktif') {
+            return redirect()->back()
+                ->with('error', 'Akun Anda sedang dinonaktifkan Admin. Mohon segera hubungi Admin.')
+                ->withInput($request->only('email'));
+        }
+
         // 3. Cek apakah user ditemukan dan passwordnya cocok
         if ($user && \Illuminate\Support\Facades\Hash::check($password, $user->password)) {
 

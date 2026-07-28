@@ -87,6 +87,11 @@
             @elseif($action == 'aktivasi')
                 <p>Kabar gembira! Status keanggotaan Anda telah <span class="highlight">diaktifkan kembali</span>.</p>
                 <p>Anda kini dapat kembali beraktivitas dan mengakses fitur layanan anggota.</p>
+            @elseif($action == 'nonaktif')
+                <p>Pemberitahuan: Status keanggotaan Anda saat ini diubah menjadi <span
+                        style="color: #d97706; font-weight: bold;">Non-Aktif</span>.</p>
+                <p>Jika Anda memiliki pertanyaan lebih lanjut mengenai perubahan status ini, silakan hubungi pengurus
+                    MWC NU Tugu.</p>
             @endif
 
             <p style="margin-top: 30px;">Terima kasih atas khidmat Anda.</p>

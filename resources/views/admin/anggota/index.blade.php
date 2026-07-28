@@ -115,6 +115,7 @@
                                         <td class="p-4 truncate max-w-[150px]">{{ $item->user->email ?? '-' }}</td>
                                         <td class="p-4 truncate max-w-[150px]">{{ $item->keterangan ?? '-' }}</td>
                                         <td class="p-4">
+                                            <div class="flex items-center justify-center gap-3">
                                             <span
                                                 class="px-3 py-1 rounded-full text-[10px] font-bold
                                 @if ($item->status == 'aktif') bg-green-100 text-green-700
@@ -122,9 +123,10 @@
                                 @else bg-yellow-100 text-yellow-700 @endif">
                                                 {{ ucfirst($item->status) }}
                                             </span>
+                                        </div>
                                         </td>
-                                        <td class="p-4">
-                                            <div class="flex items-center gap-3">
+                                        <td class="p-4 text-center">
+                                            <div class="flex items-center justify-center gap-3">
                                                 @if ($item->status == 'menunggu validasi')
                                                     <!-- Tombol Pemicu Modal Setuju -->
                                                     <button type="button"
@@ -156,13 +158,14 @@
                                                         </button>
                                                     </form>
                                                 @elseif($item->status == 'non aktif')
-                                                    <form action="{{ route('admin.anggota.verifikasi', $item->id) }}"
+                                                    <form
+                                                        action="{{ route('admin.anggota.verifikasi', $item->id_anggota) }}"
                                                         method="POST"
                                                         onsubmit="return confirm('Yakin ingin mengaktifkan kembali anggota ini?')">
                                                         @csrf @method('PUT')
                                                         <input type="hidden" name="action" value="aktivasi">
                                                         <button type="submit" title="Aktivasi"
-                                                            class="uploader text-blue-600 hover:text-blue-800 transition">
+                                                            class="text-blue-600 hover:text-blue-800 transition">
                                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
                                                                 fill="none" viewBox="0 0 24 24"
                                                                 stroke="currentColor">
@@ -172,6 +175,26 @@
                                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                                     stroke-width="2"
                                                                     d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                            </svg>
+                                                        </button>
+                                                    </form>
+                                                @elseif($item->status == 'aktif')
+                                                    <!-- Tombol untuk Menonaktifkan Anggota -->
+                                                    <form
+                                                        action="{{ route('admin.anggota.verifikasi', $item->id_anggota) }}"
+                                                        method="POST"
+                                                        onsubmit="return confirm('Yakin ingin menonaktifkan anggota ini?')">
+                                                        @csrf @method('PUT')
+                                                        <input type="hidden" name="action" value="nonaktif">
+                                                        <button type="submit" title="Nonaktifkan"
+                                                            class="text-amber-600 hover:text-amber-800 transition">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
+                                                                fill="none" viewBox="0 0 24 24"
+                                                                stroke="currentColor">
+                                                                <!-- Ikon Pause / Nonaktif -->
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                             </svg>
                                                         </button>
                                                     </form>

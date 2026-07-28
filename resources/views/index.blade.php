@@ -704,7 +704,7 @@
                         <div class="most-recent-area">
                             <!-- Section Tittle -->
                             <div class="small-tittle mb-20">
-                                <h4>Opini terbaru</h4>
+                                <h4>Opini Terbaru!</h4>
                             </div>
                             <!-- Details -->
                             @if ($opinis->isNotEmpty())

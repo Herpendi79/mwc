@@ -215,7 +215,6 @@ class AdminController extends Controller
         // Logika Database & Validasi Berdasarkan Action
         if ($action == 'setuju' || $action == 'aktivasi') {
 
-            // Validasi khusus jika aksi 'setuju', pastikan no_anggota diisi dan unik
             if ($action == 'setuju') {
                 $request->validate([
                     'no_anggota' => 'required|string|unique:anggota,no_anggota,' . $id . ',id_anggota',
@@ -224,15 +223,14 @@ class AdminController extends Controller
                     'no_anggota.unique' => 'Nomor Anggota ini sudah terdaftar oleh anggota lain.',
                 ]);
 
-                // Update status aktif dan masukkan No Anggotanya
                 $anggota->update([
                     'status' => 'aktif',
                     'no_anggota' => $request->no_anggota,
                 ]);
             } else {
-                // Untuk aktivasi ulang (jika tidak butuh input baru)
                 $anggota->update(['status' => 'aktif']);
             }
+
             if ($user && empty($user->email_verified_at)) {
                 $user->update([
                     'email_verified_at' => now(),
@@ -240,6 +238,10 @@ class AdminController extends Controller
             }
 
             $message = ($action == 'setuju') ? "Anggota berhasil divalidasi dan disetujui." : "Anggota berhasil diaktifkan kembali.";
+        } elseif ($action == 'nonaktif') {
+            // Ubah status anggota menjadi non aktif
+            $anggota->update(['status' => 'non aktif']);
+            $message = "Status anggota berhasil diubah menjadi non-aktif.";
         } elseif ($action == 'tolak') {
             $user = $anggota->user;
             $anggota->delete();
@@ -254,7 +256,7 @@ class AdminController extends Controller
             try {
                 Mail::to($email)->send(new StatusAnggotaMail($action, $name));
             } catch (\Exception $e) {
-                // Tangani jika pengiriman email gagal agar tidak memutus eksekusi database
+                // Tangani jika pengiriman email gagal
             }
         }
 
