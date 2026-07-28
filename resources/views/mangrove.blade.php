@@ -53,9 +53,9 @@
                                 </h2>
                                 <ul class="blog-info-link mt-3 mb-4">
                                     <li><i class="fa fa-user"></i>
-                                            Admin</li>
+                                        Admin</li>
                                     <li><i class="fa fa-map-marker"></i>
-                                            Semarang</li>
+                                        Semarang</li>
                                 </ul>
                                 <p class="excert" style="text-align: justify; line-height: 1.6;">
                                     <strong>Mangrove adalah benteng alami yang menjaga keseimbangan lingkungan
@@ -166,20 +166,22 @@
                                         <div x-show="metode === 'transfer'" x-cloak
                                             class="mb-5 p-4 bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 rounded-xl space-y-4">
 
-                                            <div>
-                                                <h4 class="font-bold text-emerald-800 dark:text-emerald-300 mb-2">Informasi
-                                                    Rekening Tujuan:</h4>
-                                                <div class="text-sm text-emerald-700 dark:text-emerald-400"
-                                                    x-show="rekening && rekening.bank">
-                                                    <p>Bank: <span class="font-bold" x-text="rekening.bank"></span></p>
-                                                    <p>No. Rekening: <span class="font-bold"
-                                                            x-text="rekening.no_rek"></span></p>
-                                                    <p>Atas Nama: <span class="font-bold" x-text="rekening.an"></span></p>
+                                            <div x-data="{ rekening: @js(json_decode(Storage::get('rekening.txt'), true)) }">
+                                                <div>
+                                                    <h4 class="font-bold text-emerald-800 dark:text-emerald-300 mb-2">
+                                                        Informasi Rekening Tujuan:</h4>
+                                                    <div class="text-sm text-emerald-700 dark:text-emerald-400"
+                                                        x-show="rekening && rekening.bank">
+                                                        <label>Bank: <span class="font-bold" x-text="rekening.bank"></span></label><br>
+                                                        <label>No. Rekening: <span class="font-bold"
+                                                                x-text="rekening.no_rek"></span></label><br>
+                                                        <label>Atas Nama: <span class="font-bold" x-text="rekening.an"></span>
+                                                        </label>
+                                                    </div>
+                                                    <p x-show="!rekening || !rekening.bank" class="text-red-500 text-sm">
+                                                        Data rekening tidak tersedia.</p>
                                                 </div>
-                                                <p x-show="!rekening || !rekening.bank" class="text-red-500 text-sm">Data
-                                                    rekening tidak tersedia.</p>
                                             </div>
-                                            <hr class="border-emerald-200 dark:border-emerald-800/60">
 
                                             <div>
                                                 <label
@@ -225,9 +227,9 @@
                                                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px;">
                                             <div class="media-body">
 
-                                                    <h3 style="margin: 0; font-size: 16px; line-height: 1.2;">
-                                                        {{ Str::limit($post->donatur, 70) }}
-                                                    </h3>
+                                                <h3 style="margin: 0; font-size: 16px; line-height: 1.2;">
+                                                    {{ Str::limit($post->donatur, 70) }}
+                                                </h3>
 
                                                 <p style="margin: 0; font-size: 12px;">
                                                     {{ $post->jumlah_pohon }} Pohon
