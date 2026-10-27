@@ -5,7 +5,7 @@
                 <div class="header-bottom header-sticky">
                     <div class="container">
                         <div class="row align-items-center">
-                            <div class="col-lg-9 col-md-8">
+                            <div class="col-lg-12 col-md-12">
                                 <!-- sticky -->
                                 <!-- Perbaikan pada bagian sticky-logo -->
                                 <div class="sticky-logo">
@@ -48,41 +48,16 @@
                                                             Bencana</a></li>
                                                 </ul>
                                             </li>
-                                            <li><a href="#">Download</a>
-                                                <ul class="submenu">
-                                                    <li><a href="{{ route('khutbah') }}" target="_blank">Khutbah
-                                                            Jumat</a></li>
-                                                    <li><a href="{{ route('pesan_dakwah') }}" target="_blank">Pesan
-                                                            Dakwah</a></li>
-                                                    <li><a href="{{ route('infografis') }}"
-                                                            target="_blank">Infografis</a></li>
-                                                </ul>
-                                            </li>
+                                            <li><a href="{{ route('khutbah') }}" target="_blank">Khutbah
+                                                    Jumat</a></li>
+                                            <li><a href="{{ route('pesan_dakwah') }}" target="_blank">Pesan
+                                                    Dakwah</a></li>
+                                            <li><a href="{{ route('infografis') }}" target="_blank">Infografis</a></li>
+
                                             <li><a href="{{ route('login') }}" target="_blank">Login</a>
                                             </li>
                                         </ul>
                                     </nav>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-4">
-                                <div class="header-right f-right d-none d-lg-block">
-                                    <!-- Heder social -->
-                                    <ul class="header-social">
-                                        <!-- Facebook -->
-                                        <li><a href="https://www.facebook.com/mwcnutugu" target="_blank"><i
-                                                    class="fab fa-facebook-f"></i></a></li>
-
-                                        <!-- Instagram -->
-                                        <li><a href="https://www.instagram.com/mwcnutugu" target="_blank"><i
-                                                    class="fab fa-instagram"></i></a></li>
-
-                                        <!-- YouTube -->
-                                        <li><a href="https://www.youtube.com/@mwcnutugu" target="_blank"><i
-                                                    class="fab fa-youtube"></i></a></li>
-
-                                        <!-- Twitter/X (Opsional) -->
-                                        <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                                    </ul>
                                 </div>
                             </div>
                             <!-- Mobile Menu -->
